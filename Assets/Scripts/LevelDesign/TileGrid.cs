@@ -5,16 +5,16 @@ public class TileGrid : MonoBehaviour
 {
 
     [Header("Grid Settings")]
-    [SerializeField] private int gridWidth;
-    [SerializeField] private int gridHeight;
+    public int gridWidth;
+    public int gridHeight;
 
     public GameObject tilePrefab;
 
-    private List<GameObject> tiles = new List<GameObject>();
-    private GameObject[,] tileGrid;
+    public List<GameObject> tiles = new List<GameObject>();
+    public GameObject[,] tileGrid;
 
-    private readonly float tileWidth = 2f;
-    private readonly float tileHeight = 1.1875f;
+    public readonly float tileWidth = 2f;
+    public readonly float tileHeight = 1.1875f;
 
     public Slider gridWidthSlider;
     public Slider gridHeightSlider;

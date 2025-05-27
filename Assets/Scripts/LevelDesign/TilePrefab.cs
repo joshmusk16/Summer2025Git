@@ -13,6 +13,8 @@ public class TilePrefab : MonoBehaviour
     private Vector2 mouseWorldPosition;
     private Camera mainCamera;
 
+    public bool objectOnTile = false;
+
     void Start()
     {
         mainCamera = Camera.main;

@@ -9,11 +9,13 @@ public class DevMenuUI : MonoBehaviour
     private Vector2 mouseWorldPosition;
     private Camera mainCamera;
 
+    private bool followingMouse = false;
+
     void Start()
     {
         mainCamera = Camera.main;
     }
- 
+
     void Update()
     {
         Vector3 mouseScreenPosition = Input.mousePosition;
@@ -23,9 +25,19 @@ public class DevMenuUI : MonoBehaviour
             mouseScreenPosition.y,
             Mathf.Abs(mainCamera.transform.position.z)));
 
-        if (Input.GetKey(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && DetectMouse(new Vector2(0, 96), 180, 8))
+        {
+            followingMouse = true;
+        }
+
+        if (followingMouse)
         {
             transform.position = Vector2.Lerp(transform.position, mouseWorldPosition - new Vector2(0, 96) / 16f, Time.deltaTime * 10f);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            followingMouse = false;
         }
 
         gameObject.GetComponent<SpriteRenderer>().sprite = tabs[currentTab];
