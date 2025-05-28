@@ -438,6 +438,7 @@ MonoBehaviour:
   gridWidth: 10
   gridHeight: 10
   tilePrefab: {fileID: 4200995191323063975, guid: 7761e765f4c66434b8c82b634c3c1d28, type: 3}
+  tiles: []
   gridWidthSlider: {fileID: 1671349138}
   gridHeightSlider: {fileID: 1638875402}
   generateGridButton: {fileID: 139990331}

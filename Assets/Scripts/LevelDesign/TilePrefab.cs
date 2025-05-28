@@ -71,4 +71,16 @@ public class TilePrefab : MonoBehaviour
             return false;
         }
     }
+
+    public void SwitchObjectOnTile()
+    {
+        if (objectOnTile)
+        {
+            objectOnTile = false;
+        }
+        else
+        {
+            objectOnTile = true;
+        }
+    }
 }
