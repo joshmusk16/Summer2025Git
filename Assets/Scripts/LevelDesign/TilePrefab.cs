@@ -13,7 +13,8 @@ public class TilePrefab : MonoBehaviour
     private Vector2 mouseWorldPosition;
     private Camera mainCamera;
 
-    public bool objectOnTile = false;
+    public bool objectOnTile = true;
+    public bool editable = true;
 
     void Start()
     {
@@ -31,27 +32,31 @@ public class TilePrefab : MonoBehaviour
 
         gameObject.GetComponent<SpriteRenderer>().sprite = tiles[state];
 
-        if (MouseDetected() && state == 1)
+        if (editable)
         {
-            state = 2;
-        }
-        else if(MouseDetected() == false && state != 0)
-        {
-            state = 1;
-        }
-
-        if (MouseDetected())
-        {
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                state = 0;
-            }
-            else if (Input.GetKey(KeyCode.Mouse1))
+            if (MouseDetected() && state == 1)
             {
                 state = 2;
             }
-        }
+            else if (MouseDetected() == false && state != 0)
+            {
+                state = 1;
+            }
 
+            if (MouseDetected())
+            {
+                if (Input.GetKey(KeyCode.Mouse0))
+                {
+                    state = 0;
+                    objectOnTile = false;
+                }
+                else if (Input.GetKey(KeyCode.Mouse1))
+                {
+                    state = 2;
+                    objectOnTile = true;
+                }
+            }
+        }
     }
 
     public bool MouseDetected()

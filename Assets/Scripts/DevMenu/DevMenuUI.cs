@@ -11,6 +11,9 @@ public class DevMenuUI : MonoBehaviour
 
     private bool followingMouse = false;
 
+    [Header("TileGrid Reference")]
+    public TileGrid tileGrid;
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -27,6 +30,7 @@ public class DevMenuUI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && DetectMouse(new Vector2(0, 96), 180, 8))
         {
+            tileGrid.DisableEditing();
             followingMouse = true;
         }
 
@@ -37,6 +41,7 @@ public class DevMenuUI : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
+            tileGrid.EnableEditing();
             followingMouse = false;
         }
 

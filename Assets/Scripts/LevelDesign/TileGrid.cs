@@ -31,7 +31,6 @@ public class TileGrid : MonoBehaviour
         }
     }
 
-
     public void GenerateGrid()
     {
         foreach (GameObject tile in tiles)
@@ -56,7 +55,22 @@ public class TileGrid : MonoBehaviour
                 tileGrid[x, y] = tile;
             }
         }
+    }
 
+    public void EnableEditing()
+    {
+        foreach (GameObject tile in tiles)
+        {
+            tile.GetComponent<TilePrefab>().editable = true;
+        }
+    }
+
+    public void DisableEditing()
+    {
+        foreach (GameObject tile in tiles)
+        {
+            tile.GetComponent<TilePrefab>().editable = false;
+        }
     }
 
 }
