@@ -3,18 +3,17 @@ using UnityEngine;
 public class ItemPlacement : MonoBehaviour
 {
     [Header("Prefab Object and Sprites")]
-    public GameObject emptyObject;
     public GameObject prefabToPlace;
 
     [Header("Is An Item Held?")]
     public bool itemHeld = false;
+    public GameObject heldObject;
 
     private Vector2 mouseWorldPosition;
     private Camera mainCamera;
 
-    private bool placementLocationFound = false;
-    private TilePrefab nearestTile;
-    private GameObject temp;
+    private TilePrefab nearestTileScript;
+    private GameObject nearestTile;
 
     [Header("TileGrid Manager")]
     public TileGrid tileGrid;
@@ -33,23 +32,37 @@ public class ItemPlacement : MonoBehaviour
                 mouseScreenPosition.y,
                 Mathf.Abs(mainCamera.transform.position.z)));
 
-        if (Input.GetKey(KeyCode.Mouse0) && itemHeld)
+        PlacementPosition();
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && nearestTileScript != null
+        && nearestTileScript.objectOnTile != null && itemHeld == false)
         {
-            temp.transform.position = Vector2.Lerp(temp.transform.position, PlacementPosition(), Time.deltaTime * 10f);
+            heldObject = nearestTileScript.objectOnTile;
+            nearestTileScript.objectOnTile = null;
+            itemHeld = true;
+            tileGrid.DisableEditing();
+        }
+
+        if (itemHeld)
+        {
+            heldObject.transform.position = Vector2.Lerp(heldObject.transform.position, PlacementPosition(), Time.deltaTime * 10f);
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse0) && itemHeld)
         {
-            if (placementLocationFound && nearestTile.objectOnTile == false)
+            if (nearestTileScript != null && nearestTileScript.objectOnTile == false && nearestTileScript.state == 0)
             {
-                Instantiate(prefabToPlace, PlacementPosition(), Quaternion.identity);
-                nearestTile.objectOnTile = true;
+                heldObject.transform.position = nearestTile.transform.position;
+                nearestTileScript.objectOnTile = heldObject;
             }
-            Destroy(temp);
+            else if(nearestTileScript == null)
+            {
+                Destroy(heldObject);
+            }
+            heldObject = null;
             itemHeld = false;
             tileGrid.EnableEditing();
         }
-
     }
 
     public Vector2 PlacementPosition()
@@ -62,33 +75,20 @@ public class ItemPlacement : MonoBehaviour
 
             if (temp.x < tileGrid.gridWidth && temp.y < tileGrid.gridHeight && temp.x >= 0 && temp.y >= 0)
             {
-                nearestTile = tileGrid.tileGrid[(int)temp.x, (int)temp.y].GetComponent<TilePrefab>();
-                placementLocationFound = true;
-                return tileGrid.tileGrid[(int)temp.x, (int)temp.y].transform.position;
-            }
-            else
-            {
-                nearestTile = null;
-                placementLocationFound = false;
-                return mouseWorldPosition;
+                nearestTile = tileGrid.tileGrid[(int)temp.x, (int)temp.y];
+                nearestTileScript = tileGrid.tileGrid[(int)temp.x, (int)temp.y].GetComponent<TilePrefab>();
+                if (nearestTileScript.state == 0)
+                {
+                    return tileGrid.tileGrid[(int)temp.x, (int)temp.y].transform.position;
+                }
+                else
+                {
+                    return mouseWorldPosition; 
+                }
             }
         }
-        else
-        {
-            nearestTile = null;
-            placementLocationFound = false;
-            return mouseWorldPosition;
-        }
+        nearestTile = null;
+        nearestTileScript = null;
+        return mouseWorldPosition;
     }
-
-    public void PassPrefabToPlace(GameObject prefab, Sprite prefabSprite, int sortingOrder)
-    {
-        itemHeld = true;
-        prefabToPlace = prefab;
-        temp = Instantiate(emptyObject, PlacementPosition(), Quaternion.identity);
-        temp.GetComponent<SpriteRenderer>().sprite = prefabSprite;
-        temp.GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
-        tileGrid.DisableEditing();
-    }
-
 }

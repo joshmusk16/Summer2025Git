@@ -4,7 +4,7 @@ public class TilePrefab : MonoBehaviour
 {
     [Header("Tile Sprites")]
     public Sprite[] tiles = new Sprite[3];
-    private int state = 1;
+    public int state = 1;
 
     [Header("Tile Dimensions")]
     public int pixelWidth;
@@ -13,8 +13,8 @@ public class TilePrefab : MonoBehaviour
     private Vector2 mouseWorldPosition;
     private Camera mainCamera;
 
-    public bool objectOnTile = true;
     public bool editable = true;
+    public GameObject objectOnTile = null;
 
     void Start()
     {
@@ -48,12 +48,10 @@ public class TilePrefab : MonoBehaviour
                 if (Input.GetKey(KeyCode.Mouse0))
                 {
                     state = 0;
-                    objectOnTile = false;
                 }
                 else if (Input.GetKey(KeyCode.Mouse1))
                 {
                     state = 2;
-                    objectOnTile = true;
                 }
             }
         }
@@ -74,18 +72,6 @@ public class TilePrefab : MonoBehaviour
         else
         {
             return false;
-        }
-    }
-
-    public void SwitchObjectOnTile()
-    {
-        if (objectOnTile)
-        {
-            objectOnTile = false;
-        }
-        else
-        {
-            objectOnTile = true;
         }
     }
 }

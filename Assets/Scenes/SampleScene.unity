@@ -497,7 +497,6 @@ GameObject:
   m_Component:
   - component: {fileID: 533256819}
   - component: {fileID: 533256821}
-  - component: {fileID: 533256820}
   m_Layer: 0
   m_Name: PlayerSpawnerUI
   m_TagString: Untagged
@@ -520,22 +519,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 189774943}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &533256820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 533256818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8548d9ecda9876e43a0b4ea5aca0d90c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pickUpSprite: {fileID: -1823254525, guid: 55758356181097143b6c7ee47a074bf4, type: 3}
-  prefabToPlace: {fileID: 8065389504923267336, guid: c98aceb5e4f3ec9439c598d3669c0450, type: 3}
-  sortingOrder: 6
-  itemPlacementScript: {fileID: 969360204}
 --- !u!212 &533256821
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -790,9 +773,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dd68a43fdd1c294e80c8673f14d2ed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
   prefabToPlace: {fileID: 0}
   itemHeld: 0
+  heldObject: {fileID: 0}
   tileGrid: {fileID: 417636058}
 --- !u!4 &969360205
 Transform:
