@@ -2,80 +2,33 @@ using UnityEngine;
 
 public class TilePrefab : MonoBehaviour
 {
-    [Header("Tile Sprites")]
+    [Header("Tile Info")]
     public Sprite[] tiles = new Sprite[3];
+    public Sprite cliffSprite;
     public int state = 1;
-
-    [Header("Tile Dimensions")]
-    public int pixelWidth;
-    public int pixelHeight;
-
-    private Vector2 mouseWorldPosition;
-    private Camera mainCamera;
 
     public bool editable = true;
     public GameObject objectOnTile = null;
-
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
+    public bool drawCliff = false;
+    private GameObject cliff;
 
     void Update()
     {
-        Vector3 mouseScreenPosition = Input.mousePosition;
-
-        mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(
-                mouseScreenPosition.x,
-                mouseScreenPosition.y,
-                Mathf.Abs(mainCamera.transform.position.z)));
-
         gameObject.GetComponent<SpriteRenderer>().sprite = tiles[state];
-
-        if (editable)
-        {
-            if (MouseDetected() && state == 1)
-            {
-                state = 2;
-            }
-            else if (MouseDetected() == false && state != 0)
-            {
-                state = 1;
-            }
-
-            if (MouseDetected())
-            {
-                if (Input.GetKey(KeyCode.Mouse0))
-                {
-                    state = 0;
-                }
-                else if (Input.GetKey(KeyCode.Mouse1))
-                {
-                    state = 2;
-                    if (objectOnTile != null)
-                    {
-                        Destroy(objectOnTile);
-                    }
-                }
-            }
-        }
     }
 
-    public bool MouseDetected()
+    public void DrawCliff()
     {
-        float xBounds = pixelWidth / 32f;
-        float yBounds = pixelHeight / 32f;
-
-        if (mouseWorldPosition.x > transform.position.x - xBounds
-        && mouseWorldPosition.x < transform.position.x + xBounds
-        && mouseWorldPosition.y > transform.position.y - yBounds
-        && mouseWorldPosition.y < transform.position.y + yBounds)
+        if (cliff == null)
         {
-            return true;
+            cliff = Instantiate(cliff, Vector2.zero, Quaternion.identity, transform);
+            cliff.AddComponent<SpriteRenderer>().sprite = cliffSprite;
+            cliff.GetComponent<SpriteRenderer>().sortingOrder = gameObject.GetComponent<SpriteRenderer>().sortingOrder;
         }
         else
         {
-            return false;
+            Destroy(cliff);   
         }
     }
+    
 }
