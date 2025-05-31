@@ -52,6 +52,10 @@ public class TilePrefab : MonoBehaviour
                 else if (Input.GetKey(KeyCode.Mouse1))
                 {
                     state = 2;
+                    if (objectOnTile != null)
+                    {
+                        Destroy(objectOnTile);
+                    }
                 }
             }
         }

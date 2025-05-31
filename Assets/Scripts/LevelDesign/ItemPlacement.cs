@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class ItemPlacement : MonoBehaviour
 {
-    [Header("Prefab Object and Sprites")]
-    public GameObject prefabToPlace;
-
     [Header("Is An Item Held?")]
     public bool itemHeld = false;
     public GameObject heldObject;
@@ -54,8 +51,9 @@ public class ItemPlacement : MonoBehaviour
             {
                 heldObject.transform.position = nearestTile.transform.position;
                 nearestTileScript.objectOnTile = heldObject;
+                heldObject.GetComponent<SpriteRenderer>().sortingOrder = nearestTile.GetComponent<SpriteRenderer>().sortingOrder + 1;
             }
-            else if(nearestTileScript == null)
+            else if (nearestTileScript == null || nearestTileScript.objectOnTile == false)
             {
                 Destroy(heldObject);
             }
@@ -83,12 +81,22 @@ public class ItemPlacement : MonoBehaviour
                 }
                 else
                 {
-                    return mouseWorldPosition; 
+                    return mouseWorldPosition;
                 }
             }
         }
         nearestTile = null;
         nearestTileScript = null;
         return mouseWorldPosition;
+    }
+
+    public void InsertHeldItem(GameObject itemToHold)
+    {
+        if (itemHeld == false)
+        {
+            heldObject = Instantiate(itemToHold, mouseWorldPosition, Quaternion.identity);
+            tileGrid.DisableEditing();
+            itemHeld = true;
+        }
     }
 }
