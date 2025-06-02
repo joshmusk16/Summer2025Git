@@ -7,6 +7,7 @@ public class TileGrid : MonoBehaviour
     [Header("Grid Settings")]
     public int gridWidth;
     public int gridHeight;
+    public int gridLowestSortingLayer;
 
     public GameObject tilePrefab;
 
@@ -58,7 +59,19 @@ public class TileGrid : MonoBehaviour
             if (Input.GetKey(KeyCode.Mouse0) && nearestTile != null)
             {
                 nearestTileScript.state = 0;
-                //implement cliff drawing
+                if (nearestTileY == gridHeight - 1)
+                {
+                    nearestTileScript.DrawCliff();
+                }
+                else if (tileGrid[nearestTileX, nearestTileY + 1].GetComponent<TilePrefab>().state != 0)
+                {
+                    nearestTileScript.DrawCliff();
+                }
+
+                if (nearestTileY != 0 && tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().cliff != null)
+                {
+                    tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().DestroyCliff();
+                }
             }
 
             if (Input.GetKey(KeyCode.Mouse1) && nearestTile != null)
@@ -67,6 +80,17 @@ public class TileGrid : MonoBehaviour
                 if (nearestTileScript.objectOnTile != null)
                 {
                     Destroy(nearestTileScript.objectOnTile);
+                }
+
+                if (nearestTileScript.cliff != null)
+                {
+                    Destroy(nearestTileScript.cliff);
+                }
+
+                if (nearestTileY != 0 && tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().cliff == null &&
+                tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().state == 0)
+                {
+                    tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().DrawCliff();
                 }
             }
         }
@@ -89,7 +113,7 @@ public class TileGrid : MonoBehaviour
         tiles.Clear();
 
         tileGrid = new GameObject[gridWidth, gridHeight];
-        Vector2 startPosition = new Vector2(-gridWidth * tileWidth / 2f, gridHeight * tileHeight / 2f);
+        Vector2 startPosition = new(-gridWidth * tileWidth / 2f, gridHeight * tileHeight / 2f);
 
         for (int y = 0; y < gridHeight; y++)
         {
@@ -98,6 +122,7 @@ public class TileGrid : MonoBehaviour
                 Vector2 tilePosition = startPosition + new Vector2(x * tileWidth, y * -tileHeight);
 
                 GameObject tile = Instantiate(tilePrefab, tilePosition, Quaternion.identity, gameObject.transform);
+                tile.GetComponent<SpriteRenderer>().sortingOrder = gridLowestSortingLayer + y;
                 tile.name = "Tile " + x + "," + y;
                 tiles.Add(tile);
                 tileGrid[x, y] = tile;

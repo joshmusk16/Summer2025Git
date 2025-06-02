@@ -244,7 +244,7 @@ Transform:
   m_GameObject: {fileID: 189774942}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -19.26, y: -5.98, z: 0}
+  m_LocalPosition: {x: -21.67, y: -8.78, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -354,6 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridWidth: 10
   gridHeight: 10
+  gridLowestSortingLayer: -10
   tilePrefab: {fileID: 4200995191323063975, guid: 7761e765f4c66434b8c82b634c3c1d28, type: 3}
   tiles: []
   gridWidthSlider: {fileID: 1671349138}
