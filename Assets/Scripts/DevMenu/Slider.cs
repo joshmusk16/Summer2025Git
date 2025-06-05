@@ -49,7 +49,7 @@ public class Slider : MonoBehaviour
             mouseScreenPosition.y,
             Mathf.Abs(mainCamera.transform.position.z)));
 
-        if (DetectMouse(sliderBall, 16, 16))
+        if (DetectMouse(sliderBall, 16, 16) && !Input.GetKey(KeyCode.Mouse0))
         {
             sliderBall.transform.localScale = new Vector2(1.5f, 1.5f);
         }

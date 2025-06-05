@@ -34,14 +34,15 @@ public class AttackUI : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Mouse0) && heldProgram != null)
         {
-            heldProgram.transform.position = mouseWorldPosition;
+            heldProgram.transform.position = Vector2.Lerp(heldProgram.transform.position, mouseWorldPosition, Time.deltaTime * 15f);
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse0) && heldProgram != null)
         {
-            UpdateAttackProgramUI();
             heldProgram = null;
         }
+
+        UpdateAttackProgramUI();
     }
 
     void SetStartingUIPositions()
@@ -57,23 +58,29 @@ public class AttackUI : MonoBehaviour
         SortByYPosition();
         for (int i = 0; i < 4; i++)
         {
-            attackPrograms[i].transform.position = uiPositions[i];
+            if (attackPrograms[i] != heldProgram)
+            {
+                attackPrograms[i].transform.position = Vector2.Lerp(attackPrograms[i].transform.position, uiPositions[i], Time.deltaTime * 15f);
+            }
         }
     }
 
     void SortByYPosition()
     {
+        if (heldProgram != null)
+        {
         int n = attackPrograms.Length;
 
-        for (int i = 0; i < n - 1; i++)
-        {
-            for (int j = 0; j < n - i - 1; j++)
+            for (int i = 0; i < n - 1; i++)
             {
-                if (attackPrograms[j].transform.position.y < attackPrograms[j + 1].transform.position.y)
+                for (int j = 0; j < n - i - 1; j++)
                 {
-                    GameObject temp = attackPrograms[j];
-                    attackPrograms[j] = attackPrograms[j + 1];
-                    attackPrograms[j + 1] = temp;
+                    if (attackPrograms[j].transform.position.y < attackPrograms[j + 1].transform.position.y)
+                    {
+                        GameObject temp = attackPrograms[j];
+                        attackPrograms[j] = attackPrograms[j + 1];
+                        attackPrograms[j + 1] = temp;
+                    }
                 }
             }
         }
