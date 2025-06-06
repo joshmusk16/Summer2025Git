@@ -6,28 +6,16 @@ public class ItemPlacement : MonoBehaviour
     public bool itemHeld = false;
     public GameObject heldObject;
 
-    private Vector2 mouseWorldPosition;
-    private Camera mainCamera;
-
     private TilePrefab nearestTileScript;
     private GameObject nearestTile;
 
     [Header("TileGrid Manager")]
     public TileGrid tileGrid;
 
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
+    public MouseTracker mouse;
 
     void Update()
     {
-        Vector3 mouseScreenPosition = Input.mousePosition;
-
-        mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(
-                mouseScreenPosition.x,
-                mouseScreenPosition.y,
-                Mathf.Abs(mainCamera.transform.position.z)));
 
         PlacementPosition();
 
@@ -68,7 +56,7 @@ public class ItemPlacement : MonoBehaviour
         if (tileGrid.tiles.Count != 0)
         {
             Vector2 correction = new(tileGrid.tileWidth / 2f, -tileGrid.tileHeight / 2f);
-            Vector2 temp = mouseWorldPosition - (Vector2)tileGrid.tileGrid[0, 0].transform.position + correction;
+            Vector2 temp = mouse.worldPosition - (Vector2)tileGrid.tileGrid[0, 0].transform.position + correction;
             temp = new Vector2(Mathf.FloorToInt(temp.x / tileGrid.tileWidth), Mathf.FloorToInt(-temp.y / tileGrid.tileHeight));
 
             if (temp.x < tileGrid.gridWidth && temp.y < tileGrid.gridHeight && temp.x >= 0 && temp.y >= 0)
@@ -81,20 +69,20 @@ public class ItemPlacement : MonoBehaviour
                 }
                 else
                 {
-                    return mouseWorldPosition;
+                    return mouse.worldPosition;
                 }
             }
         }
         nearestTile = null;
         nearestTileScript = null;
-        return mouseWorldPosition;
+        return mouse.worldPosition;
     }
 
     public void InsertHeldItem(GameObject itemToHold)
     {
         if (itemHeld == false)
         {
-            heldObject = Instantiate(itemToHold, mouseWorldPosition, Quaternion.identity);
+            heldObject = Instantiate(itemToHold, mouse.worldPosition, Quaternion.identity);
             tileGrid.DisableEditing();
             itemHeld = true;
         }

@@ -7,24 +7,15 @@ public class ItemSpawner : MonoBehaviour
     public GameObject objectToPlace;
     public ItemPlacement itemPlacementScript;
 
-    private Vector2 mouseWorldPosition;
-    private Camera mainCamera;
+    public MouseTracker mouse;
 
     void Start()
     {
-        mainCamera = Camera.main;
         gameObject.GetComponent<SpriteRenderer>().sprite = objectSprite;
     }
 
     void Update()
     {
-        Vector3 mouseScreenPosition = Input.mousePosition;
-
-        mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(
-                mouseScreenPosition.x,
-                mouseScreenPosition.y,
-                Mathf.Abs(mainCamera.transform.position.z)));
-
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected())
         {
@@ -37,10 +28,10 @@ public class ItemSpawner : MonoBehaviour
             float xBounds = objectSprite.rect.width / 32f;
             float yBounds = objectSprite.rect.height / 32f;
 
-            if (mouseWorldPosition.x > transform.position.x - xBounds
-            && mouseWorldPosition.x < transform.position.x + xBounds
-            && mouseWorldPosition.y > transform.position.y - yBounds
-            && mouseWorldPosition.y < transform.position.y + yBounds)
+            if (mouse.worldPosition.x > transform.position.x - xBounds
+            && mouse.worldPosition.x < transform.position.x + xBounds
+            && mouse.worldPosition.y > transform.position.y - yBounds
+            && mouse.worldPosition.y < transform.position.y + yBounds)
             {
                 return true;
             }

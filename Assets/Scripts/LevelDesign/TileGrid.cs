@@ -27,23 +27,10 @@ public class TileGrid : MonoBehaviour
     private int nearestTileX;
     private int nearestTileY;
 
-    private Vector2 mouseWorldPosition;
-    private Camera mainCamera;
-
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
+    public MouseTracker mouse; 
 
     void Update()
     {
-        Vector3 mouseScreenPosition = Input.mousePosition;
-
-        mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(
-                mouseScreenPosition.x,
-                mouseScreenPosition.y,
-                Mathf.Abs(mainCamera.transform.position.z)));
-
         if (generateGridButton.activated)
         {
             gridWidth = gridWidthSlider.sliderCurrentValue;
@@ -135,7 +122,7 @@ public class TileGrid : MonoBehaviour
         if (tiles.Count != 0)
         {
             Vector2 correction = new(tileWidth / 2f, -tileHeight / 2f);
-            Vector2 temp = mouseWorldPosition - (Vector2)tileGrid[0, 0].transform.position + correction;
+            Vector2 temp = mouse.worldPosition - (Vector2)tileGrid[0, 0].transform.position + correction;
             temp = new Vector2(Mathf.FloorToInt(temp.x / tileWidth), Mathf.FloorToInt(-temp.y / tileHeight));
 
             if (temp.x < gridWidth && temp.y < gridHeight && temp.x >= 0 && temp.y >= 0)

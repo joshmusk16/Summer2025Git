@@ -6,27 +6,15 @@ public class DevMenuUI : MonoBehaviour
     public Sprite[] tabs = new Sprite[3];
     private int currentTab = 0;
 
-    private Vector2 mouseWorldPosition;
-    private Camera mainCamera;
-
     private bool followingMouse = false;
 
     [Header("TileGrid Reference")]
     public TileGrid tileGrid;
 
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
+    public MouseTracker mouse;
 
     void Update()
     {
-        Vector3 mouseScreenPosition = Input.mousePosition;
-
-        mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(
-            mouseScreenPosition.x,
-            mouseScreenPosition.y,
-            Mathf.Abs(mainCamera.transform.position.z)));
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && DetectMouse(new Vector2(0, 96), 180, 8))
         {
@@ -36,7 +24,7 @@ public class DevMenuUI : MonoBehaviour
 
         if (followingMouse)
         {
-            transform.position = Vector2.Lerp(transform.position, mouseWorldPosition - new Vector2(0, 96) / 16f, Time.deltaTime * 10f);
+            transform.position = Vector2.Lerp(transform.position, mouse.worldPosition - new Vector2(0, 96) / 16f, Time.deltaTime * 10f);
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
@@ -70,10 +58,10 @@ public class DevMenuUI : MonoBehaviour
         xBounds /= 32f;
         yBounds /= 32f;
 
-        if (mouseWorldPosition.x > startingPosition.x - xBounds
-        && mouseWorldPosition.x < startingPosition.x + xBounds
-        && mouseWorldPosition.y > startingPosition.y - yBounds
-        && mouseWorldPosition.y < startingPosition.y + yBounds)
+        if (mouse.worldPosition.x > startingPosition.x - xBounds
+        && mouse.worldPosition.x < startingPosition.x + xBounds
+        && mouse.worldPosition.y > startingPosition.y - yBounds
+        && mouse.worldPosition.y < startingPosition.y + yBounds)
         {
             return true;
         }
