@@ -3,7 +3,8 @@ using UnityEngine;
 public class AttackUI : MonoBehaviour
 {
     //This script handles all of the visual UI, the actual change to the ordering of the attackProgram List will
-    //be hangled in another script with that list (remove and insert in new postion, etc.)
+    //be hangled in the Attack Data script (remove and insert in new postion, etc.)
+
     public readonly int atkUICount = 5;
 
     private Vector2[] uiPositions = new Vector2[5];
@@ -70,7 +71,7 @@ public class AttackUI : MonoBehaviour
     {
         if (heldProgram != null)
         {
-        int n = attackPrograms.Length;
+        int n = atkUICount;
 
             for (int i = 0; i < n - 1; i++)
             {
@@ -109,12 +110,12 @@ public class AttackUI : MonoBehaviour
     {
         float distance = Vector2.Distance(attackPrograms[0].transform.position, mouse.worldPosition);
         GameObject closestObj = attackPrograms[0];
-        foreach (GameObject attackProgram in attackPrograms)
+        for(int i = 0; i < atkUICount; i++)
         {
-            if (Vector2.Distance(attackProgram.transform.position, mouse.worldPosition) < distance)
+            if (Vector2.Distance(attackPrograms[i].transform.position, mouse.worldPosition) < distance)
             {
-                distance = Vector2.Distance(attackProgram.transform.position, mouse.worldPosition);
-                closestObj = attackProgram;
+                distance = Vector2.Distance(attackPrograms[i].transform.position, mouse.worldPosition);
+                closestObj = attackPrograms[i];
             }
         }
         return closestObj;
