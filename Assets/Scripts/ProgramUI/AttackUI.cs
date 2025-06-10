@@ -27,7 +27,7 @@ public class AttackUI : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Mouse0) && heldProgram != null)
         {
-            heldProgram.transform.position = Vector2.Lerp(heldProgram.transform.position, mouse.worldPosition, Time.deltaTime * 15f);
+            heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.worldPosition, 15f);
             UpdateAttackProgramUI();
         }
 
@@ -35,6 +35,11 @@ public class AttackUI : MonoBehaviour
         {
             heldProgram = null;
             UpdateAttackProgramUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            ScrollAttckProgramUI();
         }
     }
 
@@ -65,6 +70,39 @@ public class AttackUI : MonoBehaviour
                 attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 20f);
             }
         }
+    }
+
+    void ScrollAttckProgramUI()
+    {
+
+        for (int i = 0; i < atkUICount; i++)
+        {
+            if (i == 0)
+            {
+                attackPrograms[i].GetComponent<LerpUIHandler>().StopLocationLerp();
+                attackPrograms[i].transform.position = uiPositions[atkUICount - 1];
+                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 20f);
+            }
+            else if (i == 1)
+            {
+                attackPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i - 1], 15f);
+                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 20f);
+            }
+            else
+            {
+                attackPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i - 1], 15f);
+                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 20f);
+            }
+        }
+
+        GameObject firstObject = attackPrograms[0];
+
+        for (int i = 0; i < atkUICount - 1; i++)
+        {
+            attackPrograms[i] = attackPrograms[i + 1];
+        }
+
+        attackPrograms[atkUICount - 1] = firstObject;
     }
 
     void SortByYPosition()

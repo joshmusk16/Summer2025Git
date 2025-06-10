@@ -45,7 +45,7 @@ public class LerpUIHandler : MonoBehaviour
             locationLerpSpeed = speed;
         }
     }
-    
+
     public void ScaleLerp(Vector2 desiredScale, float speed)
     {
         if ((Vector2)transform.localScale != desiredScale)
@@ -54,5 +54,15 @@ public class LerpUIHandler : MonoBehaviour
             scaleDestination = desiredScale;
             scaleLerpSpeed = speed;
         }
+    }
+
+    public void StopLocationLerp()
+    {
+        isLerping = false;
+    }
+    
+    public void StopScaleLerp()
+    {
+        isScaling = false;
     }
 }
