@@ -806,6 +806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e109dc852aa1554f951379e561f74a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  atkUICount: 5
   attackPrograms:
   - {fileID: 1160209030}
   - {fileID: 1107061317}
@@ -813,6 +814,7 @@ MonoBehaviour:
   - {fileID: 76470409}
   - {fileID: 788363173}
   mouse: {fileID: 672980304}
+  attackProgramsData: {fileID: 684479108}
 --- !u!4 &684479107
 Transform:
   m_ObjectHideFlags: 0
@@ -849,7 +851,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalAttackProgramAmount: 0
   currentAttackProgramAmount: 0
-  attackPrograms: []
+  attackPrograms:
+  - {fileID: 2421044966896697607, guid: 68a7ae5d1bf493341910e150bed41736, type: 3}
+  - {fileID: 2421044966896697607, guid: 68a7ae5d1bf493341910e150bed41736, type: 3}
+  - {fileID: 155279966200684616, guid: 7f3a0e17947a48f478c47464cf01440f, type: 3}
+  - {fileID: 155279966200684616, guid: 7f3a0e17947a48f478c47464cf01440f, type: 3}
+  - {fileID: 8492401179797594747, guid: a35fc088eecab7a479d302969e814972, type: 3}
+  - {fileID: 8492401179797594747, guid: a35fc088eecab7a479d302969e814972, type: 3}
+  - {fileID: 8872061202123533106, guid: 12a3919b16681404896e89c2ec0896eb, type: 3}
+  - {fileID: 8872061202123533106, guid: 12a3919b16681404896e89c2ec0896eb, type: 3}
+  - {fileID: 2708242997516111379, guid: c3da7be1ab93a1d42a681a56bb6d5684, type: 3}
+  - {fileID: 2708242997516111379, guid: c3da7be1ab93a1d42a681a56bb6d5684, type: 3}
   currentDeckAmountDisplay: {fileID: 439790795}
   totalDeckAmountDisplay: {fileID: 90505872}
 --- !u!1 &788363173

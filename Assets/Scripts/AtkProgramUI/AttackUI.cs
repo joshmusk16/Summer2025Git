@@ -5,13 +5,14 @@ public class AttackUI : MonoBehaviour
     //This script handles all of the visual UI, the actual change to the ordering of the attackProgram List will
     //be hangled in the Attack Data script (remove and insert in new postion, etc.)
 
-    public readonly int atkUICount = 5;
+    public int atkUICount = 5;
 
     private Vector2[] uiPositions = new Vector2[5];
     public GameObject[] attackPrograms = new GameObject[5];
     private GameObject heldProgram = null;
 
     public MouseTracker mouse;
+    public AttackProgramsData attackProgramsData;
 
     void Start()
     {
@@ -39,6 +40,8 @@ public class AttackUI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.U))
         {
+            // attackProgramsData.DecreaseCurrentAtkCount();
+            //SetAtkCount();
             ScrollAttckProgramUI();
         }
     }
@@ -48,6 +51,23 @@ public class AttackUI : MonoBehaviour
         for (int i = 0; i < atkUICount; i++)
         {
             uiPositions[i] = attackPrograms[i].transform.position;
+        }
+    }
+
+    void SetStartingUISprites()
+    {
+        
+    }
+
+    void SetAtkCount()
+    {
+        if (attackProgramsData.currentAttackProgramAmount > 5)
+        {
+            atkUICount = 5;
+        }
+        else
+        {
+            atkUICount = attackProgramsData.currentAttackProgramAmount;
         }
     }
 

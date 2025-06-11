@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackData : MonoBehaviour
+public class AttackProgramsData : MonoBehaviour
 {
     public int totalAttackProgramAmount;
     public int currentAttackProgramAmount;
@@ -10,10 +10,24 @@ public class AttackData : MonoBehaviour
     public NumberUI currentDeckAmountDisplay;
     public NumberUI totalDeckAmountDisplay;
 
+    void Start()
+    {
+        totalAttackProgramAmount = attackPrograms.Count;
+        currentAttackProgramAmount = attackPrograms.Count;
+    }
+
     void Update()
     {
         currentDeckAmountDisplay.UpdateNumber(currentAttackProgramAmount);
         totalDeckAmountDisplay.UpdateNumber(totalAttackProgramAmount);
         //These should not run in update, for debugging only.
+    }
+
+    public void DecreaseCurrentAtkCount()
+    {
+        if (currentAttackProgramAmount > 0)
+        {
+            currentAttackProgramAmount--;   
+        }
     }
 }
