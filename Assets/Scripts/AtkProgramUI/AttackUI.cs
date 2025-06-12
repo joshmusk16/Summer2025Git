@@ -14,6 +14,8 @@ public class AttackUI : MonoBehaviour
     public MouseTracker mouse;
     public AttackProgramsData attackProgramsData;
 
+    private int heldProgramFirstIndex;
+
     void Start()
     {
         SetStartingUIPositions();
@@ -24,25 +26,29 @@ public class AttackUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected(ClosestAtkUIToMouse()))
         {
             heldProgram = ClosestAtkUIToMouse();
+            heldProgramFirstIndex = System.Array.IndexOf(attackPrograms, heldProgram);
         }
 
         if (Input.GetKey(KeyCode.Mouse0) && heldProgram != null)
         {
-            heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.worldPosition, 15f);
+            heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.worldPosition, 25f);
             UpdateAttackProgramUI();
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse0) && heldProgram != null)
         {
+            int heldProgramLastIndex = System.Array.IndexOf(attackPrograms, heldProgram);
+
             heldProgram = null;
             UpdateAttackProgramUI();
+
+            attackProgramsData.MoveAttackProgram(heldProgramFirstIndex, heldProgramLastIndex);
         }
 
         if (Input.GetKeyDown(KeyCode.U))
         {
-            // attackProgramsData.DecreaseCurrentAtkCount();
-            //SetAtkCount();
-            ScrollAttckProgramUI();
+            attackProgramsData.IncreaseCurrentAtkCount();
+            SetUISprites();
         }
     }
 
@@ -54,83 +60,59 @@ public class AttackUI : MonoBehaviour
         }
     }
 
-    void SetStartingUISprites()
+    void SetUISprites()
     {
-        
+        for (int i = 0; i < 5; i++)
+        {
+            if (i + attackProgramsData.currentAttackProgramAmount < attackProgramsData.totalAttackProgramAmount)
+            {
+                attackPrograms[i].GetComponent<SpriteRenderer>().sprite =
+                attackProgramsData.attackPrograms[i + attackProgramsData.currentAttackProgramAmount].GetComponent<AttackData>().uiSprite;
+            }
+            else
+            {
+                attackPrograms[i].GetComponent<SpriteRenderer>().enabled = false;
+            }
+        }
     }
 
-    void SetAtkCount()
+    int SetAtkCount()
     {
-        if (attackProgramsData.currentAttackProgramAmount > 5)
+        if (attackProgramsData.totalAttackProgramAmount - attackProgramsData.currentAttackProgramAmount > 5)
         {
-            atkUICount = 5;
+            return 5;
         }
         else
         {
-            atkUICount = attackProgramsData.currentAttackProgramAmount;
+            return attackProgramsData.totalAttackProgramAmount - attackProgramsData.currentAttackProgramAmount;
         }
     }
 
     void UpdateAttackProgramUI()
     {
         SortByYPosition();
-        for (int i = 0; i < atkUICount; i++)
+        for (int i = 0; i < SetAtkCount(); i++)
         {
             if (attackPrograms[i] != heldProgram)
             {
-                attackPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i], 20f);
+                attackPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i], 25f);
             }
 
             if (i == 0)
             {
-                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 20f);
+                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 25f);
             }
             else
             {
-                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 20f);
+                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 25f);
             }
         }
-    }
-
-    void ScrollAttckProgramUI()
-    {
-
-        for (int i = 0; i < atkUICount; i++)
-        {
-            if (i == 0)
-            {
-                attackPrograms[i].GetComponent<LerpUIHandler>().StopLocationLerp();
-                attackPrograms[i].transform.position = uiPositions[atkUICount - 1];
-                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 20f);
-            }
-            else if (i == 1)
-            {
-                attackPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i - 1], 15f);
-                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 20f);
-            }
-            else
-            {
-                attackPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i - 1], 15f);
-                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 20f);
-            }
-        }
-
-        GameObject firstObject = attackPrograms[0];
-
-        for (int i = 0; i < atkUICount - 1; i++)
-        {
-            attackPrograms[i] = attackPrograms[i + 1];
-        }
-
-        attackPrograms[atkUICount - 1] = firstObject;
     }
 
     void SortByYPosition()
     {
-        if (heldProgram != null)
-        {
-        int n = atkUICount;
-
+        int n = SetAtkCount();
+        
             for (int i = 0; i < n - 1; i++)
             {
                 for (int j = 0; j < n - i - 1; j++)
@@ -143,7 +125,6 @@ public class AttackUI : MonoBehaviour
                     }
                 }
             }
-        }
     }
 
     bool MouseDetected(GameObject obj)
@@ -168,7 +149,7 @@ public class AttackUI : MonoBehaviour
     {
         float distance = Vector2.Distance(attackPrograms[0].transform.position, mouse.worldPosition);
         GameObject closestObj = attackPrograms[0];
-        for(int i = 0; i < atkUICount; i++)
+        for(int i = 0; i < SetAtkCount(); i++)
         {
             if (Vector2.Distance(attackPrograms[i].transform.position, mouse.worldPosition) < distance)
             {

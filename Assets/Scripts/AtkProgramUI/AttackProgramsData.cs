@@ -13,7 +13,7 @@ public class AttackProgramsData : MonoBehaviour
     void Start()
     {
         totalAttackProgramAmount = attackPrograms.Count;
-        currentAttackProgramAmount = attackPrograms.Count;
+        currentAttackProgramAmount = 0;
     }
 
     void Update()
@@ -23,11 +23,21 @@ public class AttackProgramsData : MonoBehaviour
         //These should not run in update, for debugging only.
     }
 
-    public void DecreaseCurrentAtkCount()
+    public void IncreaseCurrentAtkCount()
     {
-        if (currentAttackProgramAmount > 0)
+        if (currentAttackProgramAmount < totalAttackProgramAmount)
         {
-            currentAttackProgramAmount--;   
+            currentAttackProgramAmount++;
         }
+    }
+
+    public void MoveAttackProgram(int startIndex, int endIndex)
+    {
+        endIndex += currentAttackProgramAmount;
+        startIndex += currentAttackProgramAmount;
+
+        GameObject swap = attackPrograms[startIndex];
+        attackPrograms.RemoveAt(startIndex);
+        attackPrograms.Insert(endIndex, swap);
     }
 }
