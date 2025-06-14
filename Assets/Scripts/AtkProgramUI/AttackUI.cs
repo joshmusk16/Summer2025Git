@@ -68,6 +68,14 @@ public class AttackUI : MonoBehaviour
             {
                 attackPrograms[i].GetComponent<SpriteRenderer>().sprite =
                 attackProgramsData.attackPrograms[i + attackProgramsData.currentAttackProgramAmount].GetComponent<AttackData>().uiSprite;
+                if (i != 0)
+                {
+                    attackPrograms[i].GetComponent<LerpUIHandler>().ParabolicScaleLerp(new Vector2(1.1f, 1.1f), 0.2f, 2f);
+                }
+                else
+                {
+                    attackPrograms[i].GetComponent<LerpUIHandler>().ParabolicScaleLerp(new Vector2(2.1f, 2.1f), 0.2f, 2f);
+                }
             }
             else
             {
