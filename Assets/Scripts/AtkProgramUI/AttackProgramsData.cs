@@ -4,7 +4,7 @@ using UnityEngine;
 public class AttackProgramsData : MonoBehaviour
 {
     public int totalAttackProgramAmount;
-    public int currentAttackProgramAmount;
+    public int currentAttackProgramAmount = 0;
     public List<GameObject> attackPrograms = new();
 
     public NumberUI currentDeckAmountDisplay;
@@ -13,12 +13,11 @@ public class AttackProgramsData : MonoBehaviour
     void Start()
     {
         totalAttackProgramAmount = attackPrograms.Count;
-        currentAttackProgramAmount = 0;
     }
 
     void Update()
     {
-        currentDeckAmountDisplay.UpdateNumber(currentAttackProgramAmount);
+        currentDeckAmountDisplay.UpdateNumber(totalAttackProgramAmount - currentAttackProgramAmount);
         totalDeckAmountDisplay.UpdateNumber(totalAttackProgramAmount);
         //These should not run in update, for debugging only.
     }

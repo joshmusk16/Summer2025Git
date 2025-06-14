@@ -19,6 +19,7 @@ public class AttackUI : MonoBehaviour
     void Start()
     {
         SetStartingUIPositions();
+        SetUISprites();
     }
 
     void Update()
@@ -26,6 +27,11 @@ public class AttackUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected(ClosestAtkUIToMouse()))
         {
             heldProgram = ClosestAtkUIToMouse();
+            heldProgram.GetComponent<SpriteRenderer>().sortingOrder += 1;
+
+            Vector3 tempScale = heldProgram.transform.localScale;
+            heldProgram.GetComponent<LerpUIHandler>().ParabolicScaleLerp(tempScale + new Vector3(0.4f, 0.4f), 0.1f, 2f);
+
             heldProgramFirstIndex = System.Array.IndexOf(attackPrograms, heldProgram);
         }
 
@@ -38,7 +44,7 @@ public class AttackUI : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Mouse0) && heldProgram != null)
         {
             int heldProgramLastIndex = System.Array.IndexOf(attackPrograms, heldProgram);
-
+            heldProgram.GetComponent<SpriteRenderer>().sortingOrder -= 1;
             heldProgram = null;
             UpdateAttackProgramUI();
 
@@ -64,18 +70,13 @@ public class AttackUI : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            if (i + attackProgramsData.currentAttackProgramAmount < attackProgramsData.totalAttackProgramAmount)
+            if (i + attackProgramsData.currentAttackProgramAmount < attackProgramsData.attackPrograms.Count)
             {
                 attackPrograms[i].GetComponent<SpriteRenderer>().sprite =
                 attackProgramsData.attackPrograms[i + attackProgramsData.currentAttackProgramAmount].GetComponent<AttackData>().uiSprite;
-                if (i != 0)
-                {
-                    attackPrograms[i].GetComponent<LerpUIHandler>().ParabolicScaleLerp(new Vector2(1.1f, 1.1f), 0.2f, 2f);
-                }
-                else
-                {
-                    attackPrograms[i].GetComponent<LerpUIHandler>().ParabolicScaleLerp(new Vector2(2.1f, 2.1f), 0.2f, 2f);
-                }
+
+                Vector3 tempScale = attackPrograms[i].transform.localScale;
+                attackPrograms[i].GetComponent<LerpUIHandler>().ParabolicScaleLerp(tempScale + new Vector3(0.2f, 0.2f), 0.1f, 2f);
             }
             else
             {
