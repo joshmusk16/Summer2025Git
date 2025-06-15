@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AttackUI : MonoBehaviour
@@ -29,10 +30,16 @@ public class AttackUI : MonoBehaviour
             heldProgram = ClosestAtkUIToMouse();
             heldProgram.GetComponent<SpriteRenderer>().sortingOrder += 1;
 
-            Vector3 tempScale = heldProgram.transform.localScale;
-            heldProgram.GetComponent<LerpUIHandler>().ParabolicScaleLerp(tempScale + new Vector3(0.4f, 0.4f), 0.1f, 2f);
+            if (Array.IndexOf(attackPrograms, heldProgram) == 0)
+            {
+                heldProgram.GetComponent<LerpUIHandler>().ElasticScaleLerp(transform.localScale, new Vector3(2.5f, 2.5f), 0.5f);
+            }
+            else
+            {
+                heldProgram.GetComponent<LerpUIHandler>().ElasticScaleLerp(transform.localScale, new Vector3(1.5f, 1.5f), 0.5f);
+            }
 
-            heldProgramFirstIndex = System.Array.IndexOf(attackPrograms, heldProgram);
+            heldProgramFirstIndex = Array.IndexOf(attackPrograms, heldProgram);
         }
 
         if (Input.GetKey(KeyCode.Mouse0) && heldProgram != null)
@@ -43,7 +50,7 @@ public class AttackUI : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Mouse0) && heldProgram != null)
         {
-            int heldProgramLastIndex = System.Array.IndexOf(attackPrograms, heldProgram);
+            int heldProgramLastIndex = Array.IndexOf(attackPrograms, heldProgram);
             heldProgram.GetComponent<SpriteRenderer>().sortingOrder -= 1;
             heldProgram = null;
             UpdateAttackProgramUI();
@@ -105,15 +112,15 @@ public class AttackUI : MonoBehaviour
             if (attackPrograms[i] != heldProgram)
             {
                 attackPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i], 25f);
-            }
 
-            if (i == 0)
-            {
-                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 25f);
-            }
-            else
-            {
-                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 25f);
+                if (i == 0)
+                {
+                    attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 25f);
+                }
+                else
+                {
+                    attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 25f);
+                }
             }
         }
     }

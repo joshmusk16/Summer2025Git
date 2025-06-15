@@ -5,6 +5,7 @@ public class LerpUIHandler : MonoBehaviour
     private bool isLerping = false;
     private bool isScaling = false;
     private bool isParabolicLerping = false;
+    private bool isElasticLerping = false;
 
     private Vector2 locationDestination;
     private float locationLerpSpeed;
@@ -17,6 +18,11 @@ public class LerpUIHandler : MonoBehaviour
     private float parabolicDuration;
     private float parabolicElapsedTime;
     private float parabolicExponentialStrength = 2.0f;
+
+    private Vector2 elasticStartScale;
+    private Vector2 elasticEndScale;
+    private float elasticDuration;
+    private float elasticElapsedTime;
 
     void Update()
     {
@@ -60,6 +66,25 @@ public class LerpUIHandler : MonoBehaviour
                 transform.localScale = currentScale;
             }
         }
+
+        if (isElasticLerping)
+        {
+            elasticElapsedTime += Time.deltaTime;
+            float t = elasticElapsedTime / elasticDuration;
+
+            if (t >= 1.0f)
+            {
+                // Animation complete - set to exact destination
+                transform.localScale = elasticEndScale;
+                isElasticLerping = false;
+            }
+            else
+            {
+                // Apply elastic easing
+                float easedT = EaseOutElastic(t);
+                transform.localScale = Vector2.Lerp(elasticStartScale, elasticEndScale, easedT);
+            }
+        }
     }
 
     public void LocationLerp(Vector2 destination, float speed)
@@ -80,6 +105,10 @@ public class LerpUIHandler : MonoBehaviour
             scaleDestination = desiredScale;
             scaleLerpSpeed = speed;
         }
+
+        // Stop other scale lerping if active
+        isElasticLerping = false;
+        isParabolicLerping = false;
     }
 
     public void ParabolicScaleLerp(Vector2 peakScale, float duration, float exponentialStrength)
@@ -92,6 +121,26 @@ public class LerpUIHandler : MonoBehaviour
         parabolicDuration = duration;
         parabolicElapsedTime = 0f;
         parabolicExponentialStrength = exponentialStrength;
+
+        // Stop other scale lerping if active
+        isElasticLerping = false;
+        isScaling = false;
+    }
+
+    public void ElasticScaleLerp(Vector2 startScale, Vector2 endScale, float duration)
+    {
+        if (duration <= 0) return;
+        if ((Vector2)transform.localScale == endScale) return;
+
+        isElasticLerping = true;
+        elasticStartScale = startScale;
+        elasticEndScale = endScale;
+        elasticDuration = duration;
+        elasticElapsedTime = 0f;
+
+        // Stop other scale lerping if active
+        isScaling = false;
+        isParabolicLerping = false;
     }
 
     public void StopLocationLerp()
@@ -108,7 +157,21 @@ public class LerpUIHandler : MonoBehaviour
     {
         isParabolicLerping = false;
     }
-    
+
+    public void StopElasticLerp()
+    {
+        isElasticLerping = false;
+    }
+
+    public void StopAllLerps()
+    {
+        isLerping = false;
+        isScaling = false;
+        isParabolicLerping = false;
+        isElasticLerping = false;
+    }
+
+    //Algorithms for for complex lerp function
 
     private Vector2 ParabolicExponentialLerp(Vector2 startValue, Vector2 peakValue, float t, float exponentialStrength)
     {
@@ -122,6 +185,15 @@ public class LerpUIHandler : MonoBehaviour
 
         // Lerp between start and peak values
         return Vector2.Lerp(startValue, peakValue, exponentialCurve);
+    }
+    
+    private float EaseOutElastic(float x)
+    {
+        const float c4 = 2f * Mathf.PI / 2f;
+        
+        return x == 0f ? 0f : 
+               x == 1f ? 1f : 
+               Mathf.Pow(2f, -15f * x) * Mathf.Sin((x * 15f - 0.5f) * c4) + 1f;
     }
 
 }
