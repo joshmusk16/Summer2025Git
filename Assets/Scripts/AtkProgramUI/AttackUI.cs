@@ -83,7 +83,7 @@ public class AttackUI : MonoBehaviour
                 attackProgramsData.attackPrograms[i + attackProgramsData.currentAttackProgramAmount].GetComponent<AttackData>().uiSprite;
 
                 Vector3 tempScale = attackPrograms[i].transform.localScale;
-                attackPrograms[i].GetComponent<LerpUIHandler>().ParabolicScaleLerp(tempScale + new Vector3(0.2f, 0.2f), 0.1f, 2f);
+                attackPrograms[i].GetComponent<LerpUIHandler>().ParabolicScaleLerp(tempScale + new Vector3(0.35f, 0.35f), 0.2f, 2f);
             }
             else
             {
