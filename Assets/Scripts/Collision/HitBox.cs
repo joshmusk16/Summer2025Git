@@ -86,12 +86,11 @@ public class HitBox : CollisionBox
             hitbox = this,
             hurtbox = hurtbox,
             damage = damage,
-            hitPoint = WorldBounds.center
         };
 
         // Trigger events
         OnHit?.Invoke(hurtbox, hitInfo);
-        Debug.Log(gameObject.name + " is hit " + hurtbox.name + " at " + Time.time);
+        Debug.Log(gameObject.name + " is hitting " + hurtbox.name + " at " + Time.time);
         hurtbox.TakeHit(hitInfo);
     }
     
