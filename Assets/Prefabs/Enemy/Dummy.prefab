@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -997143898, guid: 1afd94110664b9249acb9524735404d1, type: 3}
+  m_Sprite: {fileID: -1185962844, guid: d4e19600f4d46bc439c7435d8830d111, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -136,12 +136,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnhitAnim:
-  - {fileID: -1708654307, guid: 1afd94110664b9249acb9524735404d1, type: 3}
-  - {fileID: -997143898, guid: 1afd94110664b9249acb9524735404d1, type: 3}
+  - {fileID: 1056964018, guid: d4e19600f4d46bc439c7435d8830d111, type: 3}
+  - {fileID: 717746191, guid: d4e19600f4d46bc439c7435d8830d111, type: 3}
+  - {fileID: -1185962844, guid: d4e19600f4d46bc439c7435d8830d111, type: 3}
   animFrames:
-  - 0.35
-  - 0.1
-  idleSprite: {fileID: -997143898, guid: 1afd94110664b9249acb9524735404d1, type: 3}
+  - 0.2
+  - 0.3
+  - 0.3
+  idleSprite: {fileID: -1185962844, guid: d4e19600f4d46bc439c7435d8830d111, type: 3}
   hurtbox: {fileID: 7782968164359553862}
   animator: {fileID: 7743907509760342004}
   health: {fileID: 8321835477498240420}

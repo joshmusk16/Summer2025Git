@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1afd94110664b9249acb9524735404d1
+guid: d4e19600f4d46bc439c7435d8830d111
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,7 +110,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dummy 1_0
+      name: Dummy_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5f3be9b59bf8126459de1a40f35de55a
-      internalID: -997143898
+      spriteID: 5c61e8c3626efe74784cdce98e3506d8
+      internalID: -1185962844
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Dummy 1_1
+      name: Dummy_1
       rect:
         serializedVersion: 2
         x: 21
@@ -145,8 +145,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4b9dfd728e387b4419f970244fcce0c7
-      internalID: -1708654307
+      spriteID: 48ae53b5f9eebc84a8bb74a33d362bbc
+      internalID: 1056964018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dummy_2
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 0
+        width: 21
+        height: 26
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29e409e7a1d068e41add4bf22519c16b
+      internalID: 717746191
       vertices: []
       indices: 
       edges: []
@@ -162,8 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dummy 1_0: -997143898
-      Dummy 1_1: -1708654307
+      Dummy_0: -1185962844
+      Dummy_1: 1056964018
+      Dummy_2: 717746191
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
