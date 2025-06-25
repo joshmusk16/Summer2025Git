@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7743907509760342004}
   - component: {fileID: 2127735303445320313}
   - component: {fileID: 7917291549594994159}
+  - component: {fileID: 6021351529316744886}
   m_Layer: 0
   m_Name: Dummy
   m_TagString: Untagged
@@ -161,6 +162,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalHealth: 10
   currentHealth: 8
+--- !u!114 &6021351529316744886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7848701041199443082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05a6c8cf3762b124087e08016d23db03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageNumber: {fileID: 6346796984772630705, guid: 05fdd378e06e92d45bc63124c161eea3, type: 3}
+  hurtBox: {fileID: 7782968164359553862}
+  verticalSpawnOffset: 2.3
 --- !u!1001 &6556602630341994687
 PrefabInstance:
   m_ObjectHideFlags: 0

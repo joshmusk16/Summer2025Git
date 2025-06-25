@@ -2,22 +2,17 @@ using UnityEngine;
 
 public class DamageNumber : MonoBehaviour
 {
-    public int debugNumber;
-
     public GameObject digit;
+    public GameObject parent;
     public float digitSpacing;
+    public float verticalSpawnOffset = 1f;
 
     private GameObject[] digitObjects;
 
-    //Update for debugging
-    void Update()
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            InstantiateDamageNumber(debugNumber);
-        }
+        gameObject.GetComponent<LerpUIHandler>().OnLocationLerpFinish += DestroyNumber;
     }
-    
 
     public void InstantiateDamageNumber(int damage)
     {
@@ -29,10 +24,22 @@ public class DamageNumber : MonoBehaviour
 
         for (int i = 0; i < digitCount; i++)
         {
-            Vector3 spawnPos = gameObject.transform.position + new Vector3(1, 0) * digitSpacing * i;
+            Vector3 spawnPos = parent.transform.position + new Vector3(0, verticalSpawnOffset) + (digitSpacing * i * new Vector3(1, 0));
             digitObjects[i] = Instantiate(digit, spawnPos, Quaternion.identity, gameObject.transform);
             digitObjects[i].GetComponent<DigitUI>().UpdateNumber(digits[i]);
         }
+
+        gameObject.GetComponent<LerpUIHandler>().LocationLerp(parent.transform.position + new Vector3(0f, 1.2f), 10);
+    }
+
+    public void DestroyNumber()
+    {
+        Destroy(gameObject);
+    }
+
+    public void OnDestroy()
+    {
+        gameObject.GetComponent<LerpUIHandler>().OnLocationLerpFinish -= DestroyNumber;
     }
 
     int GetDigitCount(int number)

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class LerpUIHandler : MonoBehaviour
@@ -24,6 +25,8 @@ public class LerpUIHandler : MonoBehaviour
     private float elasticDuration;
     private float elasticElapsedTime;
 
+    public event Action OnLocationLerpFinish;
+
     void Update()
     {
         if (isLerping)
@@ -33,6 +36,7 @@ public class LerpUIHandler : MonoBehaviour
             if (Vector2.Distance(transform.position, locationDestination) < 0.01f)
             {
                 transform.position = locationDestination;
+                OnLocationLerpFinish?.Invoke();
                 isLerping = false;
             }
         }
