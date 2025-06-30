@@ -17,6 +17,10 @@ public class Animator : MonoBehaviour
     public event Action OnAnimationStart;
     public event Action OnAnimationComplete;
 
+    private bool isUsingHitbox = false;
+    private HitBox[] animHitboxes;
+    private int activeHitboxFrame;
+
     private void Awake()
     {
         if (spriteRenderer == null)
@@ -35,7 +39,20 @@ public class Animator : MonoBehaviour
         {
             // Move to next frame
             currentFrameIndex++;
-            frameTimer = 0f;
+
+            if (isUsingHitbox)
+            {
+                if (animHitboxes != null && currentFrameIndex == activeHitboxFrame)
+                {
+                    ActivateHitboxes();
+                }
+                else if (currentFrameIndex != activeHitboxFrame)
+                {
+                    DeactivateHitboxes();
+                }   
+            }
+
+                frameTimer = 0f;
 
             // Check if we've reached the end of the animation
             if (currentFrameIndex >= currentSprites.Length)
@@ -60,7 +77,7 @@ public class Animator : MonoBehaviour
         }
     }
 
-    public void PlayAnimation(Sprite[] sprites, float[] frameTimes, bool loop = false)
+    public void PlayAnimation(Sprite[] sprites, float[] frameTimes, bool loop = false, bool usingHitbox = false, HitBox[] hitboxes = null, int hitboxFrame = 0)
     {
         if (sprites.Length != frameTimes.Length || sprites.Length == 0)
         {
@@ -79,6 +96,17 @@ public class Animator : MonoBehaviour
         frameTimer = 0f;
         isPlaying = true;
 
+        if (usingHitbox)
+        {
+            isUsingHitbox = true;
+            animHitboxes = hitboxes;
+            activeHitboxFrame = hitboxFrame;
+        }
+        else
+        {
+            isUsingHitbox = false;
+        }
+
         // Set first frame and start animation
         SetCurrentFrame();
         OnAnimationStart?.Invoke();
@@ -96,7 +124,7 @@ public class Animator : MonoBehaviour
         isPlaying = false;
         OnAnimationComplete?.Invoke();
     }
-    
+
     private void SetCurrentFrame()
     {
         if (currentSprites != null && currentFrameIndex < currentSprites.Length)
@@ -105,4 +133,33 @@ public class Animator : MonoBehaviour
             currentFrameDuration = currentTimes[currentFrameIndex];
         }
     }
+
+    private void ActivateHitboxes()
+    {
+        if (animHitboxes != null)
+        {
+            foreach (HitBox hitbox in animHitboxes)
+            {
+                if (hitbox.isActive == false)
+                {
+                    hitbox.isActive = true;
+                }
+            }
+        }
+    }
+    
+    private void DeactivateHitboxes()
+    {
+        if (animHitboxes != null)
+        {
+            foreach (HitBox hitbox in animHitboxes)
+            {
+                if (hitbox.isActive == true)
+                {
+                    hitbox.isActive = false;
+                }
+            }   
+        }
+    }
+    
 }
