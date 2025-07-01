@@ -14,12 +14,13 @@ public class SlashLogic : MonoBehaviour
     {
         player = FindObjectOfType<PlayerLogic>().gameObject;
         playerAnimator = player.GetComponent<Animator>();
+        player.GetComponent<PlayerLogic>().MouseLeftOrRightChanged += ChangeTransform;
     }
 
     //update for debugging only
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Y))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             Slash();
         }
@@ -28,5 +29,18 @@ public class SlashLogic : MonoBehaviour
     void Slash()
     {
         playerAnimator.PlayAnimation(slashSprites, slashFrames, false, true, slashHitboxes, 3);
+    }
+
+    void ChangeTransform(int direction)
+    {
+        foreach (HitBox hitbox in slashHitboxes)
+        {
+            hitbox.offset.x *= -1;
+        }
+    }
+
+    void OnDestroy()
+    {
+        player.GetComponent<PlayerLogic>().MouseLeftOrRightChanged -= ChangeTransform;
     }
 }
