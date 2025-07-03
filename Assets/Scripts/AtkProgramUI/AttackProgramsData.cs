@@ -10,9 +10,22 @@ public class AttackProgramsData : MonoBehaviour
     public NumberUI currentDeckAmountDisplay;
     public NumberUI totalDeckAmountDisplay;
 
+    private GameObject currentAttackProgram = null;
+
+    private GameObject player = null;
+
     void Start()
     {
         totalAttackProgramAmount = attackPrograms.Count;
+
+        PlayerLogic playerLogic = FindObjectOfType<PlayerLogic>();
+
+        if (playerLogic != null)
+        {
+            player = playerLogic.gameObject;
+        }
+
+        currentAttackProgram = Instantiate(attackPrograms[currentAttackProgramAmount], player.transform);
     }
 
     void Update()
@@ -24,9 +37,15 @@ public class AttackProgramsData : MonoBehaviour
 
     public void IncreaseCurrentAtkCount()
     {
+        if (currentAttackProgram != null)
+        {
+            Destroy(currentAttackProgram);   
+        }
+
         if (currentAttackProgramAmount < totalAttackProgramAmount)
         {
             currentAttackProgramAmount++;
+            currentAttackProgram = Instantiate(attackPrograms[currentAttackProgramAmount], player.transform);   
         }
     }
 

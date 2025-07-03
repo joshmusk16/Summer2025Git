@@ -60,9 +60,14 @@ public class AttackUI : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.U))
         {
-            attackProgramsData.IncreaseCurrentAtkCount();
-            SetUISprites();
+            ScrollAttackUI();
         }
+    }
+
+    public void ScrollAttackUI()
+    {
+        attackProgramsData.IncreaseCurrentAtkCount();
+        SetUISprites();
     }
 
     void SetStartingUIPositions()

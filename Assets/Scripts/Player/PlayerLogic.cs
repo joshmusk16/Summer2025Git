@@ -12,7 +12,7 @@ public class PlayerLogic : MonoBehaviour
     public float[] idleFrames;
 
     public event Action<int> MouseLeftOrRightChanged;
-    private int currentMouseLeftOrRight = 1;
+    public int currentMouseLeftOrRight = 1;
 
 
     //start method for debugging, ideally the idle animation is started and stopped manually upon other animations ending
@@ -45,15 +45,15 @@ public class PlayerLogic : MonoBehaviour
         currentMouseLeftOrRight == 1)
         {
             transform.localScale *= new Vector2(-1, 1f);
-            MouseLeftOrRightChanged?.Invoke(currentMouseLeftOrRight);
+            MouseLeftOrRightChanged?.Invoke(-1);
             Debug.Log("Mouse is left of player");
             currentMouseLeftOrRight = -1;
         }
-        else if(mouseTracker.worldPosition.x > gameObject.transform.position.x &&
+        else if (mouseTracker.worldPosition.x > gameObject.transform.position.x &&
         currentMouseLeftOrRight == -1)
         {
             transform.localScale *= new Vector2(-1, 1f);
-            MouseLeftOrRightChanged?.Invoke(currentMouseLeftOrRight);
+            MouseLeftOrRightChanged?.Invoke(1);
             Debug.Log("Mouse is right of player");
             currentMouseLeftOrRight = 1;
         }

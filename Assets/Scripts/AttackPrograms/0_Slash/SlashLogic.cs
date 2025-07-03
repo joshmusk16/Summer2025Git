@@ -2,27 +2,43 @@ using UnityEngine;
 
 public class SlashLogic : MonoBehaviour
 {
-    private GameObject player;
+    private PlayerLogic player;
     private Animator playerAnimator;
+
+    private AttackUI attackUI;
 
     public Sprite[] slashSprites;
     public float[] slashFrames;
 
     public HitBox[] slashHitboxes;
 
+    private bool hasUsed = false;
+
     void Start()
     {
-        player = FindObjectOfType<PlayerLogic>().gameObject;
-        playerAnimator = player.GetComponent<Animator>();
-        player.GetComponent<PlayerLogic>().MouseLeftOrRightChanged += ChangeTransform;
+        attackUI = FindObjectOfType<AttackUI>();
+        player = FindObjectOfType<PlayerLogic>();
+        playerAnimator = player.gameObject.GetComponent<Animator>();
+
+        if (player != null)
+        {
+            player.MouseLeftOrRightChanged += ChangeTransform;
+            ChangeTransform(player.currentMouseLeftOrRight);
+        }
+
+        if (playerAnimator != null && attackUI != null)
+        {
+            playerAnimator.OnAnimationComplete += attackUI.ScrollAttackUI;
+        }
     }
 
     //update for debugging only
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && hasUsed == false)
         {
             Slash();
+            hasUsed = true;
         }
     }
 
@@ -35,12 +51,27 @@ public class SlashLogic : MonoBehaviour
     {
         foreach (HitBox hitbox in slashHitboxes)
         {
-            hitbox.offset.x *= -1;
+            if (direction == 1)
+            {
+                hitbox.offset.x = Mathf.Abs(hitbox.offset.x);
+            }
+            else if (direction == -1)
+            {
+                hitbox.offset.x = -Mathf.Abs(hitbox.offset.x);
+            }
         }
     }
 
     void OnDestroy()
     {
-        player.GetComponent<PlayerLogic>().MouseLeftOrRightChanged -= ChangeTransform;
+        if (player != null)
+        {
+            player.MouseLeftOrRightChanged -= ChangeTransform;    
+        }
+
+        if (playerAnimator != null && attackUI != null)
+        {
+            playerAnimator.OnAnimationComplete -= attackUI.ScrollAttackUI;   
+        }
     }
 }
