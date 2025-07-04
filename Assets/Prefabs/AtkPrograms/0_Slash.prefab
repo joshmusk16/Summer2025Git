@@ -47,7 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d711b1c112799ed4ea45870616d1a5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slashSprites:
+  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  attackUI: {fileID: 0}
+  attackSprites:
   - {fileID: -1250718021, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
   - {fileID: 247456802, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
   - {fileID: 1932749412, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
@@ -55,17 +58,18 @@ MonoBehaviour:
   - {fileID: -1923367368, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
   - {fileID: -1654136333, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
   - {fileID: 602935869, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
-  slashFrames:
+  attackFrames:
   - 0.1
   - 0.2
   - 0.1
-  - 0.075
-  - 0.075
-  - 0.075
-  - 0.1
-  slashHitboxes:
+  - 0.05
+  - 0.05
+  - 0.05
+  - 0.05
+  attackHitboxes:
   - {fileID: 2564874997129578755}
   - {fileID: 5118383221459371758}
+  hasUsed: 0
 --- !u!114 &3544868267541222223
 MonoBehaviour:
   m_ObjectHideFlags: 0

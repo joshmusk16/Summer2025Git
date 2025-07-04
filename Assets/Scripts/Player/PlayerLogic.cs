@@ -46,7 +46,6 @@ public class PlayerLogic : MonoBehaviour
         {
             transform.localScale *= new Vector2(-1, 1f);
             MouseLeftOrRightChanged?.Invoke(-1);
-            Debug.Log("Mouse is left of player");
             currentMouseLeftOrRight = -1;
         }
         else if (mouseTracker.worldPosition.x > gameObject.transform.position.x &&
@@ -54,7 +53,6 @@ public class PlayerLogic : MonoBehaviour
         {
             transform.localScale *= new Vector2(-1, 1f);
             MouseLeftOrRightChanged?.Invoke(1);
-            Debug.Log("Mouse is right of player");
             currentMouseLeftOrRight = 1;
         }
     }

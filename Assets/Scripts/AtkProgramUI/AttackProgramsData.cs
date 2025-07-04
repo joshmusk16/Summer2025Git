@@ -45,7 +45,11 @@ public class AttackProgramsData : MonoBehaviour
         if (currentAttackProgramAmount < totalAttackProgramAmount)
         {
             currentAttackProgramAmount++;
-            currentAttackProgram = Instantiate(attackPrograms[currentAttackProgramAmount], player.transform);   
+            
+            if (currentAttackProgramAmount != totalAttackProgramAmount)
+            {
+                currentAttackProgram = Instantiate(attackPrograms[currentAttackProgramAmount], player.transform);
+            }
         }
     }
 

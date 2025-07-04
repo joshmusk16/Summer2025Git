@@ -1,24 +1,11 @@
 using UnityEngine;
 
-public class SlashLogic : MonoBehaviour
+public class SlashLogic : Program
 {
-    private PlayerLogic player;
-    private Animator playerAnimator;
-
-    private AttackUI attackUI;
-
-    public Sprite[] slashSprites;
-    public float[] slashFrames;
-
-    public HitBox[] slashHitboxes;
-
-    private bool hasUsed = false;
 
     void Start()
     {
-        attackUI = FindObjectOfType<AttackUI>();
-        player = FindObjectOfType<PlayerLogic>();
-        playerAnimator = player.gameObject.GetComponent<Animator>();
+        FindDependencies();
 
         if (player != null)
         {
@@ -44,22 +31,7 @@ public class SlashLogic : MonoBehaviour
 
     void Slash()
     {
-        playerAnimator.PlayAnimation(slashSprites, slashFrames, false, true, slashHitboxes, 3);
-    }
-
-    void ChangeTransform(int direction)
-    {
-        foreach (HitBox hitbox in slashHitboxes)
-        {
-            if (direction == 1)
-            {
-                hitbox.offset.x = Mathf.Abs(hitbox.offset.x);
-            }
-            else if (direction == -1)
-            {
-                hitbox.offset.x = -Mathf.Abs(hitbox.offset.x);
-            }
-        }
+        playerAnimator.PlayAnimation(attackSprites, attackFrames, false, true, attackHitboxes, 3);
     }
 
     void OnDestroy()
