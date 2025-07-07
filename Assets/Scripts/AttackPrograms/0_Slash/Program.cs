@@ -6,19 +6,19 @@ public class Program : MonoBehaviour
     public PlayerLogic player;
     public Animator playerAnimator;
     public AttackUI attackUI;
+    public ProgramInputManager inputManager;
 
     public Sprite[] attackSprites;
     public float[] attackFrames;
     public HitBox[] attackHitboxes;
-
-    public bool hasUsed = false;
 
     //In script for any program inheriting this class, run FindDependencies() in Start()
     public void FindDependencies()
     {
         attackUI = FindObjectOfType<AttackUI>();
         player = FindObjectOfType<PlayerLogic>();
-
+        inputManager = FindObjectOfType<ProgramInputManager>();
+        
         if (player != null)
         {
             playerAnimator = player.gameObject.GetComponent<Animator>();

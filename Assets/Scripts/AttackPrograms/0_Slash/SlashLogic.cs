@@ -17,15 +17,10 @@ public class SlashLogic : Program
         {
             playerAnimator.OnAnimationComplete += attackUI.ScrollAttackUI;
         }
-    }
 
-    //update for debugging only
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && hasUsed == false)
+        if (inputManager != null)
         {
-            Slash();
-            hasUsed = true;
+            inputManager.StartAttackProgram += Slash;
         }
     }
 
@@ -38,12 +33,20 @@ public class SlashLogic : Program
     {
         if (player != null)
         {
-            player.MouseLeftOrRightChanged -= ChangeTransform;    
+            player.MouseLeftOrRightChanged -= ChangeTransform;
         }
 
         if (playerAnimator != null && attackUI != null)
         {
-            playerAnimator.OnAnimationComplete -= attackUI.ScrollAttackUI;   
+            playerAnimator.OnAnimationComplete -= attackUI.ScrollAttackUI;
         }
+
+        //reassigning inputManager.canAttack to true here might not be best practice
+        if (inputManager != null)
+        {
+            inputManager.canAttack = true;
+            inputManager.StartAttackProgram -= Slash;
+        }
+        
     }
 }
