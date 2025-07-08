@@ -17,38 +17,45 @@ public class AttackUI : MonoBehaviour
 
     private int heldProgramFirstIndex;
 
+    private ProgramInputManager programInputManager;
+
     void Start()
     {
+        programInputManager = FindObjectOfType<ProgramInputManager>();
         SetStartingUIPositions();
         SetUISprites();
     }
-
+    
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected(ClosestAtkUIToMouse()))
+        if (programInputManager != null && programInputManager.inSlowTimeMode == true)
         {
-            heldProgram = ClosestAtkUIToMouse();
-            heldProgram.GetComponent<SpriteRenderer>().sortingOrder += 1;
-
-            if (Array.IndexOf(attackPrograms, heldProgram) == 0)
+            if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected(ClosestAtkUIToMouse()))
             {
-                heldProgram.GetComponent<LerpUIHandler>().ElasticScaleLerp(transform.localScale, new Vector3(2.5f, 2.5f), 0.5f);
-            }
-            else
-            {
-                heldProgram.GetComponent<LerpUIHandler>().ElasticScaleLerp(transform.localScale, new Vector3(1.5f, 1.5f), 0.5f);
+                heldProgram = ClosestAtkUIToMouse();
+                heldProgram.GetComponent<SpriteRenderer>().sortingOrder += 1;
+
+                if (Array.IndexOf(attackPrograms, heldProgram) == 0)
+                {
+                    heldProgram.GetComponent<LerpUIHandler>().ElasticScaleLerp(transform.localScale, new Vector3(2.5f, 2.5f), 0.5f);
+                }
+                else
+                {
+                    heldProgram.GetComponent<LerpUIHandler>().ElasticScaleLerp(transform.localScale, new Vector3(1.5f, 1.5f), 0.5f);
+                }
+
+                heldProgramFirstIndex = Array.IndexOf(attackPrograms, heldProgram);
             }
 
-            heldProgramFirstIndex = Array.IndexOf(attackPrograms, heldProgram);
+            if (Input.GetKey(KeyCode.Mouse0) && heldProgram != null)
+            {
+                heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.worldPosition, 25f);
+                UpdateAttackProgramUI();
+            }   
         }
 
-        if (Input.GetKey(KeyCode.Mouse0) && heldProgram != null)
-        {
-            heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.worldPosition, 25f);
-            UpdateAttackProgramUI();
-        }
-
-        if (Input.GetKeyUp(KeyCode.Mouse0) && heldProgram != null)
+        if ((Input.GetKeyUp(KeyCode.Mouse0) && heldProgram != null) ||
+        (programInputManager != null && programInputManager.inSlowTimeMode == false && heldProgram != null))
         {
             int heldProgramLastIndex = Array.IndexOf(attackPrograms, heldProgram);
             heldProgram.GetComponent<SpriteRenderer>().sortingOrder -= 1;
@@ -109,10 +116,27 @@ public class AttackUI : MonoBehaviour
         }
     }
 
+    int SetInitialValue()
+    {
+        if (programInputManager == null)
+        {
+            return 0;   
+        }
+
+        if (programInputManager.isAttacking == true)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
     void UpdateAttackProgramUI()
     {
         SortByYPosition();
-        for (int i = 0; i < SetAtkCount(); i++)
+        for (int i = SetInitialValue(); i < SetAtkCount(); i++)
         {
             if (attackPrograms[i] != heldProgram)
             {
@@ -168,9 +192,9 @@ public class AttackUI : MonoBehaviour
 
     GameObject ClosestAtkUIToMouse()
     {
-        float distance = Vector2.Distance(attackPrograms[0].transform.position, mouse.worldPosition);
-        GameObject closestObj = attackPrograms[0];
-        for(int i = 0; i < SetAtkCount(); i++)
+        float distance = Vector2.Distance(attackPrograms[SetInitialValue()].transform.position, mouse.worldPosition);
+        GameObject closestObj = attackPrograms[SetInitialValue()];
+        for(int i = SetInitialValue(); i < SetAtkCount(); i++)
         {
             if (Vector2.Distance(attackPrograms[i].transform.position, mouse.worldPosition) < distance)
             {

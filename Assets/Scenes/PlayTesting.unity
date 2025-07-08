@@ -854,11 +854,11 @@ MonoBehaviour:
   currentAttackProgramAmount: 0
   attackPrograms:
   - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
+  - {fileID: 2421044966896697607, guid: 68a7ae5d1bf493341910e150bed41736, type: 3}
+  - {fileID: 155279966200684616, guid: 7f3a0e17947a48f478c47464cf01440f, type: 3}
+  - {fileID: 8492401179797594747, guid: a35fc088eecab7a479d302969e814972, type: 3}
   - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
-  - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
-  - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
-  - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
-  - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
+  - {fileID: 2421044966896697607, guid: 68a7ae5d1bf493341910e150bed41736, type: 3}
   currentDeckAmountDisplay: {fileID: 439790795}
   totalDeckAmountDisplay: {fileID: 90505872}
 --- !u!1 &788363173
@@ -1309,7 +1309,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fe3429a31b73e45b148289d4095232, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canAttack: 0
+  canUseProgram: 0
+  isAttacking: 0
+  isDefending: 0
+  inSlowTimeMode: 0
 --- !u!4 &962996298
 Transform:
   m_ObjectHideFlags: 0

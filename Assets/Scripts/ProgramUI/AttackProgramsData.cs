@@ -55,11 +55,26 @@ public class AttackProgramsData : MonoBehaviour
 
     public void MoveAttackProgram(int startIndex, int endIndex)
     {
-        endIndex += currentAttackProgramAmount;
-        startIndex += currentAttackProgramAmount;
+        if (startIndex != endIndex)
+        {
 
-        GameObject swap = attackPrograms[startIndex];
-        attackPrograms.RemoveAt(startIndex);
-        attackPrograms.Insert(endIndex, swap);
+            if (endIndex == 0)
+            {
+                Destroy(currentAttackProgram);
+                currentAttackProgram = Instantiate(attackPrograms[startIndex + currentAttackProgramAmount], player.transform);
+            }
+            else if(startIndex == 0)
+            {
+                Destroy(currentAttackProgram);
+                currentAttackProgram = Instantiate(attackPrograms[currentAttackProgramAmount + 1], player.transform);
+            }
+
+            endIndex += currentAttackProgramAmount;
+            startIndex += currentAttackProgramAmount;
+
+            GameObject swap = attackPrograms[startIndex];
+            attackPrograms.RemoveAt(startIndex);
+            attackPrograms.Insert(endIndex, swap);
+        }
     }
 }

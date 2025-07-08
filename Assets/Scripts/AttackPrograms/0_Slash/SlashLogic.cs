@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class SlashLogic : Program
 {
 
@@ -41,12 +39,11 @@ public class SlashLogic : Program
             playerAnimator.OnAnimationComplete -= attackUI.ScrollAttackUI;
         }
 
-        //reassigning inputManager.canAttack to true here might not be best practice
+        //reassigning inputManager.isAttacking to false here might not be best practice
         if (inputManager != null)
         {
-            inputManager.canAttack = true;
+            inputManager.isAttacking = false;
             inputManager.StartAttackProgram -= Slash;
         }
-        
     }
 }
