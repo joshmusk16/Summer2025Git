@@ -18,7 +18,7 @@ public class Program : MonoBehaviour
         attackUI = FindObjectOfType<AttackUI>();
         player = FindObjectOfType<PlayerLogic>();
         inputManager = FindObjectOfType<ProgramInputManager>();
-        
+
         if (player != null)
         {
             playerAnimator = player.gameObject.GetComponent<Animator>();
@@ -42,5 +42,4 @@ public class Program : MonoBehaviour
             }
         }
     }
-
 }

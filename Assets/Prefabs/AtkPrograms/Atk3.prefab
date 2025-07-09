@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3078651122291689903}
   - component: {fileID: 7472417166722116781}
-  - component: {fileID: 8239335861864722202}
+  - component: {fileID: -606737488448163654}
   m_Layer: 0
   m_Name: Atk3
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8239335861864722202
+--- !u!114 &-606737488448163654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,4 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efaae1f9c7043b34da0e71a03234647b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiSprite: {fileID: 239863864, guid: c591404509123dd4780a80987fb084b6, type: 3}
+  uiSprite: {fileID: 1609322992, guid: c591404509123dd4780a80987fb084b6, type: 3}

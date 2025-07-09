@@ -65,6 +65,7 @@ public class AttackUI : MonoBehaviour
             attackProgramsData.MoveAttackProgram(heldProgramFirstIndex, heldProgramLastIndex);
         }
 
+        //Scroll input for debugging
         if (Input.GetKeyDown(KeyCode.U))
         {
             ScrollAttackUI();
@@ -156,20 +157,21 @@ public class AttackUI : MonoBehaviour
 
     void SortByYPosition()
     {
-        int n = SetAtkCount();
+        int startIndex = SetInitialValue();
+        int endIndex = SetAtkCount();
         
-            for (int i = 0; i < n - 1; i++)
+        for (int i = startIndex; i < endIndex - 1; i++)
+        {
+            for (int j = startIndex; j < endIndex - (i - startIndex) - 1; j++)
             {
-                for (int j = 0; j < n - i - 1; j++)
+                if (attackPrograms[j].transform.position.y < attackPrograms[j + 1].transform.position.y)
                 {
-                    if (attackPrograms[j].transform.position.y < attackPrograms[j + 1].transform.position.y)
-                    {
-                        GameObject temp = attackPrograms[j];
-                        attackPrograms[j] = attackPrograms[j + 1];
-                        attackPrograms[j + 1] = temp;
-                    }
+                    GameObject temp = attackPrograms[j];
+                    attackPrograms[j] = attackPrograms[j + 1];
+                    attackPrograms[j + 1] = temp;
                 }
             }
+        }
     }
 
     bool MouseDetected(GameObject obj)

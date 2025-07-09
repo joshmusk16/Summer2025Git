@@ -13,11 +13,13 @@ public class AttackProgramsData : MonoBehaviour
     private GameObject currentAttackProgram = null;
 
     private GameObject player = null;
+    private ProgramInputManager programInputManager = null;
 
     void Start()
     {
         totalAttackProgramAmount = attackPrograms.Count;
 
+        programInputManager = FindObjectOfType<ProgramInputManager>();
         PlayerLogic playerLogic = FindObjectOfType<PlayerLogic>();
 
         if (playerLogic != null)
@@ -37,15 +39,12 @@ public class AttackProgramsData : MonoBehaviour
 
     public void IncreaseCurrentAtkCount()
     {
-        if (currentAttackProgram != null)
-        {
-            Destroy(currentAttackProgram);   
-        }
+        DestroyCurrentAttackProgram();
 
         if (currentAttackProgramAmount < totalAttackProgramAmount)
         {
             currentAttackProgramAmount++;
-            
+
             if (currentAttackProgramAmount != totalAttackProgramAmount)
             {
                 currentAttackProgram = Instantiate(attackPrograms[currentAttackProgramAmount], player.transform);
@@ -57,15 +56,14 @@ public class AttackProgramsData : MonoBehaviour
     {
         if (startIndex != endIndex)
         {
-
             if (endIndex == 0)
             {
-                Destroy(currentAttackProgram);
+                DestroyCurrentAttackProgram();
                 currentAttackProgram = Instantiate(attackPrograms[startIndex + currentAttackProgramAmount], player.transform);
             }
-            else if(startIndex == 0)
+            else if (startIndex == 0)
             {
-                Destroy(currentAttackProgram);
+                DestroyCurrentAttackProgram();
                 currentAttackProgram = Instantiate(attackPrograms[currentAttackProgramAmount + 1], player.transform);
             }
 
@@ -75,6 +73,15 @@ public class AttackProgramsData : MonoBehaviour
             GameObject swap = attackPrograms[startIndex];
             attackPrograms.RemoveAt(startIndex);
             attackPrograms.Insert(endIndex, swap);
+        }
+    }
+
+    public void DestroyCurrentAttackProgram()
+    {
+        if (currentAttackProgram != null)
+        {
+            Destroy(currentAttackProgram);
+            programInputManager.isAttacking = false;   
         }
     }
 }

@@ -39,10 +39,8 @@ public class SlashLogic : Program
             playerAnimator.OnAnimationComplete -= attackUI.ScrollAttackUI;
         }
 
-        //reassigning inputManager.isAttacking to false here might not be best practice
         if (inputManager != null)
         {
-            inputManager.isAttacking = false;
             inputManager.StartAttackProgram -= Slash;
         }
     }

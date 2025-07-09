@@ -26,13 +26,15 @@ public class ProgramInputManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 StartAttackProgram?.Invoke();
+                isAttacking = true;
                 canUseProgram = false;
             }
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 StartDefenseProgram?.Invoke();
+                isDefending = true;
                 canUseProgram = false;
-            }
+            }       
         }
 
         if (Input.GetKeyDown(KeyCode.Tab))
