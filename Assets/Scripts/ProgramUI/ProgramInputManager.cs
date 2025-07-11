@@ -13,6 +13,11 @@ public class ProgramInputManager : MonoBehaviour
     public event Action StartAttackProgram;
     public event Action StartDefenseProgram;
 
+    //These events are to be subscribed to by animations or effects that need to begin or end upon
+    //slow mode enter and exit
+    public event Action OnSlowModeEnter;
+    public event Action OnSlowModeExit;
+
     void Update()
     {
 
@@ -40,12 +45,14 @@ public class ProgramInputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             Debug.Log("Entering program rearrangement mode");
+            OnSlowModeEnter?.Invoke();
             canUseProgram = false;
             inSlowTimeMode = true;
         }
         else if (Input.GetKeyUp(KeyCode.Tab))
         {
             Debug.Log("Exiting program rearrangement mode");
+            OnSlowModeExit?.Invoke();
             inSlowTimeMode = false;
 
             if (isAttacking == false && isDefending == false)

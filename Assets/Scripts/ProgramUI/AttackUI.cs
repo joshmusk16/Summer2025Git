@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackUI : MonoBehaviour
@@ -6,30 +7,46 @@ public class AttackUI : MonoBehaviour
     //This script handles all of the visual UI, the actual change to the ordering of the attackProgram List will
     //be hangled in the Attack Data script (remove and insert in new postion, etc.)
 
-    public int atkUICount = 5;
+    private const int MAX_UI_COUNT = 5;
+    private const float PIXELS_PER_UNIT = 16f;
 
-    private Vector2[] uiPositions = new Vector2[5];
-    public GameObject[] attackPrograms = new GameObject[5];
-    private GameObject heldProgram = null;
+    public int atkUICount = MAX_UI_COUNT;
 
+    [Header("UI Configuration")]
+    private Vector2[] uiPositions = new Vector2[MAX_UI_COUNT];
+    public GameObject[] attackPrograms = new GameObject[MAX_UI_COUNT];
+
+    [Header("Dependencies")]
     public MouseTracker mouse;
     public AttackProgramsData attackProgramsData;
-
-    private int heldProgramFirstIndex;
-
     private ProgramInputManager programInputManager;
+
+    //UI State Management
+    private int heldProgramFirstIndex;
+    private GameObject heldProgram = null;
+
+    private Dictionary<GameObject, bool> mouseHoverStates = new();
 
     void Start()
     {
         programInputManager = FindObjectOfType<ProgramInputManager>();
         SetStartingUIPositions();
         SetUISprites();
+        InitializeMouseHoverStates();
+
+        if (programInputManager != null)
+        {
+            programInputManager.OnSlowModeExit += ResetMouseExitScales;
+        }
     }
-    
+
     void Update()
     {
+        UpdateMouseHoverStates();
+
         if (programInputManager != null && programInputManager.inSlowTimeMode == true)
         {
+
             if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected(ClosestAtkUIToMouse()))
             {
                 heldProgram = ClosestAtkUIToMouse();
@@ -51,7 +68,7 @@ public class AttackUI : MonoBehaviour
             {
                 heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.worldPosition, 25f);
                 UpdateAttackProgramUI();
-            }   
+            }
         }
 
         if ((Input.GetKeyUp(KeyCode.Mouse0) && heldProgram != null) ||
@@ -105,23 +122,19 @@ public class AttackUI : MonoBehaviour
         }
     }
 
-    int SetAtkCount()
+    int GetActiveUICount()
     {
-        if (attackProgramsData.totalAttackProgramAmount - attackProgramsData.currentAttackProgramAmount > 5)
-        {
-            return 5;
-        }
-        else
-        {
-            return attackProgramsData.totalAttackProgramAmount - attackProgramsData.currentAttackProgramAmount;
-        }
+        if (attackProgramsData == null) return 0;
+
+        int remaining = attackProgramsData.totalAttackProgramAmount - attackProgramsData.currentAttackProgramAmount;
+        return Mathf.Min(5, remaining);
     }
 
-    int SetInitialValue()
+    int GetInitialIndex()
     {
         if (programInputManager == null)
         {
-            return 0;   
+            return 0;
         }
 
         if (programInputManager.isAttacking == true)
@@ -137,7 +150,7 @@ public class AttackUI : MonoBehaviour
     void UpdateAttackProgramUI()
     {
         SortByYPosition();
-        for (int i = SetInitialValue(); i < SetAtkCount(); i++)
+        for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
         {
             if (attackPrograms[i] != heldProgram)
             {
@@ -157,27 +170,51 @@ public class AttackUI : MonoBehaviour
 
     void SortByYPosition()
     {
-        int startIndex = SetInitialValue();
-        int endIndex = SetAtkCount();
+        int startIndex = GetInitialIndex();
+        int endIndex = GetActiveUICount();
         
-        for (int i = startIndex; i < endIndex - 1; i++)
+        if (endIndex - startIndex <= 1) return;
+
+        // Create a temporary array for sorting
+        var sortableItems = new List<(GameObject obj, float yPos)>();
+        
+        for (int i = startIndex; i < endIndex; i++)
         {
-            for (int j = startIndex; j < endIndex - (i - startIndex) - 1; j++)
+            if (attackPrograms[i] != null)
             {
-                if (attackPrograms[j].transform.position.y < attackPrograms[j + 1].transform.position.y)
-                {
-                    GameObject temp = attackPrograms[j];
-                    attackPrograms[j] = attackPrograms[j + 1];
-                    attackPrograms[j + 1] = temp;
-                }
+                sortableItems.Add((attackPrograms[i], attackPrograms[i].transform.position.y));
             }
         }
+
+        // Sort by Y position (descending)
+        sortableItems.Sort((a, b) => b.yPos.CompareTo(a.yPos));
+
+        // Update the array
+        for (int i = 0; i < sortableItems.Count; i++)
+        {
+            attackPrograms[startIndex + i] = sortableItems[i].obj;
+        }
+    }
+
+    private GameObject ClosestAtkUIToMouse()
+    {
+        float distance = Vector2.Distance(attackPrograms[GetInitialIndex()].transform.position, mouse.worldPosition);
+        GameObject closestObj = attackPrograms[GetInitialIndex()];
+        for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
+        {
+            if (Vector2.Distance(attackPrograms[i].transform.position, mouse.worldPosition) < distance)
+            {
+                distance = Vector2.Distance(attackPrograms[i].transform.position, mouse.worldPosition);
+                closestObj = attackPrograms[i];
+            }
+        }
+        return closestObj;
     }
 
     bool MouseDetected(GameObject obj)
     {
-        float xBounds = obj.GetComponent<SpriteRenderer>().sprite.rect.width * obj.transform.localScale.x / 32f;
-        float yBounds = obj.GetComponent<SpriteRenderer>().sprite.rect.height * obj.transform.localScale.y / 32f;
+        float xBounds = obj.GetComponent<SpriteRenderer>().sprite.rect.width * obj.transform.localScale.x / (PIXELS_PER_UNIT * 2f);
+        float yBounds = obj.GetComponent<SpriteRenderer>().sprite.rect.height * obj.transform.localScale.y / (PIXELS_PER_UNIT * 2f);
 
         if (mouse.worldPosition.x > obj.transform.position.x - xBounds
         && mouse.worldPosition.x < obj.transform.position.x + xBounds
@@ -192,21 +229,90 @@ public class AttackUI : MonoBehaviour
         }
     }
 
-    GameObject ClosestAtkUIToMouse()
+    //Mouse Hover Tracking Methods
+
+    void InitializeMouseHoverStates()
     {
-        float distance = Vector2.Distance(attackPrograms[SetInitialValue()].transform.position, mouse.worldPosition);
-        GameObject closestObj = attackPrograms[SetInitialValue()];
-        for(int i = SetInitialValue(); i < SetAtkCount(); i++)
+        for (int i = 0; i < attackPrograms.Length; i++)
         {
-            if (Vector2.Distance(attackPrograms[i].transform.position, mouse.worldPosition) < distance)
+            if (attackPrograms[i] != null)
             {
-                distance = Vector2.Distance(attackPrograms[i].transform.position, mouse.worldPosition);
-                closestObj = attackPrograms[i];
+                mouseHoverStates[attackPrograms[i]] = false;
             }
         }
-        return closestObj;
     }
-    
 
+    void UpdateMouseHoverStates()
+    {
+        for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
+        {
+            if (attackPrograms[i] != null)
+            {
+                bool currentlyHovered = MouseDetected(attackPrograms[i]);
+                bool previouslyHovered = mouseHoverStates[attackPrograms[i]];
 
+                // Mouse entered the object
+                if (currentlyHovered && !previouslyHovered)
+                {
+                    OnMouseEntering(attackPrograms[i]);
+                }
+                // Mouse exited the object
+                else if (!currentlyHovered && previouslyHovered)
+                {
+                    OnMouseExiting(attackPrograms[i]);
+                }
+
+                // Update the state
+                mouseHoverStates[attackPrograms[i]] = currentlyHovered;
+            }
+        }
+    }
+
+    void OnMouseEntering(GameObject attackProgram)
+    {
+        if (attackProgram == heldProgram) return;
+
+        if (Array.IndexOf(attackPrograms, attackProgram) == 0)
+        {
+            attackProgram.GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2.3f, 2.3f), 25f);
+        }
+        else
+        {
+            attackProgram.GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1.3f, 1.3f), 25f);
+        }
+    }
+
+    void OnMouseExiting(GameObject attackProgram)
+    {
+        if (attackProgram == heldProgram) return;
+
+        if (Array.IndexOf(attackPrograms, attackProgram) == 0)
+        {
+            attackProgram.GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2f, 2f), 25f);
+        }
+        else
+        {
+            attackProgram.GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1f, 1f), 25f);
+        }
+    }
+
+    void ResetMouseExitScales()
+    {
+        for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
+        {
+            if (i == 0)
+            {
+                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2f, 2f), 25f);
+            }
+            else
+            {
+                attackPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1f, 1f), 25f);
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        programInputManager.OnSlowModeExit -= ResetMouseExitScales;
+    }
 }
