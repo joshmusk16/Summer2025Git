@@ -6,13 +6,13 @@ public class Animator : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     public Sprite[] currentSprites;
-    private float[] currentTimes;
-    private bool isPlaying = false;
+    public bool isPlaying = false;
     private bool shouldLoop = false;
 
     private int currentFrameIndex = 0;
     private float frameTimer = 0f;
-    private float currentFrameDuration = 0f;
+    private float totalAnimationTime = 0f;
+    private float[] frameTimeThresholds;
 
     public event Action OnAnimationStart;
     public event Action OnAnimationComplete;
@@ -34,12 +34,12 @@ public class Animator : MonoBehaviour
         // Update frame timer
         frameTimer += Time.deltaTime;
 
-        // Check if current frame duration has elapsed
-        if (frameTimer >= currentFrameDuration)
+        // Check if we need to change frames based on time thresholds
+        if (currentFrameIndex < frameTimeThresholds.Length - 1 && frameTimer >= frameTimeThresholds[currentFrameIndex + 1])
         {
             // Move to next frame
             currentFrameIndex++;
-
+            
             if (isUsingHitbox)
             {
                 if (animHitboxes != null && currentFrameIndex == activeHitboxFrame)
@@ -52,27 +52,28 @@ public class Animator : MonoBehaviour
                 }   
             }
 
-                frameTimer = 0f;
+            SetCurrentFrame();
+        }
 
-            // Check if we've reached the end of the animation
-            if (currentFrameIndex >= currentSprites.Length)
+        // Check if animation is complete
+        if (frameTimer >= totalAnimationTime)
+        {
+            if (shouldLoop)
             {
-                if (shouldLoop)
+                // Loop back to beginning
+                frameTimer = 0f;
+                currentFrameIndex = 0;
+                SetCurrentFrame();
+                if (isUsingHitbox)
                 {
-                    // Loop back to beginning
-                    currentFrameIndex = 0;
-                    SetCurrentFrame();
-                }
-                else
-                {
-                    // Animation complete
-                    CompleteAnimation();
-                    return;
+                    DeactivateHitboxes(); // Reset hitboxes on loop
                 }
             }
             else
             {
-                SetCurrentFrame();
+                // Animation complete
+                CompleteAnimation();
+                return;
             }
         }
     }
@@ -88,8 +89,23 @@ public class Animator : MonoBehaviour
 
         // Set up new animation
         currentSprites = sprites;
-        currentTimes = frameTimes;
         shouldLoop = loop;
+
+        // Calculate total animation time
+        totalAnimationTime = 0f;
+        for (int i = 0; i < frameTimes.Length; i++)
+        {
+            totalAnimationTime += frameTimes[i];
+        }
+
+        // Calculate frame time thresholds
+        frameTimeThresholds = new float[frameTimes.Length];
+        float cumulativeTime = 0f;
+        for (int i = 0; i < frameTimes.Length; i++)
+        {
+            frameTimeThresholds[i] = cumulativeTime;
+            cumulativeTime += frameTimes[i];
+        }
 
         // Reset animation state
         currentFrameIndex = 0;
@@ -130,7 +146,6 @@ public class Animator : MonoBehaviour
         if (currentSprites != null && currentFrameIndex < currentSprites.Length)
         {
             spriteRenderer.sprite = currentSprites[currentFrameIndex];
-            currentFrameDuration = currentTimes[currentFrameIndex];
         }
     }
 
@@ -161,5 +176,18 @@ public class Animator : MonoBehaviour
             }   
         }
     }
-    
+
+    // Helper method to get remaining animation time
+    public float GetRemainingAnimationTime()
+    {
+        if (!isPlaying) return 0f;
+        return totalAnimationTime - frameTimer;
+    }
+
+    // Helper method to get animation progress (0 to 1)
+    public float GetAnimationProgress()
+    {
+        if (!isPlaying || totalAnimationTime == 0f) return 0f;
+        return frameTimer / totalAnimationTime;
+    }
 }
