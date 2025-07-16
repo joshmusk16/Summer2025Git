@@ -40,7 +40,8 @@ public class AttackTimerUI : MonoBehaviour
     {
         if (inputManager.isAttacking)
         {
-            animBar.transform.localScale = new Vector2(playerAnimator.GetAnimationProgress(), 1f);
+            float temp = playerAnimator.GetAnimationProgress();
+            animBar.transform.localScale = new Vector2(QuadraticEaseInWithHold(temp, 0.7f), 1f);
         }
         else
         {
@@ -70,6 +71,24 @@ public class AttackTimerUI : MonoBehaviour
     void OnDestroy()
     {
         inputManager.StartAttackProgram -= StartUpdatingBar;
+    }
+
+    //Revieves a input of 0-1 as linearProgress and modifies in quadratically with a specified delay
+    //If there ends up being a lot of easing method taking 0-1 linear inputs, we should move them to a single class
+    public static float QuadraticEaseInWithHold(float linearProgress, float completionThreshold = 0.8f)
+    {
+        linearProgress = Mathf.Clamp01(linearProgress);
+        completionThreshold = Mathf.Clamp(completionThreshold, 0.1f, 1f);
+
+        // If we're past the completion threshold, stay at 1.0 (dramatic pause)
+        if (linearProgress >= completionThreshold)
+            return 1.0f;
+
+        // Scale the progress so it reaches the full 0-1 range by the threshold
+        float scaledProgress = linearProgress / completionThreshold;
+
+        // Apply quadratic easing to the scaled progress
+        return scaledProgress * scaledProgress;
     }
 
 }
