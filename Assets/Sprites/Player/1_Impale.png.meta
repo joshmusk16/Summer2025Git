@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 31db126675f6d834596d1214342d3d8b
+guid: 5236d36fd74e26c47bb4b5a5c47872f3
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -110,12 +110,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 0_Slash_0
+      name: Impale_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 96
+        width: 352
         height: 76
       alignment: 9
       pivot: {x: 0.5, y: 0.3157895}
@@ -124,134 +124,197 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73d88ca4fbd9ddf42b3a590b56b084b3
-      internalID: -1250718021
+      spriteID: 7551e1c0020b8294f9607caa4ca5a496
+      internalID: 168151508
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 0_Slash_1
+      name: Impale_1
       rect:
         serializedVersion: 2
-        x: 96
+        x: 352
         y: 0
-        width: 96
+        width: 352
         height: 76
       alignment: 9
-      pivot: {x: 0.5, y: 0.31578946}
+      pivot: {x: 0.5, y: 0.3157895}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62f975c981c2bf345bc2aba4dec20584
-      internalID: 247456802
+      spriteID: fb689fc4768ce634bb7603f720ebe736
+      internalID: 511389809
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 0_Slash_2
+      name: Impale_2
       rect:
         serializedVersion: 2
-        x: 192
+        x: 704
         y: 0
-        width: 96
+        width: 352
         height: 76
       alignment: 9
-      pivot: {x: 0.5, y: 0.31578946}
+      pivot: {x: 0.5, y: 0.3157895}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 427759ded7351c74881cd973d17cac81
-      internalID: 1932749412
+      spriteID: 54d38d46c5eacee4c9e3f3da94e1c428
+      internalID: -1582856792
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 0_Slash_3
+      name: Impale_3
       rect:
         serializedVersion: 2
-        x: 288
+        x: 1056
         y: 0
-        width: 96
+        width: 352
         height: 76
       alignment: 9
-      pivot: {x: 0.5, y: 0.31578946}
+      pivot: {x: 0.5, y: 0.3157895}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4ba5fac58ad093d48b5013f253a07a1e
-      internalID: 1855720545
+      spriteID: 63b37591485291443b4a4a317d407249
+      internalID: -821092326
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 0_Slash_4
+      name: Impale_4
       rect:
         serializedVersion: 2
-        x: 384
+        x: 1408
         y: 0
-        width: 96
+        width: 352
         height: 76
       alignment: 9
-      pivot: {x: 0.5, y: 0.31578946}
+      pivot: {x: 0.5, y: 0.3157895}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6770d71bc53a9b84b8b17240546ad467
-      internalID: -1923367368
+      spriteID: 80650a7829e672c48915574f3d6710e5
+      internalID: 204052977
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 0_Slash_5
+      name: Impale_5
       rect:
         serializedVersion: 2
-        x: 480
+        x: 1760
         y: 0
-        width: 96
+        width: 352
         height: 76
       alignment: 9
-      pivot: {x: 0.5, y: 0.31578946}
+      pivot: {x: 0.5, y: 0.3157895}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 80eba7444064753489cd00e176d239be
-      internalID: -1654136333
+      spriteID: c04a29ee1405b2345a61b6d1919ea77d
+      internalID: -158028683
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 0_Slash_6
+      name: Impale_6
       rect:
         serializedVersion: 2
-        x: 576
+        x: 2112
         y: 0
-        width: 96
+        width: 352
         height: 76
       alignment: 9
-      pivot: {x: 0.5, y: 0.31578946}
+      pivot: {x: 0.5, y: 0.3157895}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cc259b298ca05774b9957236e2a1a5ca
-      internalID: 602935869
+      spriteID: c412e95ba0b17a543b64e4be177b1d58
+      internalID: 976097400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Impale_7
+      rect:
+        serializedVersion: 2
+        x: 2464
+        y: 0
+        width: 352
+        height: 76
+      alignment: 9
+      pivot: {x: 0.5, y: 0.3157895}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ea63939c42229a47910628705d9410c
+      internalID: -1112220711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Impale_8
+      rect:
+        serializedVersion: 2
+        x: 2816
+        y: 0
+        width: 352
+        height: 76
+      alignment: 9
+      pivot: {x: 0.5, y: 0.3157895}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6ff202f9673a454188bb02ff53e8d09
+      internalID: -2054427883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Impale_9
+      rect:
+        serializedVersion: 2
+        x: 3168
+        y: 0
+        width: 352
+        height: 76
+      alignment: 9
+      pivot: {x: 0.5, y: 0.3157895}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9197da6232db4f4da65fb48d81db95d
+      internalID: 521417177
       vertices: []
       indices: 
       edges: []
@@ -267,13 +330,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      0_Slash_0: -1250718021
-      0_Slash_1: 247456802
-      0_Slash_2: 1932749412
-      0_Slash_3: 1855720545
-      0_Slash_4: -1923367368
-      0_Slash_5: -1654136333
-      0_Slash_6: 602935869
+      Impale_0: 168151508
+      Impale_1: 511389809
+      Impale_2: -1582856792
+      Impale_3: -821092326
+      Impale_4: 204052977
+      Impale_5: -158028683
+      Impale_6: 976097400
+      Impale_7: -1112220711
+      Impale_8: -2054427883
+      Impale_9: 521417177
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

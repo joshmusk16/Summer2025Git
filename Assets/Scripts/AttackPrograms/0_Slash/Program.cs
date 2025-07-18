@@ -1,5 +1,12 @@
 using UnityEngine;
 
+    [System.Serializable]
+    public struct HitboxTiming
+    {
+        public HitBox hitbox;
+        public int[] activationFrames;
+    }
+
 public class Program : MonoBehaviour
 {
 
@@ -10,7 +17,8 @@ public class Program : MonoBehaviour
 
     public Sprite[] attackSprites;
     public float[] attackFrames;
-    public HitBox[] attackHitboxes;
+    public HitboxTiming[] hitboxTimings;
+
 
     //In script for any program inheriting this class, run FindDependencies() in Start()
     public void FindDependencies()
@@ -30,15 +38,17 @@ public class Program : MonoBehaviour
     //See SlashLogic Script for reference
     public void ChangeTransform(int direction)
     {
-        foreach (HitBox hitbox in attackHitboxes)
+        foreach (HitboxTiming timing in hitboxTimings)
         {
+            HitBox temp = timing.hitbox;
+
             if (direction == 1)
             {
-                hitbox.offset.x = Mathf.Abs(hitbox.offset.x);
+                temp.offset.x = Mathf.Abs(temp.offset.x);
             }
             else if (direction == -1)
             {
-                hitbox.offset.x = -Mathf.Abs(hitbox.offset.x);
+                temp.offset.x = -Mathf.Abs(temp.offset.x);
             }
         }
     }

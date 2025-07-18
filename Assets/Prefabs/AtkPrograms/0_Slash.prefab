@@ -50,6 +50,7 @@ MonoBehaviour:
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   attackUI: {fileID: 0}
+  inputManager: {fileID: 0}
   attackSprites:
   - {fileID: -1250718021, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
   - {fileID: 247456802, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
@@ -66,10 +67,11 @@ MonoBehaviour:
   - 0.05
   - 0.05
   - 0.05
-  attackHitboxes:
-  - {fileID: 2564874997129578755}
-  - {fileID: 5118383221459371758}
-  hasUsed: 0
+  hitboxTimings:
+  - hitbox: {fileID: 2564874997129578755}
+    activationFrames: 03000000
+  - hitbox: {fileID: 5118383221459371758}
+    activationFrames: 03000000
 --- !u!114 &3544868267541222223
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class Animator : MonoBehaviour
 {
@@ -18,8 +19,8 @@ public class Animator : MonoBehaviour
     public event Action OnAnimationComplete;
 
     private bool isUsingHitbox = false;
-    private HitBox[] animHitboxes;
-    private int activeHitboxFrame;
+    public HitboxTiming[] animHitboxTimings;
+    private HashSet<HitBox> activeHitboxes = new HashSet<HitBox>();
 
     private void Awake()
     {
@@ -42,14 +43,8 @@ public class Animator : MonoBehaviour
             
             if (isUsingHitbox)
             {
-                if (animHitboxes != null && currentFrameIndex == activeHitboxFrame)
-                {
-                    ActivateHitboxes();
-                }
-                else if (currentFrameIndex != activeHitboxFrame)
-                {
-                    DeactivateHitboxes();
-                }   
+                //Debug.Log("Updating Hitboxes");
+                UpdateHitboxes();
             }
 
             SetCurrentFrame();
@@ -66,7 +61,7 @@ public class Animator : MonoBehaviour
                 SetCurrentFrame();
                 if (isUsingHitbox)
                 {
-                    DeactivateHitboxes(); // Reset hitboxes on loop
+                    DeactivateAllHitboxes(); // Reset hitboxes on loop
                 }
             }
             else
@@ -78,7 +73,7 @@ public class Animator : MonoBehaviour
         }
     }
 
-    public void PlayAnimation(Sprite[] sprites, float[] frameTimes, bool loop = false, bool usingHitbox = false, HitBox[] hitboxes = null, int hitboxFrame = 0)
+    public void PlayAnimation(Sprite[] sprites, float[] frameTimes, bool loop = false, bool usingHitbox = false, HitboxTiming[] hitboxTimings = null)
     {
         if (sprites.Length != frameTimes.Length || sprites.Length == 0)
         {
@@ -110,13 +105,11 @@ public class Animator : MonoBehaviour
         // Reset animation state
         currentFrameIndex = 0;
         frameTimer = 0f;
-        isPlaying = true;
 
-        if (usingHitbox)
+        if (usingHitbox && hitboxTimings != null)
         {
+            CopyHitboxTimings(hitboxTimings);
             isUsingHitbox = true;
-            animHitboxes = hitboxes;
-            activeHitboxFrame = hitboxFrame;
         }
         else
         {
@@ -126,6 +119,21 @@ public class Animator : MonoBehaviour
         // Set first frame and start animation
         SetCurrentFrame();
         OnAnimationStart?.Invoke();
+
+        isPlaying = true;
+    }
+
+    private void CopyHitboxTimings(HitboxTiming[] sourceTimings)
+    {
+        animHitboxTimings = new HitboxTiming[sourceTimings.Length];
+        for (int i = 0; i < sourceTimings.Length; i++)
+        {
+            animHitboxTimings[i] = new HitboxTiming
+            {
+                hitbox = sourceTimings[i].hitbox,
+                activationFrames = (int[])sourceTimings[i].activationFrames.Clone()
+            };
+        }
     }
 
     public void StopAnimation()
@@ -149,32 +157,69 @@ public class Animator : MonoBehaviour
         }
     }
 
-    private void ActivateHitboxes()
+        private void UpdateHitboxes()
     {
-        if (animHitboxes != null)
+        if (animHitboxTimings == null) return;
+
+        foreach (HitboxTiming timing in animHitboxTimings)
         {
-            foreach (HitBox hitbox in animHitboxes)
+            Debug.Log($"Frame {currentFrameIndex}: Checking hitbox with frames [{string.Join(", ", timing.activationFrames)}]");
+
+            bool shouldBeActive = false;
+            
+            // Check if current frame is in this hitbox's activation frames
+            foreach (int frame in timing.activationFrames)
             {
-                if (hitbox.isActive == false)
+                if (frame == currentFrameIndex)
                 {
-                    hitbox.isActive = true;
+                    shouldBeActive = true;
+                    break;
                 }
+            }
+
+            Debug.Log($"shouldBeActive result: {shouldBeActive}");
+
+            // Update hitbox state
+            if (shouldBeActive && !activeHitboxes.Contains(timing.hitbox))
+            {
+                ActivateHitbox(timing.hitbox);
+            }
+            else if (!shouldBeActive && activeHitboxes.Contains(timing.hitbox))
+            {
+                DeactivateHitbox(timing.hitbox);
             }
         }
     }
-    
-    private void DeactivateHitboxes()
+
+    private void ActivateHitbox(HitBox hitbox)
     {
-        if (animHitboxes != null)
+        if (hitbox != null && !hitbox.isActive)
         {
-            foreach (HitBox hitbox in animHitboxes)
-            {
-                if (hitbox.isActive == true)
-                {
-                    hitbox.isActive = false;
-                }
-            }   
+            Debug.Log("Activated:" + hitbox.name);
+            hitbox.isActive = true;
+            activeHitboxes.Add(hitbox);
         }
+    }
+    
+    private void DeactivateHitbox(HitBox hitbox)
+    {
+        if (hitbox != null && hitbox.isActive)
+        {
+            hitbox.isActive = false;
+            activeHitboxes.Remove(hitbox);
+        }
+    }
+
+    private void DeactivateAllHitboxes()
+    {
+        foreach (HitBox hitbox in activeHitboxes)
+        {
+            if (hitbox != null && hitbox.isActive)
+            {
+                hitbox.isActive = false;
+            }
+        }
+        activeHitboxes.Clear();
     }
 
     // Helper method to get remaining animation time

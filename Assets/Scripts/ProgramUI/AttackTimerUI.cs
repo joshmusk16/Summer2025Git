@@ -41,7 +41,7 @@ public class AttackTimerUI : MonoBehaviour
         if (inputManager.isAttacking)
         {
             float temp = playerAnimator.GetAnimationProgress();
-            animBar.transform.localScale = new Vector2(QuadraticEaseInWithHold(temp, 0.7f), 1f);
+            animBar.transform.localScale = new Vector2(QuadraticEaseInWithHold(temp, 0.5f), 1f);
         }
         else
         {
