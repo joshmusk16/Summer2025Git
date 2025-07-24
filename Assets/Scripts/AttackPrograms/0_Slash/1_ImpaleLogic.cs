@@ -4,9 +4,9 @@ public class ImpaleLogic : Program
     {
         FindDependencies();
 
-        if (playerAnimator != null && attackUI != null)
+        if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete += attackUI.ScrollAttackUI;
+            playerAnimator.OnAnimationComplete += programUI.ScrollProgramUI;
         }
 
         if (inputManager != null)
@@ -22,9 +22,9 @@ public class ImpaleLogic : Program
 
         void OnDestroy()
     {
-        if (playerAnimator != null && attackUI != null)
+        if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete -= attackUI.ScrollAttackUI;
+            playerAnimator.OnAnimationComplete -= programUI.ScrollProgramUI;
         }
 
         if (inputManager != null)

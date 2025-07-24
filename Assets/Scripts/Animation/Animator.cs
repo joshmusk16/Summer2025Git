@@ -163,8 +163,6 @@ public class Animator : MonoBehaviour
 
         foreach (HitboxTiming timing in animHitboxTimings)
         {
-            Debug.Log($"Frame {currentFrameIndex}: Checking hitbox with frames [{string.Join(", ", timing.activationFrames)}]");
-
             bool shouldBeActive = false;
             
             // Check if current frame is in this hitbox's activation frames
@@ -176,8 +174,6 @@ public class Animator : MonoBehaviour
                     break;
                 }
             }
-
-            Debug.Log($"shouldBeActive result: {shouldBeActive}");
 
             // Update hitbox state
             if (shouldBeActive && !activeHitboxes.Contains(timing.hitbox))

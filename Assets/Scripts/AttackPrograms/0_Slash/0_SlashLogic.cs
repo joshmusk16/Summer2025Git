@@ -11,9 +11,9 @@ public class SlashLogic : Program
             ChangeTransform(player.currentMouseLeftOrRight);
         }
 
-        if (playerAnimator != null && attackUI != null)
+        if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete += attackUI.ScrollAttackUI;
+            playerAnimator.OnAnimationComplete += programUI.ScrollProgramUI;
         }
 
         if (inputManager != null)
@@ -34,9 +34,9 @@ public class SlashLogic : Program
             player.MouseLeftOrRightChanged -= ChangeTransform;
         }
 
-        if (playerAnimator != null && attackUI != null)
+        if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete -= attackUI.ScrollAttackUI;
+            playerAnimator.OnAnimationComplete -= programUI.ScrollProgramUI;
         }
 
         if (inputManager != null)

@@ -9,10 +9,12 @@ using UnityEngine;
 
 public class Program : MonoBehaviour
 {
+    [Header("Program Type")]
+    public ProgramType programType = ProgramType.Attack;
 
     public PlayerLogic player;
     public Animator playerAnimator;
-    public AttackUI attackUI;
+    public ProgramUI programUI;
     public ProgramInputManager inputManager;
 
     public Sprite[] attackSprites;
@@ -23,7 +25,16 @@ public class Program : MonoBehaviour
     //In script for any program inheriting this class, run FindDependencies() in Start()
     public void FindDependencies()
     {
-        attackUI = FindObjectOfType<AttackUI>();
+        //Be aware that changing the AttackUIManager name in the editor will break GameObject.Find()
+        if (programType == ProgramType.Attack)
+        {
+            programUI = GameObject.Find("AttackUIManager").GetComponent<ProgramUI>();
+        }
+        else if (programType == ProgramType.Defense)
+        {
+            programUI = GameObject.Find("DefenseUIManager").GetComponent<ProgramUI>();
+        }
+    
         player = FindObjectOfType<PlayerLogic>();
         inputManager = FindObjectOfType<ProgramInputManager>();
 
