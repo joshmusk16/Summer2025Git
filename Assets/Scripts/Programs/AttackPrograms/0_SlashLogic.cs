@@ -24,7 +24,7 @@ public class SlashLogic : Program
 
     void Slash()
     {
-        playerAnimator.PlayAnimation(attackSprites, attackFrames, false, true, hitboxTimings);
+        playerAnimator.PlayAnimation(animSprites, animFrames, false, true, hitboxTimings);
     }
 
     void OnDestroy()

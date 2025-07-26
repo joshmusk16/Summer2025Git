@@ -51,11 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0867a24fdb2ded64797e53ca416d3b5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  playerAnimator: {fileID: 0}
-  attackUI: {fileID: 0}
-  inputManager: {fileID: 0}
-  attackSprites:
+  programType: 0
+  animSprites:
   - {fileID: 168151508, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
   - {fileID: 511389809, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
   - {fileID: -1582856792, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
@@ -66,7 +63,7 @@ MonoBehaviour:
   - {fileID: -1112220711, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
   - {fileID: -2054427883, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
   - {fileID: 521417177, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
-  attackFrames:
+  animFrames:
   - 0.1
   - 0.09
   - 0.08
@@ -90,6 +87,10 @@ MonoBehaviour:
     activationFrames: 08000000
   - hitbox: {fileID: 1770317936504277919}
     activationFrames: 08000000
+  player: {fileID: 0}
+  playerAnimator: {fileID: 0}
+  programUI: {fileID: 0}
+  inputManager: {fileID: 0}
 --- !u!114 &6104957623177137885
 MonoBehaviour:
   m_ObjectHideFlags: 0

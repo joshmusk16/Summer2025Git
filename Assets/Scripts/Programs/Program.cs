@@ -12,16 +12,16 @@ public class Program : MonoBehaviour
     [Header("Program Type")]
     public ProgramType programType = ProgramType.Attack;
 
-    public PlayerLogic player;
-    public Animator playerAnimator;
-    public ProgramUI programUI;
-    public ProgramInputManager inputManager;
-
-    public Sprite[] attackSprites;
-    public float[] attackFrames;
+    [Header("Animation Data")]
+    public Sprite[] animSprites;
+    public float[] animFrames;
     public HitboxTiming[] hitboxTimings;
 
-
+    [HideInInspector] public PlayerLogic player;
+    [HideInInspector] public Animator playerAnimator;
+    [HideInInspector] public ProgramUI programUI;
+    [HideInInspector] public ProgramInputManager inputManager;
+    
     //In script for any program inheriting this class, run FindDependencies() in Start()
     public void FindDependencies()
     {
@@ -34,7 +34,7 @@ public class Program : MonoBehaviour
         {
             programUI = GameObject.Find("DefenseUIManager").GetComponent<ProgramUI>();
         }
-    
+
         player = FindObjectOfType<PlayerLogic>();
         inputManager = FindObjectOfType<ProgramInputManager>();
 

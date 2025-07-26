@@ -18,6 +18,7 @@ public class ProgramListData : MonoBehaviour
     void Start()
     {
         totalProgramAmount = programs.Count;
+        UpdateCountUI();
 
         programInputManager = FindObjectOfType<ProgramInputManager>();
         PlayerLogic playerLogic = FindObjectOfType<PlayerLogic>();
@@ -77,6 +78,7 @@ public class ProgramListData : MonoBehaviour
         {
             Destroy(currentProgram);
             programInputManager.isAttacking = false;
+            programInputManager.isDefending = false;
         }
     }
 

@@ -17,6 +17,7 @@ public class Animator : MonoBehaviour
 
     public event Action OnAnimationStart;
     public event Action OnAnimationComplete;
+    public event Action<int> OnFrameChanged;
 
     private bool isUsingHitbox = false;
     public HitboxTiming[] animHitboxTimings;
@@ -40,14 +41,14 @@ public class Animator : MonoBehaviour
         {
             // Move to next frame
             currentFrameIndex++;
-            
+
             if (isUsingHitbox)
             {
-                //Debug.Log("Updating Hitboxes");
                 UpdateHitboxes();
             }
 
             SetCurrentFrame();
+            OnFrameChanged?.Invoke(currentFrameIndex);
         }
 
         // Check if animation is complete
@@ -58,7 +59,10 @@ public class Animator : MonoBehaviour
                 // Loop back to beginning
                 frameTimer = 0f;
                 currentFrameIndex = 0;
+                
                 SetCurrentFrame();
+                OnFrameChanged?.Invoke(currentFrameIndex);
+
                 if (isUsingHitbox)
                 {
                     DeactivateAllHitboxes(); // Reset hitboxes on loop
@@ -96,6 +100,7 @@ public class Animator : MonoBehaviour
         // Calculate frame time thresholds
         frameTimeThresholds = new float[frameTimes.Length];
         float cumulativeTime = 0f;
+
         for (int i = 0; i < frameTimes.Length; i++)
         {
             frameTimeThresholds[i] = cumulativeTime;
@@ -119,6 +124,7 @@ public class Animator : MonoBehaviour
         // Set first frame and start animation
         SetCurrentFrame();
         OnAnimationStart?.Invoke();
+        OnFrameChanged?.Invoke(currentFrameIndex);
 
         isPlaying = true;
     }

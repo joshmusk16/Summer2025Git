@@ -21,7 +21,7 @@ public class ProgramInputManager : MonoBehaviour
     void Update()
     {
 
-        if (canUseProgram == false && isAttacking == false && inSlowTimeMode == false)
+        if (canUseProgram == false && isAttacking == false && isDefending == false && inSlowTimeMode == false)
         {
             canUseProgram = true;
         }
@@ -34,6 +34,7 @@ public class ProgramInputManager : MonoBehaviour
                 isAttacking = true;
                 canUseProgram = false;
             }
+
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 StartDefenseProgram?.Invoke();

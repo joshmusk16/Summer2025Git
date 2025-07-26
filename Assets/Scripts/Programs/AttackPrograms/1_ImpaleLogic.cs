@@ -17,10 +17,10 @@ public class ImpaleLogic : Program
 
     void Impale()
     {
-        playerAnimator.PlayAnimation(attackSprites, attackFrames, false, true, hitboxTimings);
+        playerAnimator.PlayAnimation(animSprites, animFrames, false, true, hitboxTimings);
     }
 
-        void OnDestroy()
+    void OnDestroy()
     {
         if (playerAnimator != null && programUI != null)
         {
