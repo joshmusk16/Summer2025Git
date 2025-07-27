@@ -22,7 +22,7 @@ public class DummyLogic : MonoBehaviour
 
     private void StartHitAnimation(HitInfo hitInfo)
     {
-        animator.PlayAnimation(OnhitAnim, animFrames, false);
+        animator.PlayAnimation(OnhitAnim, animFrames, ProgramType.Other, false);
     }
 
     void OnDestroy()

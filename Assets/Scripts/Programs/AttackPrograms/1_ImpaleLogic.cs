@@ -6,7 +6,7 @@ public class ImpaleLogic : Program
 
         if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete += programUI.ScrollProgramUI;
+            playerAnimator.OnAnimationComplete += OnAnimationCompleted;
         }
 
         if (inputManager != null)
@@ -17,14 +17,14 @@ public class ImpaleLogic : Program
 
     void Impale()
     {
-        playerAnimator.PlayAnimation(animSprites, animFrames, false, true, hitboxTimings);
+        playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Attack, false, true, hitboxTimings);
     }
 
     void OnDestroy()
     {
         if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete -= programUI.ScrollProgramUI;
+            playerAnimator.OnAnimationComplete -= OnAnimationCompleted;
         }
 
         if (inputManager != null)

@@ -6,7 +6,7 @@ public class LockLogic : Program
 
         if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete += programUI.ScrollProgramUI;
+            playerAnimator.OnAnimationComplete += OnAnimationCompleted;
         }
 
         if (inputManager != null)
@@ -17,14 +17,14 @@ public class LockLogic : Program
 
     void Lock()
     {
-        playerAnimator.PlayAnimation(animSprites, animFrames);
+        playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Defense);
     }
 
     void OnDestroy()
     {
         if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete -= programUI.ScrollProgramUI;
+            playerAnimator.OnAnimationComplete -= OnAnimationCompleted;
         }
 
         if (inputManager != null)

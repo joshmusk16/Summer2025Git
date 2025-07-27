@@ -20,7 +20,7 @@ public class PlayerLogic : MonoBehaviour
     void Start()
     {
         playerAnimator.OnAnimationComplete += StartIdleAnimation;
-        StartIdleAnimation();
+        StartIdleAnimation(ProgramType.Other);
     }
 
     void Update()
@@ -28,9 +28,9 @@ public class PlayerLogic : MonoBehaviour
         MouseLeftOrRightOfPlayer();
     }
 
-    public void StartIdleAnimation()
+    public void StartIdleAnimation(ProgramType animType)
     {
-        playerAnimator.PlayAnimation(idleSprites, idleFrames, true);
+        playerAnimator.PlayAnimation(idleSprites, idleFrames, animType, true);
     }
 
     private void OnDestroy()

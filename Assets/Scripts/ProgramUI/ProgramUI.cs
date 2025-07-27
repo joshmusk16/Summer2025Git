@@ -5,7 +5,8 @@ using UnityEngine;
 public enum ProgramType
 {
     Attack,
-    Defense
+    Defense,
+    Other
 }
 
 public class ProgramUI : MonoBehaviour

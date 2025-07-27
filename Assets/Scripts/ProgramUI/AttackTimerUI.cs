@@ -45,7 +45,7 @@ public class AttackTimerUI : MonoBehaviour
         }
         else
         {
-            StopUpdatingBar();
+            StopUpdatingBar(ProgramType.Attack);
         }
     }
 
@@ -59,7 +59,7 @@ public class AttackTimerUI : MonoBehaviour
     }
 
     //Note this will not unsubscribe if a looping animation begins
-    public void StopUpdatingBar()
+    public void StopUpdatingBar(ProgramType type)
     {
         updatingBar = false;
         animBar.transform.localScale = new Vector2(0f, 1f);

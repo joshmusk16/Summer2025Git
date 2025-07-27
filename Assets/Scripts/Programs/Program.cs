@@ -23,7 +23,7 @@ public class Program : MonoBehaviour
     [HideInInspector] public ProgramInputManager inputManager;
     
     //In script for any program inheriting this class, run FindDependencies() in Start()
-    public void FindDependencies()
+    protected virtual void FindDependencies()
     {
         //Be aware that changing the AttackUIManager name in the editor will break GameObject.Find()
         if (programType == ProgramType.Attack)
@@ -44,10 +44,19 @@ public class Program : MonoBehaviour
         }
     }
 
+    protected virtual void OnAnimationCompleted(ProgramType completedType)
+    {
+        // Only scroll if this animation type matches our program type
+        if (completedType == programType && programUI != null)
+        {
+            programUI.ScrollProgramUI();
+        }
+    }
+
     //When given a direction of -1 or 1 in in direction, this method will change the transform of the hitboxes 
     //appropriately. This is intended to be subscribed to MouseLeftOrRightOfPlayer() in the PlayerHandler script
     //See SlashLogic Script for reference
-    public void ChangeTransform(int direction)
+    protected virtual void ChangeTransform(int direction)
     {
         foreach (HitboxTiming timing in hitboxTimings)
         {

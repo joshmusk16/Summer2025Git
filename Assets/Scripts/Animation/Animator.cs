@@ -14,9 +14,10 @@ public class Animator : MonoBehaviour
     private float frameTimer = 0f;
     private float totalAnimationTime = 0f;
     private float[] frameTimeThresholds;
+    private ProgramType animationType = ProgramType.Other;
 
     public event Action OnAnimationStart;
-    public event Action OnAnimationComplete;
+    public event Action<ProgramType> OnAnimationComplete;
     public event Action<int> OnFrameChanged;
 
     private bool isUsingHitbox = false;
@@ -77,7 +78,8 @@ public class Animator : MonoBehaviour
         }
     }
 
-    public void PlayAnimation(Sprite[] sprites, float[] frameTimes, bool loop = false, bool usingHitbox = false, HitboxTiming[] hitboxTimings = null)
+    public void PlayAnimation(Sprite[] sprites, float[] frameTimes, ProgramType animType, bool loop = false, bool usingHitbox = false,
+    HitboxTiming[] hitboxTimings = null)
     {
         if (sprites.Length != frameTimes.Length || sprites.Length == 0)
         {
@@ -89,6 +91,7 @@ public class Animator : MonoBehaviour
         // Set up new animation
         currentSprites = sprites;
         shouldLoop = loop;
+        animationType = animType;
 
         // Calculate total animation time
         totalAnimationTime = 0f;
@@ -152,7 +155,7 @@ public class Animator : MonoBehaviour
     private void CompleteAnimation()
     {
         isPlaying = false;
-        OnAnimationComplete?.Invoke();
+        OnAnimationComplete?.Invoke(animationType);
     }
 
     private void SetCurrentFrame()
