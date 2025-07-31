@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AttackTimerUI : MonoBehaviour
+public class ProgramTimerUI : MonoBehaviour
 {
 
     private Animator playerAnimator;
@@ -9,6 +9,8 @@ public class AttackTimerUI : MonoBehaviour
     public GameObject animBar;
     public bool updatingBar = false;
 
+    public ProgramType programType;
+
     //Fetch dependencies
     void Start()
     {
@@ -16,7 +18,14 @@ public class AttackTimerUI : MonoBehaviour
 
         if (inputManager != null)
         {
-            inputManager.StartAttackProgram += StartUpdatingBar;
+            if (programType == ProgramType.Attack)
+            {
+                inputManager.StartAttackProgram += StartUpdatingBar;
+            }
+            else if (programType == ProgramType.Defense)
+            {
+                inputManager.StartDefenseProgram += StartUpdatingBar;
+            }
         }
 
         GameObject playerLogic = FindObjectOfType<PlayerLogic>().gameObject;
@@ -38,14 +47,17 @@ public class AttackTimerUI : MonoBehaviour
     //Logic to animate the attack timer ui bar
     void UpdateAttackTimerBar()
     {
-        if (inputManager.isAttacking)
+        bool isActive = (programType == ProgramType.Attack && inputManager.isAttacking) ||
+        (programType == ProgramType.Defense && inputManager.isDefending);
+    
+        if (isActive)
         {
-            float temp = playerAnimator.GetAnimationProgress();
-            animBar.transform.localScale = new Vector2(QuadraticEaseInWithHold(temp, 0.5f), 1f);
+            float progress = playerAnimator.GetAnimationProgress();
+            animBar.transform.localScale = new Vector2(QuadraticEaseInWithHold(progress, 0.8f), 1f);
         }
         else
         {
-            StopUpdatingBar(ProgramType.Attack);
+            StopUpdatingBar(programType);
         }
     }
 
@@ -70,7 +82,16 @@ public class AttackTimerUI : MonoBehaviour
     //Handle unsubscriptions
     void OnDestroy()
     {
-        inputManager.StartAttackProgram -= StartUpdatingBar;
+        if (inputManager != null)
+        {
+            inputManager.StartAttackProgram -= StartUpdatingBar;
+            inputManager.StartDefenseProgram -= StartUpdatingBar;
+        }
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.OnAnimationComplete -= StopUpdatingBar;
+        }
     }
 
     //Revieves a input of 0-1 as linearProgress and modifies in quadratically with a specified delay
