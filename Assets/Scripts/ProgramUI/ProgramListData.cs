@@ -44,6 +44,8 @@ public class ProgramListData : MonoBehaviour
                 currentProgram = Instantiate(programs[currentProgramAmount], player.transform);
             }
         }
+
+        UpdateCountUI();
     }
 
     public void MoveProgram(int startIndex, int endIndex)
@@ -67,8 +69,6 @@ public class ProgramListData : MonoBehaviour
             GameObject swap = programs[startIndex];
             programs.RemoveAt(startIndex);
             programs.Insert(endIndex, swap);
-
-            UpdateCountUI();
         }
     }
 
