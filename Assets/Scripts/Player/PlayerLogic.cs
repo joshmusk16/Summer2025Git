@@ -7,6 +7,10 @@ public class PlayerLogic : MonoBehaviour
     public Animator playerAnimator;
     public MouseTracker mouseTracker;
 
+    private float playerTotalHealth;
+    private float playerCurrentHealth;
+    private PlayerHealthUI playerHealthUI;
+
     [Header("Player Idle Info")]
     public Sprite[] idleSprites;
     public float[] idleFrames;
@@ -19,6 +23,8 @@ public class PlayerLogic : MonoBehaviour
 
     void Start()
     {
+        playerHealthUI = FindObjectOfType<PlayerHealthUI>();
+
         playerAnimator.OnAnimationComplete += StartIdleAnimation;
         StartIdleAnimation(ProgramType.Other);
     }
@@ -28,14 +34,65 @@ public class PlayerLogic : MonoBehaviour
         MouseLeftOrRightOfPlayer();
     }
 
+    #region Player Health Methods
+
+    public void AddPlayerHealth(int health)
+    {
+        if (playerCurrentHealth + health <= playerTotalHealth)
+        {
+            playerCurrentHealth += health;
+        }
+        else
+        {
+            playerCurrentHealth = playerTotalHealth;
+        }
+
+        AnimateHealthBar();
+    }
+
+    public void RemovePlayerHealth(int health)
+    {
+        if (playerCurrentHealth - health > 0)
+        {
+            playerCurrentHealth -= health;
+        }
+        else
+        {
+            playerCurrentHealth = 0;
+        }
+
+        AnimateHealthBar();
+    }
+
+    public void AddPlayerTotalHealth(int health)
+    {
+        playerTotalHealth += health;
+
+        AnimateHealthBar();
+    }
+
+    public void RemovePlayerTotalHealth(int health)
+    {
+        playerTotalHealth -= health;
+
+        if (playerCurrentHealth > playerTotalHealth)
+        {
+            playerCurrentHealth = playerTotalHealth;
+        }
+
+        AnimateHealthBar();
+    }
+
+    private void AnimateHealthBar()
+    {
+        playerHealthUI.AnimateHealthChange(playerCurrentHealth / playerTotalHealth);
+    }
+
+    #endregion
+
     public void StartIdleAnimation(ProgramType animType)
     {
         playerAnimator.PlayAnimation(idleSprites, idleFrames, animType, true);
-    }
-
-    private void OnDestroy()
-    {
-        playerAnimator.OnAnimationComplete -= StartIdleAnimation;
     }
 
     //returns -1 for mouse left of the player and 1 for mouse right of the player
@@ -55,5 +112,10 @@ public class PlayerLogic : MonoBehaviour
             MouseLeftOrRightChanged?.Invoke(1);
             currentMouseLeftOrRight = 1;
         }
+    }
+
+    private void OnDestroy()
+    {
+        playerAnimator.OnAnimationComplete -= StartIdleAnimation;
     }
 }
