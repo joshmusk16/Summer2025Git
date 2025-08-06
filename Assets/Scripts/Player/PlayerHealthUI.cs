@@ -8,7 +8,7 @@ public class PlayerHealthUI : MonoBehaviour
 
     private bool isAnimating;
     private Vector2 animationDestination;
-    private const float animationSpeed = 5f;
+    private const float animationSpeed = 10f;
 
     public event Action OnHealthBarAnimationFinish;
 
@@ -18,7 +18,7 @@ public class PlayerHealthUI : MonoBehaviour
         {
             playerHealthBar.transform.localScale = Vector2.Lerp(playerHealthBar.transform.localScale, animationDestination, Time.deltaTime * animationSpeed);
 
-            if (Mathf.Abs(animationDestination.x - playerHealthBar.transform.localScale.x) < 0.01f)
+            if (Mathf.Abs(animationDestination.x - playerHealthBar.transform.localScale.x) < 0.0001f)
             {
                 playerHealthBar.transform.localScale = animationDestination;
                 OnHealthBarAnimationFinish?.Invoke();
