@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class Animator : MonoBehaviour
+public class CustomAnimator : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
 
@@ -18,7 +18,7 @@ public class Animator : MonoBehaviour
 
     public event Action OnAnimationStart;
     public event Action<ProgramType> OnAnimationComplete;
-    public event Action<int> OnFrameChanged;
+    public event Action<int, ProgramType> OnFrameChanged;
 
     private bool isUsingHitbox = false;
     public HitboxTiming[] animHitboxTimings;
@@ -49,7 +49,8 @@ public class Animator : MonoBehaviour
             }
 
             SetCurrentFrame();
-            OnFrameChanged?.Invoke(currentFrameIndex);
+            Debug.Log("Frame Changed");
+            OnFrameChanged?.Invoke(currentFrameIndex, animationType);
         }
 
         // Check if animation is complete
@@ -62,7 +63,7 @@ public class Animator : MonoBehaviour
                 currentFrameIndex = 0;
                 
                 SetCurrentFrame();
-                OnFrameChanged?.Invoke(currentFrameIndex);
+                OnFrameChanged?.Invoke(currentFrameIndex, animationType);
 
                 if (isUsingHitbox)
                 {
@@ -127,7 +128,7 @@ public class Animator : MonoBehaviour
         // Set first frame and start animation
         SetCurrentFrame();
         OnAnimationStart?.Invoke();
-        OnFrameChanged?.Invoke(currentFrameIndex);
+        OnFrameChanged?.Invoke(currentFrameIndex, animationType);
 
         isPlaying = true;
     }

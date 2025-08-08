@@ -1,5 +1,10 @@
+using UnityEngine;
+
 public class LockLogic : Program
 {
+    private const int hitBoxDeactivationFrame = 5;
+    private const int hitBoxActivationFrame = 10;
+
     void Start()
     {
         FindDependencies();
@@ -7,6 +12,8 @@ public class LockLogic : Program
         if (playerAnimator != null && programUI != null)
         {
             playerAnimator.OnAnimationComplete += OnAnimationCompleted;
+            playerAnimator.OnFrameChanged += DisableHitbox;
+            playerAnimator.OnFrameChanged += EnableHitbox;
         }
 
         if (inputManager != null)
@@ -20,11 +27,25 @@ public class LockLogic : Program
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Defense);
     }
 
+    void DisableHitbox(int frame, ProgramType type)
+    {
+        Debug.Log("Disable Hitbox triggered");
+        if (frame == hitBoxDeactivationFrame && type == programType) player.DisablePlayerHitbox();
+    }
+
+    void EnableHitbox(int frame, ProgramType type)
+    {
+        Debug.Log("Enable Hitbox triggered");
+        if (frame == hitBoxActivationFrame && type == programType) player.EnablePlayerHitbox();
+    }
+
     void OnDestroy()
     {
         if (playerAnimator != null && programUI != null)
         {
             playerAnimator.OnAnimationComplete -= OnAnimationCompleted;
+            playerAnimator.OnFrameChanged -= DisableHitbox;
+            playerAnimator.OnFrameChanged -= EnableHitbox;
         }
 
         if (inputManager != null)

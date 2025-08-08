@@ -18,7 +18,7 @@ public class Program : MonoBehaviour
     public HitboxTiming[] hitboxTimings;
 
     [HideInInspector] public PlayerLogic player;
-    [HideInInspector] public Animator playerAnimator;
+    [HideInInspector] public CustomAnimator playerAnimator;
     [HideInInspector] public ProgramUI programUI;
     [HideInInspector] public ProgramInputManager inputManager;
     
@@ -40,7 +40,7 @@ public class Program : MonoBehaviour
 
         if (player != null)
         {
-            playerAnimator = player.gameObject.GetComponent<Animator>();
+            playerAnimator = player.gameObject.GetComponent<CustomAnimator>();
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerLogic : MonoBehaviour
 {
 
-    public Animator playerAnimator;
+    private CustomAnimator playerAnimator;
     public MouseTracker mouseTracker;
 
     [Header("Player Health Data")]
@@ -26,8 +26,8 @@ public class PlayerLogic : MonoBehaviour
     void Start()
     {
         playerHealthUI = FindObjectOfType<PlayerHealthUI>();
-
         playerHurtBox = gameObject.GetComponent<HurtBox>();
+        playerAnimator = gameObject.GetComponent<CustomAnimator>();
         
         if (playerHurtBox != null)
         {
@@ -112,14 +112,14 @@ public class PlayerLogic : MonoBehaviour
 
     public void EnablePlayerHitbox()
     {
-        if (playerHurtBox == null || playerHurtBox.enabled == true) return;
-        playerHurtBox.enabled = true;
+        if (playerHurtBox == null || playerHurtBox.isActive == true) return;
+        playerHurtBox.isActive = true;
     }
 
     public void DisablePlayerHitbox()
     {
-        if (playerHurtBox == null || playerHurtBox.enabled == false) return;
-        playerHurtBox.enabled = false;
+        if (playerHurtBox == null || playerHurtBox.isActive == false) return;
+        playerHurtBox.isActive = false;
     }
 
     #endregion
@@ -132,14 +132,14 @@ public class PlayerLogic : MonoBehaviour
     //returns -1 for mouse left of the player and 1 for mouse right of the player
     public void MouseLeftOrRightOfPlayer()
     {
-        if (mouseTracker.worldPosition.x <= gameObject.transform.position.x &&
+        if (mouseTracker.GetWorldMousePosition().x <= gameObject.transform.position.x &&
         currentMouseLeftOrRight == 1)
         {
             transform.localScale *= new Vector2(-1, 1f);
             MouseLeftOrRightChanged?.Invoke(-1);
             currentMouseLeftOrRight = -1;
         }
-        else if (mouseTracker.worldPosition.x > gameObject.transform.position.x &&
+        else if (mouseTracker.GetWorldMousePosition().x > gameObject.transform.position.x &&
         currentMouseLeftOrRight == -1)
         {
             transform.localScale *= new Vector2(-1, 1f);

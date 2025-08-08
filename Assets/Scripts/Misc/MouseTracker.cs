@@ -3,14 +3,18 @@ using UnityEngine;
 public class MouseTracker : MonoBehaviour
 {
     public Vector2 worldPosition;
+    public Vector2 uiPosition;
+
     private Camera mainCamera;
+    private Camera uiCamera;
 
     void Start()
     {
-        mainCamera = Camera.main;
+        mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        uiCamera = GameObject.Find("UICamera").GetComponent<Camera>();
     }
 
-    void Update()
+    public Vector3 GetWorldMousePosition()
     {
         Vector3 mouseScreenPosition = Input.mousePosition;
 
@@ -18,5 +22,20 @@ public class MouseTracker : MonoBehaviour
                 mouseScreenPosition.x,
                 mouseScreenPosition.y,
                 Mathf.Abs(mainCamera.transform.position.z)));
+
+        return worldPosition;
     }
+
+    public Vector3 GetUIMousePosition()
+    {
+        Vector3 mouseScreenPosition = Input.mousePosition;
+
+        uiPosition = uiCamera.ScreenToWorldPoint(new Vector3(
+                mouseScreenPosition.x,
+                mouseScreenPosition.y,
+                Mathf.Abs(uiCamera.transform.position.z)));
+
+        return uiPosition;
+    }
+
 }

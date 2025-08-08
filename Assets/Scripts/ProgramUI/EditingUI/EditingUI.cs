@@ -11,7 +11,7 @@ public class EditingUI : MonoBehaviour
     public float[] animFrames;
 
     private LerpUIHandler lerpHandler;
-    private Animator animator;
+    private CustomAnimator animator;
     private SpriteRenderer spriteRenderer;
 
     [HideInInspector] public ProgramInputManager inputManager;
@@ -21,7 +21,7 @@ public class EditingUI : MonoBehaviour
         inputManager = FindObjectOfType<ProgramInputManager>();
 
         lerpHandler = gameObject.GetComponent<LerpUIHandler>();
-        animator = gameObject.GetComponent<Animator>();
+        animator = gameObject.GetComponent<CustomAnimator>();
 
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         spriteRenderer.enabled = false;

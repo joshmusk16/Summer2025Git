@@ -3,7 +3,7 @@ using UnityEngine;
 public class ProgramTimerUI : MonoBehaviour
 {
 
-    private Animator playerAnimator;
+    private CustomAnimator playerAnimator;
     private ProgramInputManager inputManager;
 
     public GameObject animBar;
@@ -32,7 +32,7 @@ public class ProgramTimerUI : MonoBehaviour
 
         if (playerLogic != null)
         {
-            playerAnimator = playerLogic.GetComponent<Animator>();
+            playerAnimator = playerLogic.GetComponent<CustomAnimator>();
         }
     }
 

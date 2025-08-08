@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 37177297}
   - component: {fileID: 37177299}
   - component: {fileID: 37177300}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EditingUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 76470411}
   - component: {fileID: 76470410}
   - component: {fileID: 76470412}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -450,7 +450,7 @@ GameObject:
   m_Component:
   - component: {fileID: 125615887}
   - component: {fileID: 125615886}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: LeftPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -652,7 +652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 211234013}
   - component: {fileID: 211234014}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BarBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -734,6 +734,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 611740130}
     m_Modifications:
+    - target: {fileID: 5164138640206634696, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5183121382449834687, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329846568193671283, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5803162831609794792, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
       propertyPath: m_LocalPosition.x
       value: 25.2
@@ -777,6 +789,26 @@ PrefabInstance:
     - target: {fileID: 5905287385932114587, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
       propertyPath: m_Name
       value: DefenseCount
+      objectReference: {fileID: 0}
+    - target: {fileID: 5905287385932114587, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7267787911234268590, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7525789733912810615, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7674557170550666005, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7693573963302864738, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1053,8 +1085,8 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 60
-  orthographic: 1
+  field of view: 118
+  orthographic: 0
   orthographic size: 16
   m_Depth: -1
   m_CullingMask:
@@ -1122,7 +1154,7 @@ GameObject:
   - component: {fileID: 611740130}
   - component: {fileID: 611740129}
   - component: {fileID: 611740128}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DefenseUIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1207,7 +1239,7 @@ GameObject:
   m_Component:
   - component: {fileID: 622653287}
   - component: {fileID: 622653288}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1360,7 +1392,7 @@ GameObject:
   - component: {fileID: 684479107}
   - component: {fileID: 684479106}
   - component: {fileID: 684479108}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: AttackUIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1446,7 +1478,7 @@ GameObject:
   - component: {fileID: 788363175}
   - component: {fileID: 788363174}
   - component: {fileID: 788363176}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1532,6 +1564,89 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1808a762517ec4469655d8097838065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &852259958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 852259961}
+  - component: {fileID: 852259960}
+  m_Layer: 0
+  m_Name: UICamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!20 &852259960
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852259958}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 118
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &852259961
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852259958}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &861617245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1627,7 +1742,7 @@ GameObject:
   - component: {fileID: 864831186}
   - component: {fileID: 864831185}
   - component: {fileID: 864831184}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1724,7 +1839,7 @@ GameObject:
   - component: {fileID: 872361634}
   - component: {fileID: 872361633}
   - component: {fileID: 872361635}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1885,7 +2000,7 @@ GameObject:
   m_Component:
   - component: {fileID: 911204013}
   - component: {fileID: 911204014}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DefenseProgramUIHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2150,7 +2265,7 @@ GameObject:
   - component: {fileID: 1107061319}
   - component: {fileID: 1107061318}
   - component: {fileID: 1107061320}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2236,6 +2351,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1808a762517ec4469655d8097838065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1115827751
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1115827753}
+  - component: {fileID: 1115827752}
+  m_Layer: 0
+  m_Name: DebugHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1115827752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115827751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0}
+  size: {x: 1, y: 1}
+  isActive: 1
+  showDebugGizmo: 1
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
+  damage: 1
+  hitboxTags:
+  - default
+  multiHit: 1
+  multiHitInterval: 0.1
+  maxHits: -1
+--- !u!4 &1115827753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115827751}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.55, y: 5.03, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1143150643
 GameObject:
   m_ObjectHideFlags: 0
@@ -2247,7 +2417,7 @@ GameObject:
   - component: {fileID: 1143150646}
   - component: {fileID: 1143150645}
   - component: {fileID: 1143150644}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2344,7 +2514,7 @@ GameObject:
   - component: {fileID: 1160209032}
   - component: {fileID: 1160209031}
   - component: {fileID: 1160209033}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2533,7 +2703,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1204749987}
   - component: {fileID: 1204749986}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BarFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2618,7 +2788,7 @@ GameObject:
   - component: {fileID: 1233447213}
   - component: {fileID: 1233447212}
   - component: {fileID: 1233447211}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DefenseAnimationBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2772,7 +2942,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1339430217}
   - component: {fileID: 1339430216}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: RightPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2985,7 +3155,7 @@ GameObject:
   - component: {fileID: 1424898785}
   - component: {fileID: 1424898784}
   - component: {fileID: 1424898783}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3146,7 +3316,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1517610754}
   - component: {fileID: 1517610755}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BarMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3334,7 +3504,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d96d061b6d4323048b3b9f7ae812621d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAnimator: {fileID: 1523212147}
   mouseTracker: {fileID: 672980304}
   playerTotalHealth: 100
   playerCurrentHealth: 100
@@ -3450,6 +3619,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd46b20a3ca40c94ba7fc91e86fde293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1648717279
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1648717281}
+  - component: {fileID: 1648717280}
+  m_Layer: 0
+  m_Name: CameraController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1648717280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648717279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a5ac7896343624db58c6a1651d07b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 519420031}
+  uiCamera: {fileID: 852259960}
+  gameplayLayers:
+    serializedVersion: 2
+    m_Bits: 23
+  uiLayers:
+    serializedVersion: 2
+    m_Bits: 32
+  uiCameraSize: 16.75
+  uiCameraDistance: 10
+--- !u!4 &1648717281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648717279}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1671349138 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5290009692414263930, guid: 19ca7b287bc13b94ea122330217e8358, type: 3}
@@ -3555,7 +3778,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1718053578}
   - component: {fileID: 1718053579}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BarFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3640,7 +3863,7 @@ GameObject:
   - component: {fileID: 1785273640}
   - component: {fileID: 1785273639}
   - component: {fileID: 1785273641}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: AttackAnimationBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3740,7 +3963,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1850997520}
   - component: {fileID: 1850997521}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PlayerHealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3952,7 +4175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1923254196}
   - component: {fileID: 1923254197}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BarOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4037,7 +4260,7 @@ GameObject:
   - component: {fileID: 1952150165}
   - component: {fileID: 1952150164}
   - component: {fileID: 1952150163}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4218,7 +4441,7 @@ GameObject:
   - component: {fileID: 2064517330}
   - component: {fileID: 2064517329}
   - component: {fileID: 2064517328}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EmptyProgram 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4314,7 +4537,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2108919444}
   - component: {fileID: 2108919443}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: AttackProgramUIHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4530,6 +4753,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 684479107}
     m_Modifications:
+    - target: {fileID: 5164138640206634696, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5183121382449834687, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329846568193671283, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5803162831609794792, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
       propertyPath: m_LocalPosition.x
       value: -31.03
@@ -4573,6 +4808,26 @@ PrefabInstance:
     - target: {fileID: 5905287385932114587, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
       propertyPath: m_Name
       value: AttackCount
+      objectReference: {fileID: 0}
+    - target: {fileID: 5905287385932114587, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7267787911234268590, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7525789733912810615, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7674557170550666005, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7693573963302864738, guid: 595b294fc35af7d4c8236df1d742c680, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4666,7 +4921,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 519420032}
   - {fileID: 672980303}
   - {fileID: 1356191100}
   - {fileID: 189774943}
@@ -4676,6 +4930,8 @@ SceneRoots:
   - {fileID: 962996298}
   - {fileID: 684479107}
   - {fileID: 611740130}
+  - {fileID: 1850997520}
+  - {fileID: 37177296}
   - {fileID: 1339430217}
   - {fileID: 125615887}
   - {fileID: 891495397}
@@ -4685,5 +4941,7 @@ SceneRoots:
   - {fileID: 400329777}
   - {fileID: 2142633142}
   - {fileID: 1523212149}
-  - {fileID: 37177296}
-  - {fileID: 1850997520}
+  - {fileID: 1648717281}
+  - {fileID: 519420032}
+  - {fileID: 852259961}
+  - {fileID: 1115827753}

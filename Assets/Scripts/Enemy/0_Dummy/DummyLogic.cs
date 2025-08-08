@@ -8,7 +8,7 @@ public class DummyLogic : MonoBehaviour
     public Sprite idleSprite;
 
     public HurtBox hurtbox;
-    public Animator animator;
+    public CustomAnimator animator;
     public EnemyHealthBar health;
 
     void Start()

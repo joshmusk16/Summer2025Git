@@ -75,7 +75,7 @@ public class ProgramUI : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Mouse0) && heldProgram != null)
             {
-                heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.worldPosition, 25f);
+                heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.GetUIMousePosition(), 25f);
                 UpdateProgramUI();
             }
         }
@@ -222,13 +222,13 @@ public class ProgramUI : MonoBehaviour
 
     private GameObject ClosestUIToMouse()
     {
-        float distance = Vector2.Distance(uiPrograms[GetInitialIndex()].transform.position, mouse.worldPosition);
+        float distance = Vector2.Distance(uiPrograms[GetInitialIndex()].transform.position, mouse.GetUIMousePosition());
         GameObject closestObj = uiPrograms[GetInitialIndex()];
         for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
         {
-            if (Vector2.Distance(uiPrograms[i].transform.position, mouse.worldPosition) < distance)
+            if (Vector2.Distance(uiPrograms[i].transform.position, mouse.GetUIMousePosition()) < distance)
             {
-                distance = Vector2.Distance(uiPrograms[i].transform.position, mouse.worldPosition);
+                distance = Vector2.Distance(uiPrograms[i].transform.position, mouse.GetUIMousePosition());
                 closestObj = uiPrograms[i];
             }
         }
@@ -240,10 +240,10 @@ public class ProgramUI : MonoBehaviour
         float xBounds = obj.GetComponent<SpriteRenderer>().sprite.rect.width * obj.transform.localScale.x / (PIXELS_PER_UNIT * 2f);
         float yBounds = obj.GetComponent<SpriteRenderer>().sprite.rect.height * obj.transform.localScale.y / (PIXELS_PER_UNIT * 2f);
 
-        if (mouse.worldPosition.x > obj.transform.position.x - xBounds
-        && mouse.worldPosition.x < obj.transform.position.x + xBounds
-        && mouse.worldPosition.y > obj.transform.position.y - yBounds
-        && mouse.worldPosition.y < obj.transform.position.y + yBounds)
+        if (mouse.GetUIMousePosition().x > obj.transform.position.x - xBounds
+        && mouse.GetUIMousePosition().x < obj.transform.position.x + xBounds
+        && mouse.GetUIMousePosition().y > obj.transform.position.y - yBounds
+        && mouse.GetUIMousePosition().y < obj.transform.position.y + yBounds)
         {
             return true;
         }
