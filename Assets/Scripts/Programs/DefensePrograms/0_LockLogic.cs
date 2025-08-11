@@ -29,13 +29,11 @@ public class LockLogic : Program
 
     void DisableHitbox(int frame, ProgramType type)
     {
-        Debug.Log("Disable Hitbox triggered");
         if (frame == hitBoxDeactivationFrame && type == programType) player.DisablePlayerHitbox();
     }
 
     void EnableHitbox(int frame, ProgramType type)
     {
-        Debug.Log("Enable Hitbox triggered");
         if (frame == hitBoxActivationFrame && type == programType) player.EnablePlayerHitbox();
     }
 

@@ -49,7 +49,6 @@ public class CustomAnimator : MonoBehaviour
             }
 
             SetCurrentFrame();
-            Debug.Log("Frame Changed");
             OnFrameChanged?.Invoke(currentFrameIndex, animationType);
         }
 

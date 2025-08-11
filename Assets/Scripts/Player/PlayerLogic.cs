@@ -5,12 +5,8 @@ public class PlayerLogic : MonoBehaviour
 {
 
     private CustomAnimator playerAnimator;
+    private PlayerTimerLogic playerTimerLogic;
     public MouseTracker mouseTracker;
-
-    [Header("Player Health Data")]
-    [SerializeField] private float playerTotalHealth;
-    [SerializeField] private float playerCurrentHealth;
-    private PlayerHealthUI playerHealthUI;
 
     private HurtBox playerHurtBox;
 
@@ -25,13 +21,13 @@ public class PlayerLogic : MonoBehaviour
 
     void Start()
     {
-        playerHealthUI = FindObjectOfType<PlayerHealthUI>();
         playerHurtBox = gameObject.GetComponent<HurtBox>();
         playerAnimator = gameObject.GetComponent<CustomAnimator>();
+        playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
         
         if (playerHurtBox != null)
         {
-            playerHurtBox.OnHit += RemovePlayerHealth;
+            playerHurtBox.OnHit += playerTimerLogic.RemovePlayerHealth;
         }
 
         playerAnimator.OnAnimationComplete += StartIdleAnimation;
@@ -43,71 +39,6 @@ public class PlayerLogic : MonoBehaviour
         MouseLeftOrRightOfPlayer();
     }
 
-    #region Player Health Methods
-
-    public void AddPlayerHealth(HitInfo hitInfo)
-    {
-        if (hitInfo.damage <= 0) return;
-        
-        if (playerCurrentHealth + hitInfo.damage <= playerTotalHealth)
-        {
-            playerCurrentHealth += hitInfo.damage;
-        }
-        else
-        {
-            playerCurrentHealth = playerTotalHealth;
-        }
-
-        AnimateHealthBar();
-    }
-
-    public void RemovePlayerHealth(HitInfo hitInfo)
-    {
-        if (hitInfo.damage <= 0) return;
-
-        if (playerCurrentHealth - hitInfo.damage > 0)
-        {
-            playerCurrentHealth -= hitInfo.damage;
-        }
-        else
-        {
-            playerCurrentHealth = 0;
-        }
-
-        AnimateHealthBar();
-    }
-
-    public void AddPlayerTotalHealth(int health)
-    {
-        if (health <= 0) return;
-
-        playerTotalHealth += health;
-
-        AnimateHealthBar();
-    }
-
-    public void RemovePlayerTotalHealth(int health)
-    {
-        if (health <= 0) return;
-
-        playerTotalHealth -= health;
-
-        if (playerCurrentHealth > playerTotalHealth)
-        {
-            playerCurrentHealth = playerTotalHealth;
-        }
-
-        AnimateHealthBar();
-    }
-
-    private void AnimateHealthBar()
-    {
-        playerHealthUI.AnimateHealthChange(playerCurrentHealth / playerTotalHealth);
-    }
-
-    #endregion
-
-    //Need to test hurtbox methods with 0_LockLogic still
     #region Player HurtBox Methods
 
     public void EnablePlayerHitbox()
@@ -151,5 +82,6 @@ public class PlayerLogic : MonoBehaviour
     private void OnDestroy()
     {
         playerAnimator.OnAnimationComplete -= StartIdleAnimation;
+        playerHurtBox.OnHit -= playerTimerLogic.RemovePlayerHealth;
     }
 }
