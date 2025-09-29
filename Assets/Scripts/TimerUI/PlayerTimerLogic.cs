@@ -42,7 +42,7 @@ public class PlayerTimerLogic : MonoBehaviour
         if (playerCurrentTime < nextUpdateTime)
         {
             AnimateHealthBar();
-            Debug.Log("Called animateHealthBar at" + playerCurrentTime);
+            //Debug.Log("Called animateHealthBar at" + playerCurrentTime);
         }
 
         if (playerCurrentTime < 0)

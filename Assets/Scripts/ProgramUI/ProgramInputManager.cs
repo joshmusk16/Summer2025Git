@@ -18,6 +18,20 @@ public class ProgramInputManager : MonoBehaviour
     public event Action OnSlowModeEnter;
     public event Action OnSlowModeExit;
 
+    public void ForceExitSlowMode()
+    {
+        inSlowTimeMode = false;
+
+        if (isAttacking == false && isDefending == false)
+        {
+            canUseProgram = true;
+        }
+        else
+        {
+            canUseProgram = false;
+        }
+    }
+
     void Update()
     {
 
@@ -54,16 +68,7 @@ public class ProgramInputManager : MonoBehaviour
         {
             Debug.Log("Exiting program rearrangement mode");
             OnSlowModeExit?.Invoke();
-            inSlowTimeMode = false;
-
-            if (isAttacking == false && isDefending == false)
-            {
-                canUseProgram = true;
-            }
-            else
-            {
-                canUseProgram = false;
-            }
+            ForceExitSlowMode();
         }
     }
     
