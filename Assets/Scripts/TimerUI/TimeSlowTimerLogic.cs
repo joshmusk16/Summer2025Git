@@ -141,4 +141,26 @@ public class TimeSlowTimerLogic : MonoBehaviour
         StopIncreasingTimeSlowTimer();
     }
 
+    public bool IsTimeSlowAboveZero()
+    {
+        if (timeSlowCurrentTime > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (inputManager != null)
+        {
+            inputManager.OnSlowModeEnter -= StartDecreasingTimeSlowTimer;
+            inputManager.OnSlowModeEnter -= StopAndResetAllTimers;
+            inputManager.OnSlowModeExit -= StopDecreasingTimeSlowTimer;
+            inputManager.OnSlowModeExit -= StartRechargeDelay;
+        }
+    }
 }

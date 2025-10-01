@@ -18,6 +18,17 @@ public class ProgramInputManager : MonoBehaviour
     public event Action OnSlowModeEnter;
     public event Action OnSlowModeExit;
 
+    private TimeSlowTimerLogic timeSlowTimerLogic;
+    private ProgramListData attackProgramList;
+    private ProgramListData defenseProgramList;
+
+    void Start()
+    {
+        timeSlowTimerLogic = FindObjectOfType<TimeSlowTimerLogic>();
+        attackProgramList = GameObject.Find("AttackUIManager").GetComponent<ProgramListData>();
+        defenseProgramList = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
+    }
+
     public void ForceExitSlowMode()
     {
         inSlowTimeMode = false;
@@ -42,14 +53,14 @@ public class ProgramInputManager : MonoBehaviour
 
         if (canUseProgram)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0) && attackProgramList.AreProgramsAvailable())
             {
                 StartAttackProgram?.Invoke();
                 isAttacking = true;
                 canUseProgram = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse1) && defenseProgramList.AreProgramsAvailable())
             {
                 StartDefenseProgram?.Invoke();
                 isDefending = true;
@@ -57,7 +68,7 @@ public class ProgramInputManager : MonoBehaviour
             }       
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && timeSlowTimerLogic.IsTimeSlowAboveZero())
         {
             Debug.Log("Entering program rearrangement mode");
             OnSlowModeEnter?.Invoke();

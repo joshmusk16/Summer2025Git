@@ -85,6 +85,18 @@ public class ProgramListData : MonoBehaviour
     public void UpdateCountUI()
     {
         currentDeckAmountDisplay.UpdateNumber(totalProgramAmount - currentProgramAmount);
-        totalDeckAmountDisplay.UpdateNumber(totalProgramAmount); 
+        totalDeckAmountDisplay.UpdateNumber(totalProgramAmount);
+    }
+
+    public bool AreProgramsAvailable()
+    {
+        if (currentProgramAmount < totalProgramAmount)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
