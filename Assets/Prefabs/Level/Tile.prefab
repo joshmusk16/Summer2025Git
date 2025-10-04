@@ -98,9 +98,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 21300000, guid: 179f77b30c8fd1c4f9fe7b9178959aae, type: 3}
   - {fileID: 0}
-  state: 1
+  - {fileID: 21300000, guid: 179f77b30c8fd1c4f9fe7b9178959aae, type: 3}
+  state: 0
   editable: 1
   objectOnTile: {fileID: 0}
   cliffPrefab: {fileID: 4013031084012680382, guid: a28bbec3f8fa6904798f0524a3e7b455, type: 3}

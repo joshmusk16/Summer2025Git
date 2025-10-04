@@ -4,7 +4,7 @@ public class TilePrefab : MonoBehaviour
 {
     [Header("Tile Info")]
     public Sprite[] tiles = new Sprite[2];
-    public int state = 1;
+    public int state = 0;
 
     public bool editable = true;
     public GameObject objectOnTile = null;
@@ -12,9 +12,10 @@ public class TilePrefab : MonoBehaviour
     public GameObject cliffPrefab;
     public GameObject cliff;
 
-    void Update()
+    public void DrawTile(int tileState)
     {
-        gameObject.GetComponent<SpriteRenderer>().sprite = tiles[state];
+        state = tileState;
+        gameObject.GetComponent<SpriteRenderer>().sprite = tiles[tileState];
     }
 
     public void DrawCliff()

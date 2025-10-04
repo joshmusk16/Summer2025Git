@@ -15,8 +15,8 @@ public class LevelData : ScriptableObject
     [Tooltip("0 = active/solid, 1 = inactive/empty")]
     public int[] tileStates;
 
-    // Validate that the data is correct
-    public bool IsValid()
+    // Validate that the level data is correct
+    public bool IsValidLevel()
     {
         if (tileStates == null)
         {
@@ -34,30 +34,20 @@ public class LevelData : ScriptableObject
         return true;
     }
 
-    // Get tile state at specific grid position
-    public int GetTileState(int x, int y)
-    {
-        if (x < 0 || x >= width || y < 0 || y >= height)
-            return -1;
-        
-        return tileStates[y * width + x];
-    }
-
-    // Helper method to initialize/resize the array from inspector
-    [ContextMenu("Initialize Tile Array")]
-    public void InitializeTileArray()
+    [ContextMenu("Initialize Tile Array Size")]
+    public void InitializeTileArraySize()
     {
         tileStates = new int[width * height];
         Debug.Log($"Initialized tile array for {width}x{height} grid ({tileStates.Length} tiles)");
     }
 
-    // Helper to fill with a pattern (useful for testing)
+    // Helper to fill with a pattern (useful for testing / not necessary)
     [ContextMenu("Fill with Empty Border")]
     public void FillWithEmptyBorder()
     {
         if (tileStates == null || tileStates.Length != width * height)
         {
-            InitializeTileArray();
+            InitializeTileArraySize();
         }
 
         for (int y = 0; y < height; y++)

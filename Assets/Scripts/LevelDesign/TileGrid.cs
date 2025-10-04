@@ -18,6 +18,7 @@ public class TileGrid : MonoBehaviour
     public readonly float tileWidth = 2f;
     public readonly float tileHeight = 1.1875f;
 
+    [Header("DevMenu UI References")]
     public Slider gridWidthSlider;
     public Slider gridHeightSlider;
     public Button generateGridButton;
@@ -35,7 +36,7 @@ public class TileGrid : MonoBehaviour
         {
             gridWidth = gridWidthSlider.sliderCurrentValue;
             gridHeight = gridHeightSlider.sliderCurrentValue;
-            GenerateGrid();
+            GenerateEmptyGrid();
             generateGridButton.activated = false;
         }
 
@@ -45,12 +46,12 @@ public class TileGrid : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.Mouse0) && nearestTile != null)
             {
-                nearestTileScript.state = 0;
+                nearestTileScript.DrawTile(1);
                 if (nearestTileY == gridHeight - 1)
                 {
                     nearestTileScript.DrawCliff();
                 }
-                else if (tileGrid[nearestTileX, nearestTileY + 1].GetComponent<TilePrefab>().state != 0)
+                else if (tileGrid[nearestTileX, nearestTileY + 1].GetComponent<TilePrefab>().state != 1)
                 {
                     nearestTileScript.DrawCliff();
                 }
@@ -63,7 +64,7 @@ public class TileGrid : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Mouse1) && nearestTile != null)
             {
-                nearestTileScript.state = 1;
+                nearestTileScript.DrawTile(0);
                 if (nearestTileScript.objectOnTile != null)
                 {
                     Destroy(nearestTileScript.objectOnTile);
@@ -75,7 +76,7 @@ public class TileGrid : MonoBehaviour
                 }
 
                 if (nearestTileY != 0 && tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().cliff == null &&
-                tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().state == 0)
+                tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().state == 1)
                 {
                     tileGrid[nearestTileX, nearestTileY - 1].GetComponent<TilePrefab>().DrawCliff();
                 }
@@ -83,21 +84,34 @@ public class TileGrid : MonoBehaviour
         }
     }
 
-//==========================================================================================
-//==========================================================================================
+    //==========================================================================================
+    //==========================================================================================
 
-    public void GenerateGrid()
+    public void LoadLevel(LevelData levelData)
     {
-        foreach (GameObject tile in tiles)
+        if (levelData == null)
         {
-            if (tile.GetComponent<TilePrefab>().objectOnTile != null)
-            {
-                Destroy(tile.GetComponent<TilePrefab>().objectOnTile);
-            }
-            Destroy(tile);
+            Debug.LogError("Cannot load null level data!");
+            return;
         }
 
-        tiles.Clear();
+        if (!levelData.IsValidLevel())
+        {
+            Debug.LogError($"Level data '{levelData.levelName}' is invalid!");
+            return;
+        }
+
+        Debug.Log($"Loading level: {levelData.levelName} ({levelData.width}x{levelData.height})");
+
+        gridWidth = levelData.width;
+        gridHeight = levelData.height;
+
+        GenerateGridFromData(levelData.width, levelData.height, levelData.tileStates);
+    }
+
+    public void GenerateEmptyGrid()
+    {
+        ClearGrid();
 
         tileGrid = new GameObject[gridWidth, gridHeight];
         Vector2 startPosition = new(-gridWidth * tileWidth / 2f, gridHeight * tileHeight / 2f);
@@ -113,6 +127,62 @@ public class TileGrid : MonoBehaviour
                 tile.name = "Tile " + x + "," + y;
                 tiles.Add(tile);
                 tileGrid[x, y] = tile;
+            }
+        }
+    }
+
+    private void GenerateGridFromData(int gridWidth, int gridHeight, int[] stateData)
+    {
+        ClearGrid();
+
+        tileGrid = new GameObject[gridWidth, gridHeight];
+        Vector2 startPosition = new(-gridWidth * tileWidth / 2f, gridHeight * tileHeight / 2f);
+
+        int dataIndex = 0;
+
+        for (int y = 0; y < gridHeight; y++)
+        {
+            for (int x = 0; x < gridWidth; x++)
+            {
+                Vector2 tilePosition = startPosition + new Vector2(x * tileWidth, y * -tileHeight);
+
+                GameObject tile = Instantiate(tilePrefab, tilePosition, Quaternion.identity, gameObject.transform);
+                tile.GetComponent<SpriteRenderer>().sortingOrder = gridLowestSortingLayer + y;
+                tile.name = "Tile " + x + "," + y;
+
+                // Set tile state from array
+                TilePrefab tileScript = tile.GetComponent<TilePrefab>();
+                int tileState = stateData[dataIndex];
+                tileScript.DrawTile(tileState);
+
+                // Apply visual changes based on state
+                if (tileState == 1)
+                {
+                    // Active tile - check if needs cliff
+                    if (y == gridHeight - 1)
+                    {
+                        tileScript.DrawCliff();
+                    }
+                }
+
+                tiles.Add(tile);
+                tileGrid[x, y] = tile;
+                dataIndex++;
+            }
+        }
+
+        // Second pass: draw cliffs for tiles that need them based on neighbors
+        for (int y = 0; y < gridHeight - 1; y++)
+        {
+            for (int x = 0; x < gridWidth; x++)
+            {
+                TilePrefab currentTile = tileGrid[x, y].GetComponent<TilePrefab>();
+                TilePrefab tileBelow = tileGrid[x, y + 1].GetComponent<TilePrefab>();
+
+                if (currentTile.state == 1 && tileBelow.state != 1)
+                {
+                    currentTile.DrawCliff();
+                }
             }
         }
     }
@@ -137,6 +207,20 @@ public class TileGrid : MonoBehaviour
         nearestTile = null;
         nearestTileScript = null;
         return;
+    }
+
+    public void ClearGrid()
+    {
+        foreach (GameObject tile in tiles)
+        {
+            if (tile.GetComponent<TilePrefab>().objectOnTile != null)
+            {
+                Destroy(tile.GetComponent<TilePrefab>().objectOnTile);
+            }
+            Destroy(tile);
+        }
+
+        tiles.Clear();
     }
 
     public void EnableEditing()
