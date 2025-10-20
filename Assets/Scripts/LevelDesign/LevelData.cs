@@ -12,7 +12,7 @@ public class LevelData : ScriptableObject
     public int height;
     
     [Header("Tile States")]
-    [Tooltip("0 = active/solid, 1 = inactive/empty")]
+    [Tooltip("0 = inactive/empty, 1 = active/solid")]
     public int[] tileStates;
 
     // Validate that the level data is correct
@@ -39,29 +39,5 @@ public class LevelData : ScriptableObject
     {
         tileStates = new int[width * height];
         Debug.Log($"Initialized tile array for {width}x{height} grid ({tileStates.Length} tiles)");
-    }
-
-    // Helper to fill with a pattern (useful for testing / not necessary)
-    [ContextMenu("Fill with Empty Border")]
-    public void FillWithEmptyBorder()
-    {
-        if (tileStates == null || tileStates.Length != width * height)
-        {
-            InitializeTileArraySize();
-        }
-
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                int index = y * width + x;
-                // Make borders inactive (1), interior active (0)
-                if (x == 0 || x == width - 1 || y == 0 || y == height - 1)
-                    tileStates[index] = 1;
-                else
-                    tileStates[index] = 0;
-            }
-        }
-        Debug.Log("Filled with empty border pattern");
     }
 }

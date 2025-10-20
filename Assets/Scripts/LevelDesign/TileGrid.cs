@@ -13,7 +13,7 @@ public class TileGrid : MonoBehaviour
 
     public List<GameObject> tiles = new List<GameObject>();
     public GameObject[,] tileGrid;
-    private bool isEditable = true;
+    [SerializeField] private bool isEditable = false;
 
     public readonly float tileWidth = 2f;
     public readonly float tileHeight = 1.1875f;
@@ -107,6 +107,34 @@ public class TileGrid : MonoBehaviour
         gridHeight = levelData.height;
 
         GenerateGridFromData(levelData.width, levelData.height, levelData.tileStates);
+    }
+
+    public LevelData ExportToLevelData(string levelName, int levelNumber)
+    {
+        if (tileGrid == null)
+        {
+            return null;
+        }
+
+        LevelData newLevel = ScriptableObject.CreateInstance<LevelData>();
+        newLevel.levelName = levelName;
+        newLevel.levelNumber = levelNumber;
+        newLevel.width = gridWidth;
+        newLevel.height = gridHeight;
+        newLevel.tileStates = new int[gridWidth * gridHeight];
+
+        int index = 0;
+        for (int y = 0; y < gridHeight; y++)
+        {
+            for (int x = 0; x < gridWidth; x++)
+            {
+                newLevel.tileStates[index] = tileGrid[x, y].GetComponent<TilePrefab>().state;
+                index++;
+            }
+        }
+
+        Debug.Log($"Exported level: {levelName}");
+        return newLevel;
     }
 
     public void GenerateEmptyGrid()

@@ -1016,6 +1016,7 @@ MonoBehaviour:
   gridLowestSortingLayer: -10
   tilePrefab: {fileID: 4200995191323063975, guid: 7761e765f4c66434b8c82b634c3c1d28, type: 3}
   tiles: []
+  isEditable: 0
   gridWidthSlider: {fileID: 1671349138}
   gridHeightSlider: {fileID: 1638875402}
   generateGridButton: {fileID: 139990331}
@@ -3023,7 +3024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef326d8cbe3917849ae1f80f041f0da0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeSlowTotalTime: 5
+  timeSlowTotalTime: 100
   timeSlowCurrentTime: 1
   timerSpeedDecreaseMultiplier: 1
   timerSpeedIncreaseMultiplier: 1
@@ -3535,7 +3536,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Sprite: {fileID: 149335960, guid: 0885b2ebb4238264ba1dc764dd21431b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3964,6 +3965,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1785922077}
   - component: {fileID: 1785922076}
+  - component: {fileID: 1785922078}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -3984,7 +3986,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
-  - {fileID: 11400000, guid: 763a84b6637ae544c9c67940ef7cbb05, type: 2}
+  - {fileID: 11400000, guid: fd2ab8701ced5004da5fd1e6a2716fff, type: 2}
+  - {fileID: 11400000, guid: 9e33640125c720b49bf18a1339fac728, type: 2}
+  - {fileID: 11400000, guid: a5c92d5db60b18d4bbcc465faec98315, type: 2}
+  - {fileID: 11400000, guid: cf84d25679dcdd542b96899cd06fc88a, type: 2}
+  - {fileID: 11400000, guid: c03d547a99ffdc343b8c43fe9c907d0f, type: 2}
+  - {fileID: 11400000, guid: 6cca1d9a0eedc0041972e72060e76b3c, type: 2}
+  - {fileID: 11400000, guid: dde2565b880526c4793f8316656e5bc5, type: 2}
+  - {fileID: 11400000, guid: 4780e8a43a147e44492b3f7b5ed7aad3, type: 2}
 --- !u!4 &1785922077
 Transform:
   m_ObjectHideFlags: 0
@@ -4000,6 +4009,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1785922078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785922075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0f9d83ce7c21a4aa54be1465eb59c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveFolderPath: Assets/Scripts/LevelDesign/Levels
+  defaultLevelName: CustomLevel
+  nextLevelNumber: 1
+  saveKey: 109
 --- !u!1 &1850997519
 GameObject:
   m_ObjectHideFlags: 0

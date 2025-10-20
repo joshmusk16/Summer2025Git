@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class TilePrefab : MonoBehaviour
 {
+    //TILE STATE : 0 = inactive/empty, 1 = active/solid
     [Header("Tile Info")]
     public Sprite[] tiles = new Sprite[2];
     public int state = 0;
@@ -31,5 +32,4 @@ public class TilePrefab : MonoBehaviour
     {
         Destroy(cliff);
     }
-
 }

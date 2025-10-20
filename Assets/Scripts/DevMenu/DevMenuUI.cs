@@ -29,7 +29,6 @@ public class DevMenuUI : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            tileGrid.EnableEditing();
             followingMouse = false;
         }
 

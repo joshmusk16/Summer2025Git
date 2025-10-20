@@ -5,14 +5,17 @@ public class LevelCollection : MonoBehaviour
 {
     [Header("Level Management")]
     [SerializeField] private List<LevelData> levels = new List<LevelData>();
-    
+
     [Header("References")]
     private TileGrid tileGrid;
+    private GameObject player;
 
     void Start()
     {
-        tileGrid= FindObjectOfType<TileGrid>();
+        tileGrid = FindObjectOfType<TileGrid>();
+        player = FindObjectOfType<PlayerLogic>().gameObject;
         LoadRandomLevel();
+        MovePlayerToRandomTile();
     }
 
     void Update()
@@ -20,6 +23,7 @@ public class LevelCollection : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             LoadRandomLevel();
+            MovePlayerToRandomTile();
         }
     }
 
@@ -42,5 +46,41 @@ public class LevelCollection : MonoBehaviour
 
         Debug.Log($"Loading random level: {randomLevel.levelName} (Index: {randomIndex})");
         tileGrid.LoadLevel(randomLevel);
+    }
+
+    public void MovePlayerToRandomTile()
+    {
+        if (player == null)
+        {
+            return;
+        }
+
+        if (tileGrid == null || tileGrid.tiles.Count == 0)
+        {
+            return;
+        }
+
+        List<GameObject> validTiles = new List<GameObject>();
+
+        foreach (GameObject tile in tileGrid.tiles)
+        {
+            TilePrefab tileScript = tile.GetComponent<TilePrefab>();
+            if (tileScript != null)
+            {
+                if (tileScript.state != 0)
+                {
+                    validTiles.Add(tile);
+                }
+            }
+        }
+
+        if (validTiles.Count == 0)
+        {
+            return;
+        }
+
+        GameObject randomTile = validTiles[Random.Range(0, validTiles.Count)];
+        Vector3 spawnPosition = randomTile.transform.position;
+        player.transform.position = spawnPosition;
     }
 }
