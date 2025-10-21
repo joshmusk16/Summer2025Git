@@ -241,7 +241,7 @@ public class TileGrid : MonoBehaviour
     {
         foreach (GameObject tile in tiles)
         {
-            if (tile.GetComponent<TilePrefab>().objectOnTile != null)
+            if (tile.GetComponent<TilePrefab>().objectOnTile)
             {
                 Destroy(tile.GetComponent<TilePrefab>().objectOnTile);
             }

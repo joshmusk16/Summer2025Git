@@ -10,12 +10,17 @@ public class LevelCollection : MonoBehaviour
     private TileGrid tileGrid;
     private GameObject player;
 
+    [Header("Spawn Dummies")]
+    [SerializeField] private GameObject dummy;
+    [SerializeField] private int amountOfDummies;
+
     void Start()
     {
         tileGrid = FindObjectOfType<TileGrid>();
         player = FindObjectOfType<PlayerLogic>().gameObject;
         LoadRandomLevel();
         MovePlayerToRandomTile();
+        SpawnDummies(amountOfDummies);
     }
 
     void Update()
@@ -24,6 +29,7 @@ public class LevelCollection : MonoBehaviour
         {
             LoadRandomLevel();
             MovePlayerToRandomTile();
+            SpawnDummies(amountOfDummies);
         }
     }
 
@@ -82,5 +88,44 @@ public class LevelCollection : MonoBehaviour
         GameObject randomTile = validTiles[Random.Range(0, validTiles.Count)];
         Vector3 spawnPosition = randomTile.transform.position;
         player.transform.position = spawnPosition;
+    }
+
+    public void SpawnDummies(int amount)
+    {
+        if (dummy == null)
+        {
+            return;
+        }
+
+        if (tileGrid == null || tileGrid.tiles.Count == 0)
+        {
+            return;
+        }
+    
+        List<GameObject> validTiles = new List<GameObject>();
+
+        foreach (GameObject tile in tileGrid.tiles)
+        {
+            TilePrefab tileScript = tile.GetComponent<TilePrefab>();
+            if (tileScript != null)
+            {
+                if (tileScript.state != 0)
+                {
+                    validTiles.Add(tile);
+                }
+            }
+        }
+
+        for (int i = 0; i < amount; i++)
+        {
+            if (validTiles.Count == 0) break;
+
+            int randomIndex = Random.Range(0, validTiles.Count);
+            GameObject selectedTile = validTiles[randomIndex];
+
+            GameObject newDummy = Instantiate(dummy, selectedTile.transform.position, Quaternion.identity);
+            selectedTile.GetComponent<TilePrefab>().objectOnTile = newDummy;
+            validTiles.RemoveAt(randomIndex);
+        }
     }
 }

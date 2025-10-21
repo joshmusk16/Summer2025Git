@@ -166,7 +166,7 @@ public class CustomAnimator : MonoBehaviour
         }
     }
 
-        private void UpdateHitboxes()
+    private void UpdateHitboxes()
     {
         if (animHitboxTimings == null) return;
 
