@@ -16,6 +16,11 @@ public class CustomAnimator : MonoBehaviour
     private float[] frameTimeThresholds;
     private ProgramType animationType = ProgramType.Other;
 
+    private bool isParameterDriven = false;
+    private float[] parameterThresholds;
+    private int lastParameterFrameIndex = -1;
+    private Func<float> parameterSource;
+
     public event Action OnAnimationStart;
     public event Action<ProgramType> OnAnimationComplete;
     public event Action<int, ProgramType> OnFrameChanged;
@@ -34,6 +39,18 @@ public class CustomAnimator : MonoBehaviour
     {
         if (!isPlaying || currentSprites == null) return;
 
+        if (isParameterDriven)
+        {
+            UpdateParameterDrivenAnimation();
+        }
+        else
+        {
+            UpdateTimeDrivenAnimation();
+        }
+    }
+
+    private void UpdateTimeDrivenAnimation()
+    {
         // Update frame timer
         frameTimer += Time.deltaTime;
 
@@ -60,7 +77,7 @@ public class CustomAnimator : MonoBehaviour
                 // Loop back to beginning
                 frameTimer = 0f;
                 currentFrameIndex = 0;
-                
+
                 SetCurrentFrame();
                 OnFrameChanged?.Invoke(currentFrameIndex, animationType);
 
@@ -76,6 +93,55 @@ public class CustomAnimator : MonoBehaviour
                 return;
             }
         }
+    }
+
+    private void UpdateParameterDrivenAnimation()
+    {
+        if (parameterSource == null) return;
+
+        float currentParameter = Mathf.Clamp01(parameterSource());
+        int newFrameIndex = GetFrameIndexFromParameter(currentParameter);
+
+        if (newFrameIndex != lastParameterFrameIndex)
+        {
+            currentFrameIndex = newFrameIndex;
+            lastParameterFrameIndex = newFrameIndex;
+
+            if (isUsingHitbox)
+            {
+                UpdateHitboxes();
+            }
+
+            SetCurrentFrame();
+            OnFrameChanged?.Invoke(currentFrameIndex, animationType);
+        }
+        
+        if (currentParameter >= 1.0f)
+        {
+            int lastFrame = currentSprites.Length - 1;
+            if (currentFrameIndex != lastFrame)
+            {
+                currentFrameIndex = lastFrame;
+                lastParameterFrameIndex = lastFrame;
+                SetCurrentFrame(lastFrame);
+                OnFrameChanged?.Invoke(currentFrameIndex, animationType);
+            }
+            CompleteAnimation();
+            return;
+        }
+    }
+
+    private int GetFrameIndexFromParameter(float parameter)
+    {
+        // Find which frame should be active based on parameter value
+        for (int i = parameterThresholds.Length - 1; i >= 0; i--)
+        {
+            if (parameter >= parameterThresholds[i])
+            {
+                return i;
+            }
+        }
+        return 0; // Default to first frame
     }
 
     public void PlayAnimation(Sprite[] sprites, float[] frameTimes, ProgramType animType, bool loop = false, bool usingHitbox = false,
@@ -114,42 +180,82 @@ public class CustomAnimator : MonoBehaviour
         currentFrameIndex = 0;
         frameTimer = 0f;
 
+        SetUpHitboxInfo(usingHitbox, hitboxTimings);
+        StartAnimation();
+    }
+
+    public void PlayParameterDrivenAnimation(Sprite[] sprites, float[] frameThresholds, Func<float> parameter, bool usingHitbox = false, HitboxTiming[] hitboxTimings = null)
+    {
+        if (sprites.Length != frameThresholds.Length ||
+        sprites.Length == 0 || parameterSource == null) return;
+
+        // Validate that thresholds are in 0-1 range and properly ordered
+        for (int i = 0; i < frameThresholds.Length; i++)
+        {
+            if (frameThresholds[i] < 0f || frameThresholds[i] > 1f) return;
+            if (i > 0 && frameThresholds[i] < frameThresholds[i - 1]) return;
+        }
+
+        StopAnimation();
+
+        currentSprites = sprites;
+        shouldLoop = false;
+        isParameterDriven = true;
+        parameterSource = parameter;
+
+        parameterThresholds = new float[frameThresholds.Length];
+        Array.Copy(frameThresholds, parameterThresholds, frameThresholds.Length);
+
+        currentFrameIndex = 0;
+        lastParameterFrameIndex = -1;
+
+        SetUpHitboxInfo(usingHitbox, hitboxTimings);
+        StartAnimation();
+    }
+
+    private void SetUpHitboxInfo(bool usingHitbox, HitboxTiming[] hitboxTimings)
+    {
         if (usingHitbox && hitboxTimings != null)
         {
-            CopyHitboxTimings(hitboxTimings);
+            animHitboxTimings = new HitboxTiming[hitboxTimings.Length];
+            for (int i = 0; i < hitboxTimings.Length; i++)
+            {
+                animHitboxTimings[i] = new HitboxTiming
+                {
+                    hitbox = hitboxTimings[i].hitbox,
+                    activationFrames = (int[])hitboxTimings[i].activationFrames.Clone()
+                };
+            }
             isUsingHitbox = true;
         }
         else
         {
             isUsingHitbox = false;
         }
+    }
 
-        // Set first frame and start animation
+    private void StartAnimation()
+    {
         SetCurrentFrame();
         OnAnimationStart?.Invoke();
         OnFrameChanged?.Invoke(currentFrameIndex, animationType);
-
         isPlaying = true;
     }
 
-    private void CopyHitboxTimings(HitboxTiming[] sourceTimings)
-    {
-        animHitboxTimings = new HitboxTiming[sourceTimings.Length];
-        for (int i = 0; i < sourceTimings.Length; i++)
-        {
-            animHitboxTimings[i] = new HitboxTiming
-            {
-                hitbox = sourceTimings[i].hitbox,
-                activationFrames = (int[])sourceTimings[i].activationFrames.Clone()
-            };
-        }
-    }
 
     public void StopAnimation()
     {
         isPlaying = false;
         frameTimer = 0f;
         currentFrameIndex = 0;
+        //lastParameterFrameIndex = -1;
+        isParameterDriven = false;
+        parameterSource = null;
+
+        if (isUsingHitbox)
+        {
+            DeactivateAllHitboxes();
+        }
     }
 
     private void CompleteAnimation()
@@ -160,9 +266,14 @@ public class CustomAnimator : MonoBehaviour
 
     private void SetCurrentFrame()
     {
-        if (currentSprites != null && currentFrameIndex < currentSprites.Length)
+        SetCurrentFrame(currentFrameIndex);
+    }
+
+        private void SetCurrentFrame(int frameIndex)
+    {
+        if (currentSprites != null && frameIndex < currentSprites.Length && frameIndex >= 0)
         {
-            spriteRenderer.sprite = currentSprites[currentFrameIndex];
+            spriteRenderer.sprite = currentSprites[frameIndex];
         }
     }
 
