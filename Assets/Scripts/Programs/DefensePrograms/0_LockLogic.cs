@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class LockLogic : Program
 {
     private const int hitBoxDeactivationFrame = 5;

@@ -184,10 +184,10 @@ public class CustomAnimator : MonoBehaviour
         StartAnimation();
     }
 
-    public void PlayParameterDrivenAnimation(Sprite[] sprites, float[] frameThresholds, Func<float> parameter, bool usingHitbox = false, HitboxTiming[] hitboxTimings = null)
+    public void PlayParameterDrivenAnimation(Sprite[] sprites, float[] frameThresholds, ProgramType animType, Func<float> parameter, bool usingHitbox = false, HitboxTiming[] hitboxTimings = null)
     {
         if (sprites.Length != frameThresholds.Length ||
-        sprites.Length == 0 || parameterSource == null) return;
+        sprites.Length == 0 || parameter == null) return;
 
         // Validate that thresholds are in 0-1 range and properly ordered
         for (int i = 0; i < frameThresholds.Length; i++)
@@ -202,6 +202,7 @@ public class CustomAnimator : MonoBehaviour
         shouldLoop = false;
         isParameterDriven = true;
         parameterSource = parameter;
+        animationType = animType;
 
         parameterThresholds = new float[frameThresholds.Length];
         Array.Copy(frameThresholds, parameterThresholds, frameThresholds.Length);
@@ -248,7 +249,7 @@ public class CustomAnimator : MonoBehaviour
         isPlaying = false;
         frameTimer = 0f;
         currentFrameIndex = 0;
-        //lastParameterFrameIndex = -1;
+        lastParameterFrameIndex = -1;
         isParameterDriven = false;
         parameterSource = null;
 
@@ -348,7 +349,22 @@ public class CustomAnimator : MonoBehaviour
     // Helper method to get animation progress (0 to 1)
     public float GetAnimationProgress()
     {
-        if (!isPlaying || totalAnimationTime == 0f) return 0f;
-        return frameTimer / totalAnimationTime;
+        if (!isPlaying) return 0f;
+        
+        if (isParameterDriven)
+        {
+            // For parameter-driven animations, get the current parameter value
+            if (parameterSource != null)
+            {
+                return Mathf.Clamp01(parameterSource());
+            }
+            return 0f;
+        }
+        else
+        {
+            // For time-driven animations, use the frame timer
+            if (totalAnimationTime == 0f) return 0f;
+            return frameTimer / totalAnimationTime;
+        }
     }
 }

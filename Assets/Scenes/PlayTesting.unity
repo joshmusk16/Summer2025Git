@@ -1036,8 +1036,8 @@ MonoBehaviour:
   totalProgramAmount: 0
   currentProgramAmount: 0
   programs:
-  - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
-  - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
+  - {fileID: 761216769171562013, guid: 194aa48081dbfe143af533f917909061, type: 3}
+  - {fileID: 761216769171562013, guid: 194aa48081dbfe143af533f917909061, type: 3}
   - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
   - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
   - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
@@ -3158,6 +3158,7 @@ GameObject:
   - component: {fileID: 1523212148}
   - component: {fileID: 1523212147}
   - component: {fileID: 1523212150}
+  - component: {fileID: 1523212152}
   - component: {fileID: 1523212151}
   m_Layer: 0
   m_Name: Player
@@ -3292,6 +3293,18 @@ MonoBehaviour:
   - player
   invulnerable: 0
   invulnerabilityDuration: 0
+--- !u!114 &1523212152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523212146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec29b6895a700e34c91d59995d53c4fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1527855675 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 244087055979113184, guid: dbaf622051810f145a4122292a8fb35f, type: 3}
