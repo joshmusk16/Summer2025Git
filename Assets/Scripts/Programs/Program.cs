@@ -20,6 +20,7 @@ public class Program : MonoBehaviour
     [HideInInspector] public PlayerLogic player;
     [HideInInspector] public CustomAnimator playerAnimator;
     [HideInInspector] public PlayerMovement playerMovement;
+    [HideInInspector] public PlayerTargeting playerTargeting;
     [HideInInspector] public ProgramUI programUI;
     [HideInInspector] public ProgramInputManager inputManager;
     
@@ -38,6 +39,7 @@ public class Program : MonoBehaviour
 
         player = FindObjectOfType<PlayerLogic>();
         playerMovement = FindObjectOfType<PlayerMovement>();
+        playerTargeting = FindObjectOfType<PlayerTargeting>();
         inputManager = FindObjectOfType<ProgramInputManager>();
 
         if (player != null)

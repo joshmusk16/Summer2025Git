@@ -60,15 +60,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   programType: 1
   animSprites:
-  - {fileID: 247456802, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
-  - {fileID: 1932749412, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
-  - {fileID: 1855720545, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
-  - {fileID: -1923367368, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
+  - {fileID: 1913825983, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: -1837697654, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: -136180464, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: -1842409223, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: 804677874, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: 296830555, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: 1255811255, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
   animFrames:
+  - 0.05
   - 0.1
-  - 0.3
-  - 0.5
-  - 0.8
+  - 0.12
+  - 0.13
+  - 0.95
+  - 0.96
+  - 0.97
   hitboxTimings: []
   player: {fileID: 0}
   playerAnimator: {fileID: 0}

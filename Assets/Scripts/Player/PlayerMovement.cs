@@ -6,16 +6,24 @@ public class PlayerMovement : MonoBehaviour
     private bool isMoving = false;
     private Vector2 locationDestination;
     private Vector2 startPosition;
-    private float locationLerpSpeed;
+    private float moveElapsedTime;
+    private float moveSpeed;
+    private float totalDistance;
     public event Action OnLocationLerpFinish;
 
     void Update()
     {
         if (isMoving)
         {
-            gameObject.transform.position = Vector2.Lerp(gameObject.transform.position, locationDestination, Time.deltaTime * locationLerpSpeed);
+            moveElapsedTime += Time.deltaTime * moveSpeed;
+            float t = Mathf.Clamp01(moveElapsedTime / totalDistance);
+            
+            // EaseInQuadratic formula: t^2
+            float easedT = t * t;
+            
+            gameObject.transform.position = Vector2.Lerp(startPosition, locationDestination, easedT);
 
-            if (Vector2.Distance(transform.position, locationDestination) < 0.05f)
+            if (t >= 1f)
             {
                 transform.position = locationDestination;
                 OnLocationLerpFinish?.Invoke();
@@ -24,14 +32,16 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void MovePlayerLerp(Vector2 destination, float speed)
+    public void MovePlayerLerp(Vector2 destination, float speed = 1f)
     {
         if ((Vector2)transform.position != destination)
         {
             startPosition = transform.position;
             isMoving = true;
             locationDestination = destination;
-            locationLerpSpeed = speed;
+            moveSpeed = speed;
+            totalDistance = Vector2.Distance(startPosition, destination);
+            moveElapsedTime = 0f;
         }
     }
 
@@ -44,8 +54,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isMoving) return 1f;
         
-        float totalDistance = Vector2.Distance(startPosition, locationDestination);
-        float currentDistance = Vector2.Distance(startPosition, transform.position);
-        return totalDistance > 0 ? Mathf.Clamp01(currentDistance / totalDistance) : 1f;
+        float t = Mathf.Clamp01(moveElapsedTime / totalDistance);
+        return t * t; // Returns eased progress
     }
 }
