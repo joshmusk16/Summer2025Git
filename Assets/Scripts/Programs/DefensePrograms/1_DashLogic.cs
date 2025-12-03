@@ -1,7 +1,7 @@
 public class DashLogic : Program
 {
     private const float dashSpeed = 20f;
-    private const int dashRange = 3;
+    private const int dashRange = 4;
 
     void Start()
     {

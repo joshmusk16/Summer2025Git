@@ -7,6 +7,9 @@ public class PlayerTargeting : MonoBehaviour
     private TilePrefab nearestTileScript;
     public GameObject debug;
 
+    private Vector2 lastHoveredTileGridPos = new Vector2(-1, -1);
+    private Vector2 cachedSelectedTile;
+
     void Start()
     {
         tileGrid = FindObjectOfType<TileGrid>();
@@ -15,82 +18,107 @@ public class PlayerTargeting : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(SelectedTile(3));
-        debug.transform.position = SelectedTile(3);
+        Vector2 selectedTile = SelectedTile(4);
+        //Debug.Log(selectedTile);
+        debug.transform.position = Vector2.Lerp(debug.transform.position, selectedTile, Time.deltaTime * 20f);
+    }
+
+    private Vector2 WorldToGridPosition(Vector2 worldPosition)
+    {
+        Vector2 gridOrigin = (Vector2)tileGrid.tileGrid[0, 0].transform.position;
+        Vector2 correction = new(tileGrid.tileWidth / 2f, -tileGrid.tileHeight / 2f);
+        Vector2 temp = worldPosition - gridOrigin + correction;
+        
+        return new Vector2(
+            Mathf.FloorToInt(temp.x / tileGrid.tileWidth),
+            Mathf.FloorToInt(-temp.y / tileGrid.tileHeight)
+        );
     }
 
     public Vector2 SelectedTile(int range = 0)
     {
-        if (tileGrid.tiles.Count != 0)
+        if (tileGrid.tiles.Count == 0)
         {
-            Vector2 correction = new(tileGrid.tileWidth / 2f, -tileGrid.tileHeight / 2f);
-            Vector2 temp = mouseTracker.worldPosition - (Vector2)tileGrid.tileGrid[0, 0].transform.position + correction;
-            temp = new Vector2(
-                Mathf.FloorToInt(temp.x / tileGrid.tileWidth), 
-                Mathf.FloorToInt(-temp.y / tileGrid.tileHeight)
-            );
+            nearestTileScript = null;
+            lastHoveredTileGridPos = new Vector2(-1, -1);
+            return mouseTracker.worldPosition;
+        }
 
-            if (temp.x < tileGrid.gridWidth && temp.y < tileGrid.gridHeight && temp.x >= 0 && temp.y >= 0)
+        Vector2 temp = WorldToGridPosition(mouseTracker.worldPosition);
+
+        if (temp == lastHoveredTileGridPos)
+        {
+            return cachedSelectedTile; // Return cached result
+        }
+
+        // Mouse is over a new tile, update tracking
+        lastHoveredTileGridPos = temp;
+        Debug.Log(temp);
+
+        //Check that temp's position is in the grid's bounds
+        if (temp.x < tileGrid.gridWidth && temp.y < tileGrid.gridHeight && temp.x >= 0 && temp.y >= 0)
+        {
+            nearestTileScript = tileGrid.tileGrid[(int)temp.x, (int)temp.y].GetComponent<TilePrefab>();
+            if (nearestTileScript.state == 1)
             {
-                nearestTileScript = tileGrid.tileGrid[(int)temp.x, (int)temp.y].GetComponent<TilePrefab>();
-                if (nearestTileScript.state == 1)
+                if (range > 0 && !IsWithinRange(temp, range))
                 {
-                    if (range > 0 && !IsWithinRange(temp, range))
-                    {
-                        return GetClosestInRangeTile(range);
-                    }
-                    return tileGrid.tileGrid[(int)temp.x, (int)temp.y].transform.position;
+                    cachedSelectedTile = GetClosestInRangeTile(range);
+                    return cachedSelectedTile;
                 }
-                else
-                {
-                    // Tile is not valid (state != 1), find closest valid in-range tile
-                    if (range > 0)
-                    {
-                        return GetClosestInRangeTile(range);
-                    }
-                    return mouseTracker.worldPosition;
-                }
+                cachedSelectedTile = tileGrid.tileGrid[(int)temp.x, (int)temp.y].transform.position;
+                return cachedSelectedTile;
             }
-            else if (range > 0)
+            else
             {
-                // Mouse is outside grid bounds, find closest in-range tile
-                return GetClosestInRangeTile(range);
+                // Tile is not valid (state != 1), find closest valid in-range tile
+                if (range > 0)
+                {
+                    cachedSelectedTile = GetClosestInRangeTile(range);
+                    return cachedSelectedTile;
+                }
+                cachedSelectedTile = mouseTracker.worldPosition;
+                return cachedSelectedTile;
             }
         }
+        else if (range > 0)
+        {
+            // Mouse is outside grid bounds, find closest in-range tile
+            cachedSelectedTile = GetClosestInRangeTile(range);
+            return cachedSelectedTile;
+        }
+
         nearestTileScript = null;
-        return mouseTracker.worldPosition;
+        cachedSelectedTile = mouseTracker.worldPosition;
+        return cachedSelectedTile;
     }
 
     private bool IsWithinRange(Vector2 targetGridPos, int range)
     {
-        Vector2 correction = new(tileGrid.tileWidth / 2f, -tileGrid.tileHeight / 2f);
-        Vector2 playerGridPos = (Vector2)transform.position - (Vector2)tileGrid.tileGrid[0, 0].transform.position + correction;
-        playerGridPos = new Vector2(
-            Mathf.FloorToInt(playerGridPos.x / tileGrid.tileWidth), 
-            Mathf.FloorToInt(-playerGridPos.y / tileGrid.tileHeight)
-        );
+        Vector2 playerGridPos = WorldToGridPosition(transform.position);
 
-        float distance = Mathf.Max(Mathf.Abs(targetGridPos.x - playerGridPos.x), 
-                         Mathf.Abs(targetGridPos.y - playerGridPos.y));
+        float distance = Mathf.Max(
+                Mathf.Abs(targetGridPos.x - playerGridPos.x), 
+                Mathf.Abs(targetGridPos.y - playerGridPos.y));
         
         return distance <= range;
     }
 
     private Vector2 GetClosestInRangeTile(int range)
     {
-    // Get player's grid position
-    Vector2 correction = new(tileGrid.tileWidth / 2f, -tileGrid.tileHeight / 2f);
-    Vector2 playerGridPos = (Vector2)transform.position - (Vector2)tileGrid.tileGrid[0, 0].transform.position + correction;
-    playerGridPos = new Vector2(
-        Mathf.FloorToInt(playerGridPos.x / tileGrid.tileWidth), 
-        Mathf.FloorToInt(-playerGridPos.y / tileGrid.tileHeight)
-    );
+    Vector2 playerGridPos = WorldToGridPosition(transform.position);
+
+    int playerX = (int)playerGridPos.x;
+    int playerY = (int)playerGridPos.y;
 
     // Calculate the bounding box for the range
-    int minX = Mathf.Max(0, (int)playerGridPos.x - range);
-    int maxX = Mathf.Min(tileGrid.gridWidth - 1, (int)playerGridPos.x + range);
-    int minY = Mathf.Max(0, (int)playerGridPos.y - range);
-    int maxY = Mathf.Min(tileGrid.gridHeight - 1, (int)playerGridPos.y + range);
+    int minX = Mathf.Max(0, playerX - range);
+    int maxX = Mathf.Min(tileGrid.gridWidth - 1, playerX + range);
+    int minY = Mathf.Max(0, playerY - range);
+    int maxY = Mathf.Min(tileGrid.gridHeight - 1, playerY + range);
+
+    float closestDistance = float.MaxValue;
+    Vector2 closestTilePosition = mouseTracker.worldPosition;
 
     // Step 1: Build array of valid tiles within range
     System.Collections.Generic.List<GameObject> validTilesInRange = new();
@@ -113,9 +141,6 @@ public class PlayerTargeting : MonoBehaviour
     {
         return mouseTracker.worldPosition;
     }
-
-    float closestDistance = float.MaxValue;
-    Vector2 closestTilePosition = mouseTracker.worldPosition;
 
     foreach (GameObject tile in validTilesInRange)
     {
