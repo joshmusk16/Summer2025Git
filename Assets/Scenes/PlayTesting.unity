@@ -1036,11 +1036,11 @@ MonoBehaviour:
   totalProgramAmount: 0
   currentProgramAmount: 0
   programs:
-  - {fileID: 761216769171562013, guid: 194aa48081dbfe143af533f917909061, type: 3}
-  - {fileID: 761216769171562013, guid: 194aa48081dbfe143af533f917909061, type: 3}
-  - {fileID: 761216769171562013, guid: 194aa48081dbfe143af533f917909061, type: 3}
-  - {fileID: 761216769171562013, guid: 194aa48081dbfe143af533f917909061, type: 3}
-  - {fileID: 761216769171562013, guid: 194aa48081dbfe143af533f917909061, type: 3}
+  - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
+  - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
+  - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
+  - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
+  - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
   - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
   currentDeckAmountDisplay: {fileID: 344789025}
   totalDeckAmountDisplay: {fileID: 344789024}
@@ -1970,6 +1970,7 @@ MonoBehaviour:
   canUseProgram: 0
   isAttacking: 0
   isDefending: 0
+  isDashing: 0
   inSlowTimeMode: 0
 --- !u!4 &962996298
 Transform:
@@ -2034,6 +2035,82 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1102729332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1102729334}
+  - component: {fileID: 1102729333}
+  - component: {fileID: 1102729335}
+  m_Layer: 5
+  m_Name: DashChargeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1102729333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102729332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4294adcac031bda4a91dd70659d42aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashCharges: []
+  dashCharge: {fileID: 6011220970149492049, guid: c34507a056ba11844bc16cefce4d47ed, type: 3}
+  totalXLength: 2
+--- !u!4 &1102729334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102729332}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -15.08, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1102729335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1102729332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26683ce20087d2749923d03d4dd9e5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animSprites:
+  - {fileID: 1913825983, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: -1837697654, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: -136180464, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: -1842409223, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: 804677874, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: 296830555, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  - {fileID: 1255811255, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
+  animFrames:
+  - 0.05
+  - 0.1
+  - 0.12
+  - 0.13
+  - 0.95
+  - 0.96
+  - 0.97
 --- !u!1 &1107061317
 GameObject:
   m_ObjectHideFlags: 0
@@ -4513,6 +4590,7 @@ SceneRoots:
   - {fileID: 1240184829}
   - {fileID: 969360205}
   - {fileID: 962996298}
+  - {fileID: 1102729334}
   - {fileID: 684479107}
   - {fileID: 611740130}
   - {fileID: 1850997520}

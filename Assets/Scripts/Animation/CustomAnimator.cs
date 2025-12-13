@@ -2,6 +2,14 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+public enum ProgramType
+{
+    Attack,
+    Defense,
+    Dash,
+    Other
+}
+
 public class CustomAnimator : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;

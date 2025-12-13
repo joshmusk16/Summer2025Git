@@ -4,18 +4,16 @@ using UnityEngine;
 public class DashChargeManager : MonoBehaviour
 {
 
-public int totalDashCharges;
-public int currentDashCharges;
+private int totalDashCharges;
+private int currentDashCharges;
 public List<GameObject> dashCharges = new();
 public GameObject dashCharge;
 
-private const int startingDashChargeAmount = 3;
+private const int startingDashChargeAmount = 4;
 private const int lowestAllowedDashChargeAmount = 1; 
+private const int lowestSortingOrder = 1;
 
 [SerializeField] private int totalXLength;
-[SerializeField] private int lowestSortingOrder;
-[SerializeField] private Sprite chargedSprite;
-[SerializeField] private Sprite unchargedSprite;
 
 void Start()
 {
@@ -67,7 +65,7 @@ private void UpdateDashChargeSprites()
 {
     for(int i = 0; i < dashCharges.Count; i++)
     {
-        if(i < currentDashCharges)
+        if(i < dashCharges.Count - currentDashCharges)
         {
             dashCharges[i].GetComponent<DashChargeLogic>().ChangeState(0);        
         }
@@ -82,7 +80,8 @@ private void RearrangeDashCharges()
 {
     for(int i = 0; i < dashCharges.Count; i++)
     {
-        dashCharges[i].transform.position = StartingPosition() + new Vector2(ChargeSpacing() * i, 0);        
+        dashCharges[i].transform.position = StartingPosition() + new Vector2(ChargeSpacing() * i, 0);
+        dashCharges[i].GetComponent<SpriteRenderer>().sortingOrder = lowestSortingOrder + dashCharges.Count - i;        
     }
 }
 
@@ -97,13 +96,19 @@ private float ChargeSpacing()
     return totalDashCharges <= 1 ? 0 : totalXLength / (float)(totalDashCharges - 1);
 }
 
-//Fix this to add more than one dash charge and take int amount into account
 public void AddTotalDashCharge(int amount)
 {
     totalDashCharges += amount;
-    GameObject newDashCharge = Instantiate(dashCharge); //add transform parameter?
-    dashCharges.Add(newDashCharge);
+    currentDashCharges += amount;
+    
+    for(int i = 0; i < amount; i++)
+    {
+        GameObject newDashCharge = Instantiate(dashCharge);
+        dashCharges.Add(newDashCharge);
+    }
+    
     RearrangeDashCharges();
+    UpdateDashChargeSprites();
 }
 
 public void RemoveTotalDashCharge(int amount)
@@ -111,12 +116,22 @@ public void RemoveTotalDashCharge(int amount)
     if((totalDashCharges - amount) >= lowestAllowedDashChargeAmount)
     {
         totalDashCharges -= amount;
+        currentDashCharges = Mathf.Max(0, currentDashCharges - amount);
+
         for(int i = 0; i < amount; i++)
-            {
-                Destroy(dashCharges[0]);
-                dashCharges.RemoveAt(0);
-            }
+        {
+            int lastIndex = dashCharges.Count - 1;
+            Destroy(dashCharges[lastIndex]);
+            dashCharges.RemoveAt(lastIndex);
+        }
+        
         RearrangeDashCharges();
+        UpdateDashChargeSprites();
     }
+}
+
+public bool IsDashChargeAvailable()
+{
+    return currentDashCharges > 0;
 }
 }

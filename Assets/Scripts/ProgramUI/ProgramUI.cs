@@ -2,13 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ProgramType
-{
-    Attack,
-    Defense,
-    Other
-}
-
 public class ProgramUI : MonoBehaviour
 {
     //This script handles all of the visual UI, the actual change to the ordering of the ProgramLists will
