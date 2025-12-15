@@ -72,6 +72,24 @@ public class ProgramListNew : MonoBehaviour
         //UpdateCountUI();
     }
 
+    public void AddProgramsToHand(GameObject[] addPrograms, int[] indices)
+    {
+        if(addPrograms.Length != indices.Length) return;
+
+        for(int i = 0; i < addPrograms.Length; i++)
+        {
+            drawnPrograms.Insert(indices[i], programs[i]);
+        }
+    }
+
+    public void RemoveProgramsFromHand(int[] indices)
+    {
+        for(int i = 0; i < indices.Length; i++)
+        {
+            drawnPrograms.RemoveAt(indices[i]);
+        }
+    }
+
     public void MoveProgram(int startIndex, int endIndex)
     {
         if (startIndex != endIndex)

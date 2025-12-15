@@ -5,26 +5,20 @@ public class ProgramUINew : MonoBehaviour
 {
     //This script handles all of the visual UI, the actual change to the ordering of the ProgramLists will
     //be handled in the ProgramListData script (remove and insert in new postion, etc.)
-
-    private const int MAX_UI_COUNT = 5;
     private const float PIXELS_PER_UNIT = 16f;
 
     //New totalYLength for determinging starting uiPositions with math rather than object reference
     public Vector2 startingMiddleVector;          //Starting vector for SetStartingUIPositions()
     private const float totalYLength = 5f;
+    private const int spacingThreshold = 5;   //If the handSize is less than spacingThreshold, the SetUIPositions will calculate positions based on spacingThreshold
 
     [Header("UI Configuration")]
     public ProgramType uiType = ProgramType.Attack;     //Assigned in inspector to differentiate attack v defense list
-    public int programsUICount = MAX_UI_COUNT;
-
-    //[Header("UI Elements")]
-    //public GameObject[] uiPrograms = new GameObject[MAX_UI_COUNT];
-    // private Vector2[] uiPositions = new Vector2[MAX_UI_COUNT];
 
     //convert arrays to lists for more flexible adding/removing
     [Header("UI Elements")]
-    public GameObject emptyProgramPrefab;       //assigned in inspector, empty gameobjects with a spriteRenderer and a lerpHandler for Instantiation in SetStartingUIPositions()
-    public int startingProgramUICount;          //assigned in inspector, value can be changed throughout rounds to increase / decrease size of starting hand  (implies need for add / remove functions to startingProgramUICount)
+    public GameObject emptyProgramPrefab;        //assigned in inspector, empty gameobjects with a spriteRenderer and a lerpHandler for Instantiation in SetStartingUIPositions()
+    public int startingHandSize;                 //assigned in inspector, value can be changed throughout rounds to increase / decrease size of starting hand  (implies need for add / remove functions to startingProgramUICount)
     private int displayedProgramUICount;         //The number of programs displayed at that moment in time, not necessarily at the start of a round
     public List<GameObject> uiPrograms = new();
     private List<Vector2> uiPositions = new();
@@ -45,11 +39,6 @@ public class ProgramUINew : MonoBehaviour
         programInputManager = FindObjectOfType<ProgramInputManager>();
 
         SetupNewHand();
-
-        // InstantiateEmptyUIPrograms();
-        // SetStartingUIPositions();
-        // SetUISprites();
-        // InitializeMouseHoverStates();
 
         if (programInputManager != null)
         {
@@ -84,7 +73,7 @@ public class ProgramUINew : MonoBehaviour
             if (Input.GetKey(KeyCode.Mouse0) && heldProgram != null)
             {
                 heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.GetUIMousePosition(), 25f);
-                UpdateProgramUI();
+                LerpUIProgramsToPositions();
             }
         }
 
@@ -94,16 +83,31 @@ public class ProgramUINew : MonoBehaviour
             int heldProgramLastIndex = uiPrograms.IndexOf(heldProgram);
             heldProgram.GetComponent<SpriteRenderer>().sortingOrder -= 1;
             heldProgram = null;
-            UpdateProgramUI();
+            LerpUIProgramsToPositions();
 
             programsListData.MoveProgram(heldProgramFirstIndex, heldProgramLastIndex);
         }
     }
 
-    void SetupNewHand()
+    //To be subscribed to animation completion in each program logic script
+    public void AnimationComplete()
     {
-        //First, determine the handsize
-        displayedProgramUICount = startingProgramUICount;
+        if(uiPrograms == null) return;
+
+        if(GetProgramUICount() == 1)
+        {
+            SetupNewHand();
+        }
+        else
+        {
+            ScrollProgramUI();
+        }
+    }
+
+    public void SetupNewHand()
+    {
+        //First, reset the hand size to starting hand size
+        displayedProgramUICount = startingHandSize;
         int handSize = programsListData.DetermineHandSize(displayedProgramUICount);
 
         //Second, draw a new hand based on that handsize
@@ -113,7 +117,7 @@ public class ProgramUINew : MonoBehaviour
         InstantiateEmptyUIPrograms(handSize);
 
         //Fourth, set the EmptyUI Programs to their appropriate starting Positions
-        SetStartingUIPositions(handSize);
+        SetUIPositions(handSize);
 
         //Fifth, set the EmptyUI Programs to their appropriate Sprites
         SetUISprites(handSize);
@@ -138,9 +142,14 @@ public class ProgramUINew : MonoBehaviour
         }   
     }
 
-    void SetStartingUIPositions(int handSize)
+    void SetUIPositions(int handSize)
     {
         if(handSize == 0) return;
+
+        int divider = handSize;
+
+        if(handSize <= spacingThreshold) 
+        divider = spacingThreshold;
 
         uiPositions.Clear();
 
@@ -150,7 +159,7 @@ public class ProgramUINew : MonoBehaviour
         {
             uiPositions.Add(spawningVector);
             uiPrograms[i].transform.position = spawningVector;
-            spawningVector -= new Vector2(0, totalYLength / handSize);
+            spawningVector -= new Vector2(0, totalYLength / divider);
         }
     }
 
@@ -159,21 +168,80 @@ public class ProgramUINew : MonoBehaviour
         if (programsListData == null || programsListData.drawnPrograms == null || 
         programsListData.drawnPrograms.Count == 0 || uiPrograms.Count == 0) return;
 
-        for (int i = 0; i < handSize; i++)
+        for (int i = GetInitialIndex(); i < handSize; i++)
         {
             uiPrograms[i].GetComponent<SpriteRenderer>().sprite = 
             programsListData.drawnPrograms[i].GetComponent<ProgramData>().uiSprite;
         }
     }
 
-    void AddProgramsToHand(GameObject[] programs, int indices, int amount)
+    void LerpUIProgramsToPositions()
     {
-        //write correlating function to add programs to ProgramListNew lists
+        if(uiPrograms.Count != uiPositions.Count) return;
+
+        SortByYPosition();
+        
+        for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
+        {
+            if (uiPrograms[i] != heldProgram)
+            {
+                uiPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i], 25f);
+
+                if (i == 0)
+                {
+                    uiPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 25f);
+                }
+                else
+                {
+                    uiPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 25f);
+                }
+            }
+        }
     }
 
-    void RemoveProgramsFromHand(int[] indices, int amount)
+    public void AddProgramsToHand(GameObject[] addPrograms, int[] indices)
     {
-        //write correlating function to remove programs from ProgramListNew lists
+        if(addPrograms.Length != indices.Length) return;
+
+        programsListData.AddProgramsToHand(addPrograms, indices);
+
+        for(int i = 0; i < addPrograms.Length; i++)
+        {
+            GameObject newProgram = Instantiate(emptyProgramPrefab, gameObject.transform);
+            uiPrograms.Insert(indices[i], newProgram);
+        }
+
+        displayedProgramUICount += indices.Length;
+        int handSize = programsListData.DetermineHandSize(displayedProgramUICount);
+
+        SetUIPositions(handSize);
+        SetUISprites(handSize);
+        LerpUIProgramsToPositions();
+    }
+
+    public void RemoveProgramsFromHand(int[] indices)
+    {
+        if(displayedProgramUICount - indices.Length < 1) return;
+
+        foreach(int index in indices) 
+        {
+            if(index == 0) return;
+        }
+
+        programsListData.RemoveProgramsFromHand(indices);
+
+        for(int i = 0; i < indices.Length; i++)
+        {
+            Destroy(uiPrograms[indices[i]]);
+            uiPrograms.RemoveAt(indices[i]);
+        }
+
+        displayedProgramUICount -= indices.Length;
+        int handSize = programsListData.DetermineHandSize(displayedProgramUICount);
+
+        SetUIPositions(handSize);
+        SetUISprites(handSize);
+        LerpUIProgramsToPositions();
     }
 
     //In future, encorporate logic for adding or removing cards into this script most likely, 
@@ -193,12 +261,16 @@ public class ProgramUINew : MonoBehaviour
         programsListData.ScrollCurrentProgram();
     }
 
-    int GetActiveUICount()
+    int GetProgramUICount()
     {
         if (programsListData == null) return 0;
 
-        int remaining = programsListData.totalProgramAmount - programsListData.currentProgramAmount;
-        return Mathf.Min(displayedProgramUICount, remaining);
+        if(displayedProgramUICount != uiPrograms.Count)
+        {
+            displayedProgramUICount = uiPrograms.Count;
+        }
+
+        return displayedProgramUICount;
     }
 
     //Returns 0 vs 1 depending on whether or not the player is currently using an attack vs defense program
@@ -229,31 +301,10 @@ public class ProgramUINew : MonoBehaviour
         }
     }
 
-    void UpdateProgramUI()
-    {
-        SortByYPosition();
-        for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
-        {
-            if (uiPrograms[i] != heldProgram)
-            {
-                uiPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i], 25f);
-
-                if (i == 0)
-                {
-                    uiPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 25f);
-                }
-                else
-                {
-                    uiPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(1, 1), 25f);
-                }
-            }
-        }
-    }
-
     void SortByYPosition()
     {
         int startIndex = GetInitialIndex();
-        int endIndex = GetActiveUICount();
+        int endIndex = GetProgramUICount();
 
         if (endIndex - startIndex <= 1) return;
 
@@ -282,7 +333,7 @@ public class ProgramUINew : MonoBehaviour
     {
         float distance = Vector2.Distance(uiPrograms[GetInitialIndex()].transform.position, mouse.GetUIMousePosition());
         GameObject closestObj = uiPrograms[GetInitialIndex()];
-        for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
+        for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
         {
             if (Vector2.Distance(uiPrograms[i].transform.position, mouse.GetUIMousePosition()) < distance)
             {
@@ -326,7 +377,7 @@ public class ProgramUINew : MonoBehaviour
 
     void UpdateMouseHoverStates()
     {
-        for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
+        for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
         {
             if (uiPrograms[i] != null)
             {
@@ -380,7 +431,7 @@ public class ProgramUINew : MonoBehaviour
 
     void ResetMouseExitScales()
     {
-        for (int i = GetInitialIndex(); i < GetActiveUICount(); i++)
+        for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
         {
             if (i == 0)
             {
