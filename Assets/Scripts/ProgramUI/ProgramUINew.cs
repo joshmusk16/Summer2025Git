@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -118,7 +117,6 @@ public class ProgramUINew : MonoBehaviour
 
         //Fifth, set the EmptyUI Programs to their appropriate Sprites
         SetUISprites(handSize);
-
     }
 
     void InstantiateEmptyUIPrograms(int handSize)
@@ -144,10 +142,13 @@ public class ProgramUINew : MonoBehaviour
     {
         if(handSize == 0) return;
 
+        uiPositions.Clear();
+
         Vector2 spawningVector = startingMiddleVector + new Vector2(0, totalYLength / 2f);
 
         for (int i = 0; i < handSize; i++)
         {
+            uiPositions.Add(spawningVector);
             uiPrograms[i].transform.position = spawningVector;
             spawningVector -= new Vector2(0, totalYLength / handSize);
         }
@@ -165,9 +166,31 @@ public class ProgramUINew : MonoBehaviour
         }
     }
 
+    void AddProgramsToHand(GameObject[] programs, int indices, int amount)
+    {
+        //write correlating function to add programs to ProgramListNew lists
+    }
+
+    void RemoveProgramsFromHand(int[] indices, int amount)
+    {
+        //write correlating function to remove programs from ProgramListNew lists
+    }
+
+    //In future, encorporate logic for adding or removing cards into this script most likely, 
+    //between destroying the current program and moving
     public void ScrollProgramUI()
     {
-        
+        if(uiPrograms == null || uiPrograms.Count == 0) return;
+
+        Destroy(uiPrograms[0]);
+        uiPrograms.RemoveAt(0);
+
+        for(int i = 0; i < uiPrograms.Count; i++)
+        {
+            uiPrograms[i].GetComponent<LerpUIHandler>().LocationLerp(uiPositions[i], 25f);
+        }
+
+        programsListData.ScrollCurrentProgram();
     }
 
     int GetActiveUICount()

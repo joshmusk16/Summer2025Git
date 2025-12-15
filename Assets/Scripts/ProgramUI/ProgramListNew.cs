@@ -63,22 +63,13 @@ public class ProgramListNew : MonoBehaviour
         drawPilePrograms = new List<GameObject>(programs);
     }
 
-
-    public void IncreaseCurrentCount()
+    public void ScrollCurrentProgram()
     {
         DestroyCurrentProgram();
-
-        if (currentProgramAmount < totalProgramAmount)
-        {
-            currentProgramAmount++;
-
-            if (currentProgramAmount != totalProgramAmount)
-            {
-                currentProgram = Instantiate(programs[currentProgramAmount], player.transform);
-            }
-        }
-
-        UpdateCountUI();
+        drawnPrograms.RemoveAt(0);
+        currentProgram = Instantiate(drawnPrograms[0], player.transform);
+        
+        //UpdateCountUI();
     }
 
     public void MoveProgram(int startIndex, int endIndex)
