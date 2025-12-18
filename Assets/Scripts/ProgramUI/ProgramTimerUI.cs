@@ -76,7 +76,7 @@ public class ProgramTimerUI : MonoBehaviour
         updatingBar = false;
         animBar.transform.localScale = new Vector2(0f, 1f);
         playerAnimator.OnAnimationComplete -= StopUpdatingBar;
-        Debug.Log("Unsubscribing Stop Updating");
+        //Debug.Log("Unsubscribing Stop Updating");
     }
 
     //Handle unsubscriptions

@@ -48,7 +48,13 @@ public class ProgramListData : MonoBehaviour
             drawPilePrograms.RemoveAt(randomIndex);
         }
 
-        currentProgram = Instantiate(drawnPrograms[0], player.transform);
+        if(drawnPrograms.Count > 0)
+        {
+            DestroyCurrentProgram();
+            currentProgram = Instantiate(drawnPrograms[0], player.transform);
+        }
+
+        UpdateCountUI();
     }
 
     public void ResetDrawPile()
@@ -63,23 +69,46 @@ public class ProgramListData : MonoBehaviour
     {
         DestroyCurrentProgram();
         drawnPrograms.RemoveAt(0);
-        currentProgram = Instantiate(drawnPrograms[0], player.transform);
         
-        //UpdateCountUI();
+        if(drawnPrograms.Count > 0)
+        {
+            currentProgram = Instantiate(drawnPrograms[0], player.transform);
+        }
+        
+        UpdateCountUI();
     }
 
     public void AddProgramsToHand(GameObject[] addPrograms, int[] indices)
     {
         if(addPrograms.Length != indices.Length) return;
+        
+        foreach(int index in indices)
+        {
+            if(index == 0)
+            {
+                return;
+            }
+        }
 
         for(int i = 0; i < addPrograms.Length; i++)
         {
-            drawnPrograms.Insert(indices[i], programs[i]);
+            drawnPrograms.Insert(indices[i], addPrograms[i]);
         }
     }
 
     public void RemoveProgramsFromHand(int[] indices)
     {
+        foreach(int index in indices)
+        {
+            if(index == 0)
+            {
+                return;
+            }
+        }
+
+        System.Array.Sort(indices);
+        System.Array.Reverse(indices);
+
         for(int i = 0; i < indices.Length; i++)
         {
             drawnPrograms.RemoveAt(indices[i]);
@@ -88,22 +117,17 @@ public class ProgramListData : MonoBehaviour
 
     public void MoveProgram(int startIndex, int endIndex)
     {
-        if (startIndex != endIndex)
+        if (startIndex != endIndex && startIndex < drawnPrograms.Count && endIndex < drawnPrograms.Count)
         {
-            if (endIndex == 0)
-            {
-                DestroyCurrentProgram();
-                currentProgram = Instantiate(drawnPrograms[startIndex], player.transform);
-            }
-            else if (startIndex == 0)
-            {
-                DestroyCurrentProgram();
-                currentProgram = Instantiate(drawnPrograms[1], player.transform);
-            }
-
-            GameObject swap = programs[startIndex];
+            GameObject movedProgram = drawnPrograms[startIndex];
             drawnPrograms.RemoveAt(startIndex);
-            drawnPrograms.Insert(endIndex, swap);
+            drawnPrograms.Insert(endIndex, movedProgram);
+            
+            if(endIndex == 0 || startIndex == 0)
+            {
+                DestroyCurrentProgram();
+                currentProgram = Instantiate(drawnPrograms[0], player.transform);
+            }
         }
     }
 

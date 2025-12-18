@@ -53,7 +53,7 @@ public class PlayerTargeting : MonoBehaviour
 
         // Mouse is over a new tile, update tracking
         lastHoveredTileGridPos = temp;
-        Debug.Log(temp);
+        //Debug.Log(temp);
 
         //Check that temp's position is in the grid's bounds
         if (temp.x < tileGrid.gridWidth && temp.y < tileGrid.gridHeight && temp.x >= 0 && temp.y >= 0)

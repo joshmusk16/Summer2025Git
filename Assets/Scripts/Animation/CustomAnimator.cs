@@ -320,7 +320,7 @@ public class CustomAnimator : MonoBehaviour
     {
         if (hitbox != null && !hitbox.isActive)
         {
-            Debug.Log("Activated:" + hitbox.name);
+            //Debug.Log("Activated:" + hitbox.name);
             hitbox.isActive = true;
             activeHitboxes.Add(hitbox);
         }

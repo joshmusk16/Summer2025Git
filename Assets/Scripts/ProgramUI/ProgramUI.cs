@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,17 +10,17 @@ public class ProgramUI : MonoBehaviour
     public Vector2 startingMiddleVector;
     private const float totalYLength = 15f;
     private const int spacingThreshold = 5;   
+    private const int LOWEST_SORTING_ORDER = 10;
 
     [Header("UI Configuration")]
     public ProgramType uiType = ProgramType.Attack;   //Assign in inspector
 
-
     [Header("UI Elements")]
-    public GameObject emptyProgramPrefab;        //assigned in inspector, empty gameobjects with a spriteRenderer and a lerpHandler for Instantiation in SetStartingUIPositions()
+    public GameObject emptyProgramPrefab;
     public int startingHandSize;                 //assigned in inspector, value can be changed throughout rounds to increase / decrease size of starting hand  (implies need for add / remove functions to startingProgramUICount)
     private int displayedProgramUICount;         //The number of programs displayed at that moment in time, not necessarily at the start of a round
     [SerializeField] private List<GameObject> uiPrograms = new();
-    private List<Vector2> uiPositions = new();
+    [SerializeField] private List<Vector2> uiPositions = new();
 
     [Header("Dependencies")]
     public MouseTracker mouse;
@@ -47,15 +48,14 @@ public class ProgramUI : MonoBehaviour
 
     void Update()
     {
-        UpdateMouseHoverStates();
+        //UpdateMouseHoverStates();
 
         if (programInputManager != null && programInputManager.inSlowTimeMode == true)
         {
-
             if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected(ClosestUIToMouse()))
             {
                 heldProgram = ClosestUIToMouse();
-                heldProgram.GetComponent<SpriteRenderer>().sortingOrder += 1;
+                heldProgram.GetComponent<SpriteRenderer>().sortingOrder += uiPrograms.Count;
 
                 if (uiPrograms.IndexOf(heldProgram) == 0)
                 {
@@ -80,16 +80,16 @@ public class ProgramUI : MonoBehaviour
         (programInputManager != null && programInputManager.inSlowTimeMode == false && heldProgram != null))
         {
             int heldProgramLastIndex = uiPrograms.IndexOf(heldProgram);
-            heldProgram.GetComponent<SpriteRenderer>().sortingOrder -= 1;
             heldProgram = null;
             LerpUIProgramsToPositions();
+            UpdateSortingOrders();
 
             programsListData.MoveProgram(heldProgramFirstIndex, heldProgramLastIndex);
         }
     }
 
     //To be subscribed to animation completion in each program logic script
-    public void AnimationComplete()
+    public void ScrollOrSetupNewHand()
     {
         if(uiPrograms == null) return;
 
@@ -99,6 +99,7 @@ public class ProgramUI : MonoBehaviour
         }
         else
         {
+            Debug.Log("Trying to Scroll");
             ScrollProgramUI();
         }
     }
@@ -121,6 +122,19 @@ public class ProgramUI : MonoBehaviour
 
         //Fifth, set the EmptyUI Programs to their appropriate Sprites
         SetUISprites(handSize);
+
+        //Sixth, update the sorting order
+        UpdateSortingOrders();
+    }
+
+    void UpdateSortingOrders()
+    {
+        if(uiPrograms.Count == 0) return;
+
+        for(int i = 0; i < uiPrograms.Count; i++)
+        {
+            uiPrograms[i].GetComponent<SpriteRenderer>().sortingOrder = LOWEST_SORTING_ORDER + uiPrograms.Count - i;
+        }
     }
 
     void InstantiateEmptyUIPrograms(int handSize)
@@ -146,6 +160,8 @@ public class ProgramUI : MonoBehaviour
             }
         }   
     }
+
+    //eventually seperate the creations of the UIPositions from the assignments of the objects to their positions
 
     void SetUIPositions(int handSize)
     {
@@ -197,7 +213,7 @@ public class ProgramUI : MonoBehaviour
         if (programsListData == null || programsListData.drawnPrograms == null || 
         programsListData.drawnPrograms.Count == 0 || uiPrograms.Count == 0) return;
 
-        for (int i = GetInitialIndex(); i < handSize; i++)
+        for (int i = 0; i < handSize; i++)
         {
             uiPrograms[i].GetComponent<SpriteRenderer>().sprite = 
             programsListData.drawnPrograms[i].GetComponent<ProgramData>().uiSprite;
@@ -232,6 +248,15 @@ public class ProgramUI : MonoBehaviour
     {
         if(addPrograms.Length != indices.Length) return;
 
+        for(int i = 0; i < indices.Length; i++)
+        {
+            // If index is out of range, set it to insert at the end
+            if(indices[i] < 0 || indices[i] > uiPrograms.Count + i)
+            {
+                indices[i] = uiPrograms.Count + i;
+            }
+        }
+
         programsListData.AddProgramsToHand(addPrograms, indices);
 
         for(int i = 0; i < addPrograms.Length; i++)
@@ -240,11 +265,11 @@ public class ProgramUI : MonoBehaviour
             uiPrograms.Insert(indices[i], newProgram);
         }
 
-        displayedProgramUICount += indices.Length;
-        int handSize = programsListData.DetermineHandSize(displayedProgramUICount);
+        int handSize  = uiPrograms.Count;
 
         SetUIPositions(handSize);
         SetUISprites(handSize);
+        UpdateSortingOrders();
         LerpUIProgramsToPositions();
     }
 
@@ -257,19 +282,25 @@ public class ProgramUI : MonoBehaviour
             if(index == 0) return;
         }
 
+        Array.Sort(indices);
+        Array.Reverse(indices);
+
         programsListData.RemoveProgramsFromHand(indices);
 
         for(int i = 0; i < indices.Length; i++)
         {
-            Destroy(uiPrograms[indices[i]]);
-            uiPrograms.RemoveAt(indices[i]);
+            if(indices[i] < uiPrograms.Count)
+            {
+                Destroy(uiPrograms[indices[i]]);
+                uiPrograms.RemoveAt(indices[i]);
+            }
         }
 
-        displayedProgramUICount -= indices.Length;
-        int handSize = programsListData.DetermineHandSize(displayedProgramUICount);
+        int handSize = uiPrograms.Count;
 
         SetUIPositions(handSize);
         SetUISprites(handSize);
+        UpdateSortingOrders();
         LerpUIProgramsToPositions();
     }
 

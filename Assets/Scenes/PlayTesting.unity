@@ -809,6 +809,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &469638355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 469638357}
+  - component: {fileID: 469638356}
+  m_Layer: 0
+  m_Name: DebugAddAndRemove
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &469638356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469638355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf1e2b92642c8cd4393c26e797798f4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackUI: {fileID: 684479106}
+  defenseUI: {fileID: 611740129}
+  addPrograms:
+  - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
+  - {fileID: 5029349081135307006, guid: 18c486d47a6674342a5672e39c64b4ca, type: 3}
+  addIndices: 0200000003000000
+  removeIndices: 0200000003000000
+--- !u!4 &469638357
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469638355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1176,7 +1227,7 @@ MonoBehaviour:
   startingMiddleVector: {x: -26, y: 2}
   uiType: 0
   emptyProgramPrefab: {fileID: 2707739571561825384, guid: 847b7e991cc2a524c97f6f21b6c08268, type: 3}
-  startingHandSize: 7
+  startingHandSize: 5
   uiPrograms: []
   mouse: {fileID: 672980304}
   programsListData: {fileID: 684479108}
@@ -3628,3 +3679,4 @@ SceneRoots:
   - {fileID: 1523212149}
   - {fileID: 1337945984}
   - {fileID: 711053823}
+  - {fileID: 469638357}

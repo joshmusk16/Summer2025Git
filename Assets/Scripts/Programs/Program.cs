@@ -53,7 +53,7 @@ public class Program : MonoBehaviour
         // Only scroll if this animation type matches our program type
         if (completedType == programType && programUI != null)
         {
-            programUI.ScrollProgramUI();
+            programUI.ScrollOrSetupNewHand();
         }
     }
 
