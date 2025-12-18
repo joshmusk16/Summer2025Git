@@ -3,19 +3,17 @@ using UnityEngine;
 
 public class ProgramUINew : MonoBehaviour
 {
-    //This script handles all of the visual UI, the actual change to the ordering of the ProgramLists will
-    //be handled in the ProgramListData script (remove and insert in new postion, etc.)
     private const float PIXELS_PER_UNIT = 16f;
+    private const float CURRENT_PROGRAM_SCALAR = 2f;
 
-    //New totalYLength for determinging starting uiPositions with math rather than object reference
-    public Vector2 startingMiddleVector;          //Starting vector for SetStartingUIPositions()
+    public Vector2 startingMiddleVector;
     private const float totalYLength = 5f;
-    private const int spacingThreshold = 5;   //If the handSize is less than spacingThreshold, the SetUIPositions will calculate positions based on spacingThreshold
+    private const int spacingThreshold = 5;   
 
     [Header("UI Configuration")]
-    public ProgramType uiType = ProgramType.Attack;     //Assigned in inspector to differentiate attack v defense list
+    public ProgramType uiType = ProgramType.Attack;   //Assign in inspector
 
-    //convert arrays to lists for more flexible adding/removing
+
     [Header("UI Elements")]
     public GameObject emptyProgramPrefab;        //assigned in inspector, empty gameobjects with a spriteRenderer and a lerpHandler for Instantiation in SetStartingUIPositions()
     public int startingHandSize;                 //assigned in inspector, value can be changed throughout rounds to increase / decrease size of starting hand  (implies need for add / remove functions to startingProgramUICount)
@@ -39,6 +37,7 @@ public class ProgramUINew : MonoBehaviour
         programInputManager = FindObjectOfType<ProgramInputManager>();
 
         SetupNewHand();
+        InitializeMouseHoverStates();
 
         if (programInputManager != null)
         {
@@ -154,12 +153,36 @@ public class ProgramUINew : MonoBehaviour
         uiPositions.Clear();
 
         Vector2 spawningVector = startingMiddleVector + new Vector2(0, totalYLength / 2f);
+        Vector2 offsetVector = new(0, totalYLength / divider);
+
+        float currentProgramScalar = (CURRENT_PROGRAM_SCALAR - 1) / 2f;
+        float xBounds = emptyProgramPrefab.GetComponent<SpriteRenderer>().sprite.rect.width;
+        float yBounds = emptyProgramPrefab.GetComponent<SpriteRenderer>().sprite.rect.height;
 
         for (int i = 0; i < handSize; i++)
         {
+            if(i == 0)
+            {
+                Vector2 currentProgramLocation = spawningVector;
+                if(uiType == ProgramType.Attack)
+                {
+                    currentProgramLocation += new Vector2(xBounds, yBounds) * currentProgramScalar;
+                }   
+                else if(uiType == ProgramType.Defense)
+                {
+                    currentProgramLocation += new Vector2(-xBounds, yBounds) * currentProgramScalar;
+                }
+
+                uiPositions.Add(currentProgramLocation);
+                uiPrograms[i].transform.position = currentProgramLocation;
+                spawningVector -= offsetVector;
+
+                continue;      
+            }
+
             uiPositions.Add(spawningVector);
             uiPrograms[i].transform.position = spawningVector;
-            spawningVector -= new Vector2(0, totalYLength / divider);
+            spawningVector -= offsetVector;
         }
     }
 

@@ -4,15 +4,17 @@ using UnityEngine;
 public class ProgramListData : MonoBehaviour
 {
     public int totalProgramAmount;
-    public int currentProgramAmount = 0;
+
     public List<GameObject> programs = new();
+    public List<GameObject> drawPilePrograms = new();
+    public List<GameObject> drawnPrograms = new();
 
     public NumberUI currentDeckAmountDisplay;
     public NumberUI totalDeckAmountDisplay;
 
     private GameObject currentProgram = null;
 
-    private GameObject player = null;
+    public GameObject player;
     private ProgramInputManager programInputManager = null;
 
     void Start()
@@ -21,31 +23,67 @@ public class ProgramListData : MonoBehaviour
         UpdateCountUI();
 
         programInputManager = FindObjectOfType<ProgramInputManager>();
-        PlayerLogic playerLogic = FindObjectOfType<PlayerLogic>();
-
-        if (playerLogic != null)
-        {
-            player = playerLogic.gameObject;
-        }
-
-        currentProgram = Instantiate(programs[currentProgramAmount], player.transform);
     }
 
-    public void IncreaseCurrentCount()
+    public int DetermineHandSize(int handSize)
     {
-        DestroyCurrentProgram();
+        ResetDrawPile();
+        return Mathf.Min(handSize, drawPilePrograms.Count);
+    }
 
-        if (currentProgramAmount < totalProgramAmount)
+    public void DrawNewHand(int handSize)
+    {
+        if(drawPilePrograms == null || drawPilePrograms.Count == 0) return;
+
+        if(handSize <= 0) return;
+
+        handSize = Mathf.Min(handSize, drawPilePrograms.Count);
+
+        drawnPrograms.Clear();
+
+        for(int i = 0; i < handSize; i++)
         {
-            currentProgramAmount++;
-
-            if (currentProgramAmount != totalProgramAmount)
-            {
-                currentProgram = Instantiate(programs[currentProgramAmount], player.transform);
-            }
+            int randomIndex = Random.Range(0, drawPilePrograms.Count);
+            drawnPrograms.Add(drawPilePrograms[randomIndex]);
+            drawPilePrograms.RemoveAt(randomIndex);
         }
 
-        UpdateCountUI();
+        currentProgram = Instantiate(drawnPrograms[0], player.transform);
+    }
+
+    public void ResetDrawPile()
+    {
+        if(drawPilePrograms == null || drawPilePrograms.Count == 0)
+        {
+            drawPilePrograms = new List<GameObject>(programs);
+        }
+    }
+
+    public void ScrollCurrentProgram()
+    {
+        DestroyCurrentProgram();
+        drawnPrograms.RemoveAt(0);
+        currentProgram = Instantiate(drawnPrograms[0], player.transform);
+        
+        //UpdateCountUI();
+    }
+
+    public void AddProgramsToHand(GameObject[] addPrograms, int[] indices)
+    {
+        if(addPrograms.Length != indices.Length) return;
+
+        for(int i = 0; i < addPrograms.Length; i++)
+        {
+            drawnPrograms.Insert(indices[i], programs[i]);
+        }
+    }
+
+    public void RemoveProgramsFromHand(int[] indices)
+    {
+        for(int i = 0; i < indices.Length; i++)
+        {
+            drawnPrograms.RemoveAt(indices[i]);
+        }
     }
 
     public void MoveProgram(int startIndex, int endIndex)
@@ -55,20 +93,17 @@ public class ProgramListData : MonoBehaviour
             if (endIndex == 0)
             {
                 DestroyCurrentProgram();
-                currentProgram = Instantiate(programs[startIndex + currentProgramAmount], player.transform);
+                currentProgram = Instantiate(drawnPrograms[startIndex], player.transform);
             }
             else if (startIndex == 0)
             {
                 DestroyCurrentProgram();
-                currentProgram = Instantiate(programs[currentProgramAmount + 1], player.transform);
+                currentProgram = Instantiate(drawnPrograms[1], player.transform);
             }
 
-            endIndex += currentProgramAmount;
-            startIndex += currentProgramAmount;
-
             GameObject swap = programs[startIndex];
-            programs.RemoveAt(startIndex);
-            programs.Insert(endIndex, swap);
+            drawnPrograms.RemoveAt(startIndex);
+            drawnPrograms.Insert(endIndex, swap);
         }
     }
 
@@ -84,13 +119,13 @@ public class ProgramListData : MonoBehaviour
 
     public void UpdateCountUI()
     {
-        currentDeckAmountDisplay.UpdateNumber(totalProgramAmount - currentProgramAmount);
+        currentDeckAmountDisplay.UpdateNumber(drawPilePrograms.Count);
         totalDeckAmountDisplay.UpdateNumber(totalProgramAmount);
     }
 
     public bool AreProgramsAvailable()
     {
-        if (currentProgramAmount < totalProgramAmount)
+        if (drawnPrograms.Count > 0)
         {
             return true;
         }

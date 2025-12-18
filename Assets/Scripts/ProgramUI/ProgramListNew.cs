@@ -30,8 +30,6 @@ public class ProgramListNew : MonoBehaviour
         {
             player = playerLogic.gameObject;
         }
-
-        //currentProgram = Instantiate(programs[currentProgramAmount], player.transform);
     }
 
     public int DetermineHandSize(int handSize)
@@ -97,20 +95,17 @@ public class ProgramListNew : MonoBehaviour
             if (endIndex == 0)
             {
                 DestroyCurrentProgram();
-                currentProgram = Instantiate(programs[startIndex + currentProgramAmount], player.transform);
+                currentProgram = Instantiate(drawnPrograms[startIndex], player.transform);
             }
             else if (startIndex == 0)
             {
                 DestroyCurrentProgram();
-                currentProgram = Instantiate(programs[currentProgramAmount + 1], player.transform);
+                currentProgram = Instantiate(drawnPrograms[1], player.transform);
             }
 
-            endIndex += currentProgramAmount;
-            startIndex += currentProgramAmount;
-
             GameObject swap = programs[startIndex];
-            programs.RemoveAt(startIndex);
-            programs.Insert(endIndex, swap);
+            drawnPrograms.RemoveAt(startIndex);
+            drawnPrograms.Insert(endIndex, swap);
         }
     }
 
