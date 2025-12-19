@@ -13,7 +13,7 @@ public class ProgramUI : MonoBehaviour
     private const int LOWEST_SORTING_ORDER = 10;
 
     [Header("UI Configuration")]
-    public ProgramType uiType = ProgramType.Attack;   //Assign in inspector
+    public ProgramType uiType = ProgramType.Attack;
 
     [Header("UI Elements")]
     public GameObject emptyProgramPrefab;
@@ -120,10 +120,13 @@ public class ProgramUI : MonoBehaviour
         //Fourth, set the EmptyUI Programs to their appropriate starting Positions
         SetUIPositions(handSize);
 
-        //Fifth, set the EmptyUI Programs to their appropriate Sprites
+        //Fifth, assign those UI positions to each EmptyUI program
+        AssignUIPositions();
+
+        //Sixth, set the EmptyUI Programs to their appropriate Sprites
         SetUISprites(handSize);
 
-        //Sixth, update the sorting order
+        //Seventh, update the sorting order
         UpdateSortingOrders();
     }
 
@@ -196,15 +199,23 @@ public class ProgramUI : MonoBehaviour
                 }
 
                 uiPositions.Add(currentProgramLocation);
-                uiPrograms[i].transform.position = currentProgramLocation;
                 spawningVector -= offsetVector;
 
                 continue;      
             }
 
             uiPositions.Add(spawningVector);
-            uiPrograms[i].transform.position = spawningVector;
             spawningVector -= offsetVector;
+        }
+    }
+
+    void AssignUIPositions()
+    {
+        if(uiPositions.Count != uiPrograms.Count) return;
+
+        for(int i = 0; i < uiPrograms.Count; i++)
+        {
+            uiPrograms[i].transform.position = uiPositions[i];
         }
     }
 
@@ -268,18 +279,29 @@ public class ProgramUI : MonoBehaviour
         int handSize  = uiPrograms.Count;
 
         SetUIPositions(handSize);
-        SetUISprites(handSize);
-        UpdateSortingOrders();
+
+        for(int i = 0; i < addPrograms.Length; i++)
+        {
+            uiPrograms[indices[i]].transform.position = uiPositions[indices[i]];
+        }
+
         LerpUIProgramsToPositions();
+        UpdateSortingOrders();
+        SetUISprites(handSize);
     }
 
     public void RemoveProgramsFromHand(int[] indices)
     {
         if(displayedProgramUICount - indices.Length < 1) return;
 
-        foreach(int index in indices) 
+        for(int i = 0; i < indices.Length; i++)
         {
-            if(index == 0) return;
+            if(indices[i] == 0) return;
+
+            if(indices[i] < 0 || indices[i] >= uiPrograms.Count)
+            {
+                indices[i] = uiPrograms.Count - i;
+            }
         }
 
         Array.Sort(indices);
@@ -298,10 +320,10 @@ public class ProgramUI : MonoBehaviour
 
         int handSize = uiPrograms.Count;
 
-        SetUIPositions(handSize);
-        SetUISprites(handSize);
-        UpdateSortingOrders();
+        SetUIPositions(handSize);;
         LerpUIProgramsToPositions();
+        UpdateSortingOrders();
+        SetUISprites(handSize);
     }
 
     //In future, encorporate logic for adding or removing cards into this script most likely, 

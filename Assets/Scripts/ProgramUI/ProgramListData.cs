@@ -100,14 +100,11 @@ public class ProgramListData : MonoBehaviour
     {
         foreach(int index in indices)
         {
-            if(index == 0)
+            if(index <= 0 || index >= drawnPrograms.Count)
             {
                 return;
             }
         }
-
-        System.Array.Sort(indices);
-        System.Array.Reverse(indices);
 
         for(int i = 0; i < indices.Length; i++)
         {
