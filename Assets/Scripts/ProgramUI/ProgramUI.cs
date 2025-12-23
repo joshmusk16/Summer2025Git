@@ -8,8 +8,8 @@ public class ProgramUI : MonoBehaviour
     private const float CURRENT_PROGRAM_SCALAR = 2f;
 
     public Vector2 startingMiddleVector;
-    private const float totalYLength = 15f;
-    private const int spacingThreshold = 5;   
+    private const float TOTAL_Y_LENGTH = 15f;
+    private const int SPACING_THRESHOLD = 5;   
     private const int LOWEST_SORTING_ORDER = 10;
 
     [Header("UI Configuration")]
@@ -48,7 +48,7 @@ public class ProgramUI : MonoBehaviour
 
     void Update()
     {
-        //UpdateMouseHoverStates();
+        UpdateMouseHoverStates();
 
         if (programInputManager != null && programInputManager.inSlowTimeMode == true)
         {
@@ -117,16 +117,19 @@ public class ProgramUI : MonoBehaviour
         //Third, instantiate new empty UI programs based on that handsize
         InstantiateEmptyUIPrograms(handSize);
 
-        //Fourth, set the EmptyUI Programs to their appropriate starting Positions
+        //Fourth, set all new MouseHover states to false
+        InitializeMouseHoverStates();
+
+        //Fifth, set the EmptyUI Programs to their appropriate starting Positions
         SetUIPositions(handSize);
 
-        //Fifth, assign those UI positions to each EmptyUI program
+        //Sixth, assign those UI positions to each EmptyUI program
         AssignUIPositions();
 
-        //Sixth, set the EmptyUI Programs to their appropriate Sprites
+        //Seventh, set the EmptyUI Programs to their appropriate Sprites
         SetUISprites(handSize);
 
-        //Seventh, update the sorting order
+        //Eighth, update the sorting order
         UpdateSortingOrders();
     }
 
@@ -172,13 +175,13 @@ public class ProgramUI : MonoBehaviour
 
         int divider = handSize;
 
-        if(handSize <= spacingThreshold) 
-        divider = spacingThreshold;
+        if(handSize <= SPACING_THRESHOLD) 
+        divider = SPACING_THRESHOLD;
 
         uiPositions.Clear();
 
-        Vector2 spawningVector = startingMiddleVector + new Vector2(0, totalYLength / 2f);
-        Vector2 offsetVector = new(0, totalYLength / divider);
+        Vector2 spawningVector = startingMiddleVector + new Vector2(0, TOTAL_Y_LENGTH / 2f);
+        Vector2 offsetVector = new(0, TOTAL_Y_LENGTH / divider);
 
         float currentProgramScalar = (CURRENT_PROGRAM_SCALAR - 1) / 2f;
         float xBounds = emptyProgramPrefab.GetComponent<SpriteRenderer>().sprite.rect.width / PIXELS_PER_UNIT;
@@ -273,6 +276,7 @@ public class ProgramUI : MonoBehaviour
         for(int i = 0; i < addPrograms.Length; i++)
         {
             GameObject newProgram = Instantiate(emptyProgramPrefab, gameObject.transform);
+            mouseHoverStates.Add(newProgram, false);
             uiPrograms.Insert(indices[i], newProgram);
         }
 
@@ -314,6 +318,7 @@ public class ProgramUI : MonoBehaviour
             if(indices[i] < uiPrograms.Count)
             {
                 Destroy(uiPrograms[indices[i]]);
+                mouseHoverStates.Remove(uiPrograms[indices[i]]);
                 uiPrograms.RemoveAt(indices[i]);
             }
         }
@@ -333,8 +338,9 @@ public class ProgramUI : MonoBehaviour
         if(uiPrograms == null || uiPrograms.Count == 0) return;
 
         Destroy(uiPrograms[0]);
+        mouseHoverStates.Remove(uiPrograms[0]);
         uiPrograms.RemoveAt(0);
-        uiPositions.RemoveAt(uiPositions.Count - 1);
+        SetUIPositions(uiPrograms.Count);
 
         for(int i = 0; i < uiPrograms.Count; i++)
         {
@@ -419,16 +425,27 @@ public class ProgramUI : MonoBehaviour
 
     private GameObject ClosestUIToMouse()
     {
-        float distance = Vector2.Distance(uiPrograms[GetInitialIndex()].transform.position, mouse.GetUIMousePosition());
-        GameObject closestObj = uiPrograms[GetInitialIndex()];
-        for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
+        if (uiPrograms.Count == 0) return null;
+        
+        int startIndex = GetInitialIndex();
+        if (startIndex >= uiPrograms.Count) return null;
+        
+        GameObject closestObj = uiPrograms[startIndex];
+        float minDistance = Vector2.Distance(closestObj.transform.position, mouse.GetUIMousePosition());
+        
+        for (int i = startIndex + 1; i < uiPrograms.Count; i++)
         {
-            if (Vector2.Distance(uiPrograms[i].transform.position, mouse.GetUIMousePosition()) < distance)
+            if (uiPrograms[i] == null) continue;
+            
+            float currentDistance = Vector2.Distance(uiPrograms[i].transform.position, mouse.GetUIMousePosition());
+            
+            if (currentDistance < minDistance)
             {
-                distance = Vector2.Distance(uiPrograms[i].transform.position, mouse.GetUIMousePosition());
+                minDistance = currentDistance;
                 closestObj = uiPrograms[i];
             }
         }
+        
         return closestObj;
     }
 
@@ -454,6 +471,10 @@ public class ProgramUI : MonoBehaviour
 
     void InitializeMouseHoverStates()
     {
+        mouseHoverStates.Clear();
+
+        if(uiPrograms.Count == 0) return;
+ 
         for (int i = 0; i < uiPrograms.Count; i++)
         {
             if (uiPrograms[i] != null)
@@ -465,26 +486,28 @@ public class ProgramUI : MonoBehaviour
 
     void UpdateMouseHoverStates()
     {
+        GameObject closest = ClosestUIToMouse();
+        
         for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
         {
             if (uiPrograms[i] != null)
             {
                 bool currentlyHovered = MouseDetected(uiPrograms[i]);
-                bool previouslyHovered = mouseHoverStates[uiPrograms[i]];
+                bool isClosestAndHovered = currentlyHovered && (uiPrograms[i] == closest);
+                bool previouslyClosestAndHovered = mouseHoverStates[uiPrograms[i]];
 
-                // Mouse entered the object
-                if (currentlyHovered && !previouslyHovered)
+                mouseHoverStates[uiPrograms[i]] = isClosestAndHovered;
+
+                // Mouse entered and is closest
+                if (isClosestAndHovered && !previouslyClosestAndHovered)
                 {
                     OnMouseEntering(uiPrograms[i]);
                 }
-                // Mouse exited the object
-                else if (!currentlyHovered && previouslyHovered)
+                // Mouse exited or is no longer closest
+                else if (!isClosestAndHovered && previouslyClosestAndHovered)
                 {
                     OnMouseExiting(uiPrograms[i]);
                 }
-
-                // Update the state
-                mouseHoverStates[uiPrograms[i]] = currentlyHovered;
             }
         }
     }
@@ -492,6 +515,8 @@ public class ProgramUI : MonoBehaviour
     void OnMouseEntering(GameObject attackProgram)
     {
         if (attackProgram == heldProgram) return;
+
+        attackProgram.GetComponent<SpriteRenderer>().sortingOrder = LOWEST_SORTING_ORDER + uiPrograms.Count + 1;
 
         if (uiPrograms.IndexOf(attackProgram) == 0)
         {
@@ -507,7 +532,10 @@ public class ProgramUI : MonoBehaviour
     {
         if (attackProgram == heldProgram) return;
 
-        if (uiPrograms.IndexOf(attackProgram) == 0)
+        int index = uiPrograms.IndexOf(attackProgram);
+        attackProgram.GetComponent<SpriteRenderer>().sortingOrder = LOWEST_SORTING_ORDER + uiPrograms.Count - index;
+
+        if (index == 0)
         {
             attackProgram.GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2f, 2f), 25f);
         }
