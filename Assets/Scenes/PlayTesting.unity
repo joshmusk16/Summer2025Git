@@ -1026,6 +1026,8 @@ MonoBehaviour:
   startingHandSize: 5
   uiPrograms: []
   uiPositions: []
+  queueUIOffsetVector: {x: 2.75, y: 0}
+  queuePrefab: {fileID: 7367104391774621381, guid: f82ffdda994e5944886c681c6be19fdd, type: 3}
   mouse: {fileID: 672980304}
   programsListData: {fileID: 611740128}
 --- !u!4 &611740130
@@ -1234,6 +1236,8 @@ MonoBehaviour:
   startingHandSize: 5
   uiPrograms: []
   uiPositions: []
+  queueUIOffsetVector: {x: 2.75, y: 0}
+  queuePrefab: {fileID: 7367104391774621381, guid: f82ffdda994e5944886c681c6be19fdd, type: 3}
   mouse: {fileID: 672980304}
   programsListData: {fileID: 684479108}
 --- !u!4 &684479107

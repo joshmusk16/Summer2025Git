@@ -22,6 +22,13 @@ public class ProgramUI : MonoBehaviour
     [SerializeField] private List<GameObject> uiPrograms = new();
     [SerializeField] private List<Vector2> uiPositions = new();
 
+    [Header("Queue UI Elements")]
+    public Vector2 queueUIOffsetVector;
+    public GameObject queuePrefab;
+    private List<GameObject> queueUIObjects = new();
+    private List<Vector2> queueUIPositions = new();
+    private Dictionary<GameObject, bool> queueUIStates = new();
+
     [Header("Dependencies")]
     public MouseTracker mouse;
     public ProgramListData programsListData;
@@ -38,6 +45,7 @@ public class ProgramUI : MonoBehaviour
         programInputManager = FindObjectOfType<ProgramInputManager>();
 
         SetupNewHand();
+        SetupQueueUIOnStart();
         InitializeMouseHoverStates();
 
         if (programInputManager != null)
@@ -52,9 +60,9 @@ public class ProgramUI : MonoBehaviour
 
         if (programInputManager != null && programInputManager.inSlowTimeMode == true)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected(ClosestUIToMouse()))
+            if (Input.GetKeyDown(KeyCode.Mouse0) && MouseDetected(ClosestUIToMouse(uiPrograms)))
             {
-                heldProgram = ClosestUIToMouse();
+                heldProgram = ClosestUIToMouse(uiPrograms);
                 heldProgram.GetComponent<SpriteRenderer>().sortingOrder += uiPrograms.Count;
 
                 if (uiPrograms.IndexOf(heldProgram) == 0)
@@ -74,6 +82,13 @@ public class ProgramUI : MonoBehaviour
                 heldProgram.GetComponent<LerpUIHandler>().LocationLerp(mouse.GetUIMousePosition(), 25f);
                 LerpUIProgramsToPositions();
             }
+
+            if (Input.GetKey(KeyCode.Mouse1) && MouseDetected(ClosestUIToMouse(queueUIObjects)))
+            {
+                GameObject closestQueueUI = ClosestUIToMouse(queueUIObjects);
+                //Add method to make this state and all that come after inactive
+            }
+
         }
 
         if ((Input.GetKeyUp(KeyCode.Mouse0) && heldProgram != null) ||
@@ -95,12 +110,11 @@ public class ProgramUI : MonoBehaviour
 
         if(GetProgramUICount() == 1)
         {
-            SetupNewHand();
+            SetupNewHand(); //incorporate queue ui logic to setupnewhand
         }
         else
-        {
-            Debug.Log("Trying to Scroll");
-            ScrollProgramUI();
+        {   
+            ScrollProgramUI(); //incorporate queue ui logic to scrollProgramUI
         }
     }
 
@@ -135,11 +149,13 @@ public class ProgramUI : MonoBehaviour
 
     void UpdateSortingOrders()
     {
-        if(uiPrograms.Count == 0) return;
+        //if(uiPrograms.Count == 0 || uiPrograms.Count != queueUIObjects.Count) return;
 
         for(int i = 0; i < uiPrograms.Count; i++)
         {
-            uiPrograms[i].GetComponent<SpriteRenderer>().sortingOrder = LOWEST_SORTING_ORDER + uiPrograms.Count - i;
+            int sortingOrder = LOWEST_SORTING_ORDER + uiPrograms.Count - i;
+            uiPrograms[i].GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
+            //queueUIObjects[i].GetComponent<SpriteRenderer>().sortingOrder = sortingOrder;
         }
     }
 
@@ -167,7 +183,37 @@ public class ProgramUI : MonoBehaviour
         }   
     }
 
-    //eventually seperate the creations of the UIPositions from the assignments of the objects to their positions
+    void SetupQueueUIOnStart()
+    {
+        Debug.Log("SettingUp");
+        InstantiateQueueUI();
+        SetQueueUIPositions();
+        AssignQueueUIPositions();
+        UpdateSortingOrders();
+    }
+
+    void InstantiateQueueUI()
+    {
+        if(uiPrograms.Count == 0) return;
+
+        foreach(GameObject queueUI in queueUIObjects)
+        {
+            if(queueUI != null)
+            {
+                Destroy(queueUI);
+            }
+        }
+
+        queueUIObjects.Clear();
+
+        for(int i = 0; i < uiPrograms.Count; i++)
+        {
+            GameObject newQueueUI = Instantiate(queuePrefab, gameObject.transform);
+            queueUIObjects.Add(newQueueUI);
+        }   
+    }
+
+#region Position Methods
 
     void SetUIPositions(int handSize)
     {
@@ -221,6 +267,43 @@ public class ProgramUI : MonoBehaviour
             uiPrograms[i].transform.position = uiPositions[i];
         }
     }
+
+    void SetQueueUIPositions()
+    {
+        if(uiPositions.Count == 0) return;
+
+        queueUIPositions.Clear();
+
+        float currentProgramScalar = (CURRENT_PROGRAM_SCALAR - 1) / 2f;
+        float xBounds = emptyProgramPrefab.GetComponent<SpriteRenderer>().sprite.rect.width / PIXELS_PER_UNIT * currentProgramScalar;
+
+        Vector2 offset = (uiType == ProgramType.Attack) ? -queueUIOffsetVector : queueUIOffsetVector;
+        xBounds = (uiType == ProgramType.Attack) ? -xBounds : xBounds;
+
+        for(int i = 0; i < uiPositions.Count; i++)
+        {
+            if(i == 0)
+            {
+            queueUIPositions.Add(uiPositions[i] + offset + new Vector2(xBounds, 0));
+            }
+            else
+            {
+            queueUIPositions.Add(uiPositions[i] + offset);   
+            }
+        }
+    }
+
+    void AssignQueueUIPositions()
+    {
+        if(queueUIObjects.Count != queueUIPositions.Count) return;
+
+        for(int i = 0; i < queueUIObjects.Count; i++)
+        {
+            queueUIObjects[i].transform.position = queueUIPositions[i];
+        }
+    }
+
+#endregion
 
     void SetUISprites(int handSize)
     {
@@ -355,6 +438,21 @@ public class ProgramUI : MonoBehaviour
         programsListData.ScrollCurrentProgram();
     }
 
+    void UpdateQueueUIInactiveStates(GameObject selectedQueueUI)
+    {
+        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count) return;
+
+        int index = queueUIObjects.IndexOf(selectedQueueUI);
+
+        for(int i = index; i < queueUIObjects.Count; i++)
+        {
+            queueUIObjects[i].GetComponent<QueueUI>().SetInactive();
+            queueUIStates[queueUIObjects[i]] = false;
+        }
+    }
+
+#region Index Offseting Methods
+
     int GetProgramUICount()
     {
         if (programsListData == null) return 0;
@@ -395,6 +493,8 @@ public class ProgramUI : MonoBehaviour
         }
     }
 
+#endregion
+
     void SortByYPosition()
     {
         int startIndex = GetInitialIndex();
@@ -423,26 +523,26 @@ public class ProgramUI : MonoBehaviour
         }
     }
 
-    private GameObject ClosestUIToMouse()
+    private GameObject ClosestUIToMouse(List<GameObject> list)
     {
-        if (uiPrograms.Count == 0) return null;
+        if (list.Count == 0) return null;
         
         int startIndex = GetInitialIndex();
-        if (startIndex >= uiPrograms.Count) return null;
+        if (startIndex >= list.Count) return null;
         
-        GameObject closestObj = uiPrograms[startIndex];
+        GameObject closestObj = list[startIndex];
         float minDistance = Vector2.Distance(closestObj.transform.position, mouse.GetUIMousePosition());
         
-        for (int i = startIndex + 1; i < uiPrograms.Count; i++)
+        for (int i = startIndex + 1; i < list.Count; i++)
         {
-            if (uiPrograms[i] == null) continue;
+            if (list[i] == null) continue;
             
-            float currentDistance = Vector2.Distance(uiPrograms[i].transform.position, mouse.GetUIMousePosition());
+            float currentDistance = Vector2.Distance(list[i].transform.position, mouse.GetUIMousePosition());
             
             if (currentDistance < minDistance)
             {
                 minDistance = currentDistance;
-                closestObj = uiPrograms[i];
+                closestObj = list[i];
             }
         }
         
@@ -469,6 +569,8 @@ public class ProgramUI : MonoBehaviour
 
     //Mouse Hover Tracking Methods
 
+#region Initialize Dictionaries
+
     void InitializeMouseHoverStates()
     {
         mouseHoverStates.Clear();
@@ -484,9 +586,26 @@ public class ProgramUI : MonoBehaviour
         }
     }
 
+    void InitializeQueueUIStates()
+    {
+        queueUIStates.Clear();
+
+        if(queueUIObjects.Count == 0) return;
+ 
+        for (int i = 0; i < queueUIObjects.Count; i++)
+        {
+            if (uiPrograms[i] != null)
+            {
+                mouseHoverStates[queueUIObjects[i]] = false;
+            }
+        }
+    }
+
+#endregion
+
     void UpdateMouseHoverStates()
     {
-        GameObject closest = ClosestUIToMouse();
+        GameObject closest = ClosestUIToMouse(uiPrograms);
         
         for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
         {
