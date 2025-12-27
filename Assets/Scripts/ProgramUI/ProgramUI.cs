@@ -45,7 +45,6 @@ public class ProgramUI : MonoBehaviour
         programInputManager = FindObjectOfType<ProgramInputManager>();
 
         SetupNewHand();
-        SetupQueueUIOnStart();
         InitializeMouseHoverStates();
 
         if (programInputManager != null)
@@ -143,7 +142,10 @@ public class ProgramUI : MonoBehaviour
         //Seventh, set the EmptyUI Programs to their appropriate Sprites
         SetUISprites(handSize);
 
-        //Eighth, update the sorting order
+        //Eighth, setup the queue UI
+        SetupQueueUIOnStart();
+
+        //Ninth, update all the sorting orders
         UpdateSortingOrders();
     }
 
@@ -185,7 +187,6 @@ public class ProgramUI : MonoBehaviour
 
     void SetupQueueUIOnStart()
     {
-        Debug.Log("SettingUp");
         InstantiateQueueUI();
         SetQueueUIPositions();
         AssignQueueUIPositions();
@@ -317,6 +318,8 @@ public class ProgramUI : MonoBehaviour
         }
     }
 
+#region Lerp UI Methods
+
     void LerpUIProgramsToPositions()
     {
         if(uiPrograms.Count != uiPositions.Count) return;
@@ -341,6 +344,21 @@ public class ProgramUI : MonoBehaviour
         }
     }
 
+    void LerpQueueUIToPositions()
+    {
+        if(queueUIObjects.Count != uiPrograms.Count ||
+        queueUIObjects.Count != queueUIPositions.Count) return;
+
+        for(int i = GetInitialIndex(); i < GetProgramUICount(); i++)
+        {
+            queueUIObjects[i].GetComponent<LerpUIHandler>().LocationLerp(queueUIPositions[i], 25f); 
+        }
+    }
+
+#endregion
+
+#region Add/Remove Methods
+
     public void AddProgramsToHand(GameObject[] addPrograms, int[] indices)
     {
         if(addPrograms.Length != indices.Length) return;
@@ -361,18 +379,25 @@ public class ProgramUI : MonoBehaviour
             GameObject newProgram = Instantiate(emptyProgramPrefab, gameObject.transform);
             mouseHoverStates.Add(newProgram, false);
             uiPrograms.Insert(indices[i], newProgram);
+
+            GameObject newQueueUI = Instantiate(queuePrefab, gameObject.transform);
+            queueUIStates.Add(newQueueUI, false);
+            queueUIObjects.Insert(indices[i], newQueueUI);
         }
 
         int handSize  = uiPrograms.Count;
 
         SetUIPositions(handSize);
+        SetQueueUIPositions();
 
         for(int i = 0; i < addPrograms.Length; i++)
         {
             uiPrograms[indices[i]].transform.position = uiPositions[indices[i]];
+            queueUIObjects[indices[i]].transform.position = queueUIPositions[indices[i]];
         }
 
         LerpUIProgramsToPositions();
+        LerpQueueUIToPositions();
         UpdateSortingOrders();
         SetUISprites(handSize);
     }
@@ -403,16 +428,24 @@ public class ProgramUI : MonoBehaviour
                 Destroy(uiPrograms[indices[i]]);
                 mouseHoverStates.Remove(uiPrograms[indices[i]]);
                 uiPrograms.RemoveAt(indices[i]);
+
+                Destroy(queueUIObjects[indices[i]]);
+                queueUIStates.Remove(queueUIObjects[indices[i]]);
+                queueUIObjects.RemoveAt(indices[i]);
             }
         }
 
         int handSize = uiPrograms.Count;
 
-        SetUIPositions(handSize);;
+        SetUIPositions(handSize);
+        SetQueueUIPositions();
         LerpUIProgramsToPositions();
+        LerpQueueUIToPositions();
         UpdateSortingOrders();
         SetUISprites(handSize);
     }
+
+    #endregion
 
     //In future, encorporate logic for adding or removing cards into this script most likely, 
     //between destroying the current program and moving
@@ -423,7 +456,16 @@ public class ProgramUI : MonoBehaviour
         Destroy(uiPrograms[0]);
         mouseHoverStates.Remove(uiPrograms[0]);
         uiPrograms.RemoveAt(0);
+
+        if(queueUIObjects.Count > 1)
+        {
+            Destroy(queueUIObjects[^1]);
+            queueUIStates.Remove(queueUIObjects[^1]);
+            queueUIObjects.RemoveAt(queueUIObjects.Count - 1);  
+        }
+
         SetUIPositions(uiPrograms.Count);
+        SetQueueUIPositions();
 
         for(int i = 0; i < uiPrograms.Count; i++)
         {
@@ -434,6 +476,8 @@ public class ProgramUI : MonoBehaviour
                 uiPrograms[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(2, 2), 25f);
             }
         }
+
+        LerpQueueUIToPositions();
 
         programsListData.ScrollCurrentProgram();
     }
