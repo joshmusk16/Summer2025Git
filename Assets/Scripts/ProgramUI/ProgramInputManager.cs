@@ -1,4 +1,5 @@
 using System;
+using System.Security.Permissions;
 using UnityEngine;
 
 public class ProgramInputManager : MonoBehaviour
@@ -29,11 +30,19 @@ public class ProgramInputManager : MonoBehaviour
     private DashChargeManager dashChargeManager;
     private ProgramListData attackProgramList;
     private ProgramListData defenseProgramList;
+    private ProgramUI attackProgramUI;
+    private ProgramUI defenseProgramUI;
+    private QueueListData queueProgramList;
 
     void Start()
     {
         attackProgramList = GameObject.Find("AttackUIManager").GetComponent<ProgramListData>();
+        attackProgramUI = GameObject.Find("AttackUIManager").GetComponent<ProgramUI>();
+
         defenseProgramList = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
+        defenseProgramUI = GameObject.Find("DefenseUIManager").GetComponent<ProgramUI>();
+
+        queueProgramList = FindObjectOfType<QueueListData>();
         dashChargeManager = FindObjectOfType<DashChargeManager>();
         timeSlowTimerLogic = FindObjectOfType<TimeSlowTimerLogic>();
     }
@@ -65,9 +74,16 @@ public class ProgramInputManager : MonoBehaviour
         {
             if (Input.GetKeyDown(attackKey) && attackProgramList.AreProgramsAvailable())
             {
-                StartAttackProgram?.Invoke();
-                isAttacking = true;
-                canUseProgram = false;
+                if(queueProgramList.amountInQueue == 0)
+                {
+                    StartAttackProgram?.Invoke();
+                    isAttacking = true;
+                    canUseProgram = false;    
+                }
+                else
+                {
+                    attackProgramUI.UpdateQueueUIOnClick();
+                }
             }
 
             if (Input.GetKeyDown(defenseKey) && defenseProgramList.AreProgramsAvailable())

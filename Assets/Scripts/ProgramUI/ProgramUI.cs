@@ -33,6 +33,7 @@ public class ProgramUI : MonoBehaviour
     public MouseTracker mouse;
     public ProgramListData programsListData;
     private ProgramInputManager programInputManager;
+    private QueueDataCollector queueDataCollector;
 
     //UI State Management
     private int heldProgramFirstIndex;
@@ -43,6 +44,7 @@ public class ProgramUI : MonoBehaviour
     void Start()
     {
         programInputManager = FindObjectOfType<ProgramInputManager>();
+        queueDataCollector = FindObjectOfType<QueueDataCollector>();
 
         SetupNewHand();
         InitializeMouseHoverStates();
@@ -147,6 +149,13 @@ public class ProgramUI : MonoBehaviour
 
         //Ninth, update all the sorting orders
         UpdateSortingOrders();
+    }
+
+    //To be called in ProgramInputManager
+    public void UpdateQueueUIOnClick()
+    {
+        UpdateNextQueueUIActiveState();
+        SetQueueUISprites();
     }
 
     void UpdateSortingOrders()
@@ -306,6 +315,8 @@ public class ProgramUI : MonoBehaviour
 
 #endregion
 
+#region Set Sprite Methods
+
     void SetUISprites(int handSize)
     {
         if (programsListData == null || programsListData.drawnPrograms == null || 
@@ -314,9 +325,29 @@ public class ProgramUI : MonoBehaviour
         for (int i = 0; i < handSize; i++)
         {
             uiPrograms[i].GetComponent<SpriteRenderer>().sprite = 
-            programsListData.drawnPrograms[i].GetComponent<ProgramData>().uiSprite;
+            programsListData.drawnPrograms[i].GetComponent<Program>().uiSprite;
         }
     }
+
+    void SetQueueUISprites()
+    {
+        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count ||
+        queueUIStates == null) return;
+
+        foreach(GameObject queueUI in queueUIObjects)
+        {
+            if(queueUIStates[queueUI] == true)
+            {
+                queueUI.GetComponent<QueueUI>().SetActive(uiType);
+            }
+            else
+            {
+                queueUI.GetComponent<QueueUI>().SetInactive();
+            }     
+        }
+    }
+
+#endregion
 
 #region Lerp UI Methods
 
@@ -482,9 +513,12 @@ public class ProgramUI : MonoBehaviour
         programsListData.ScrollCurrentProgram();
     }
 
+    //This method also needs to talk to the other ProgramUI script and deactivate all of its Inactive States
+    //for the programs removed from the queue
     void UpdateQueueUIInactiveStates(GameObject selectedQueueUI)
     {
-        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count) return;
+        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count ||
+        queueUIStates == null) return;
 
         int index = queueUIObjects.IndexOf(selectedQueueUI);
 
@@ -493,6 +527,14 @@ public class ProgramUI : MonoBehaviour
             queueUIObjects[i].GetComponent<QueueUI>().SetInactive();
             queueUIStates[queueUIObjects[i]] = false;
         }
+    }
+
+    public void UpdateNextQueueUIActiveState()
+    {
+        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count ||
+        queueUIStates == null) return;
+
+        queueUIStates[queueUIObjects[GetInitialIndexNew()]] = true;
     }
 
 #region Index Offseting Methods
@@ -535,6 +577,27 @@ public class ProgramUI : MonoBehaviour
         {
             return 0;
         }
+    }
+
+    int GetInitialIndexNew()
+    {
+        if(queueUIObjects.Count == 0 || queueUIStates == null) return 0;
+
+        int offset = 0;
+        
+        for(int i = 0; i < queueUIObjects.Count; i++)
+        {
+            if(queueUIStates[queueUIObjects[i]] == true)
+            {
+                offset++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return offset;
     }
 
 #endregion

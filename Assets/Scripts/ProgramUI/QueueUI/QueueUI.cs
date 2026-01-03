@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class QueueUI : MonoBehaviour
 {
-    private ProgramType queueType = ProgramType.Attack;
 
     [SerializeField] private Sprite inactiveSprite;
     [SerializeField] private Sprite activeAttackSprite;
@@ -15,7 +14,7 @@ public class QueueUI : MonoBehaviour
         sr = gameObject.GetComponent<SpriteRenderer>();
     }
 
-    public void SetActive()
+    public void SetActive(ProgramType queueType)
     {
         if(queueType == ProgramType.Attack)
         {

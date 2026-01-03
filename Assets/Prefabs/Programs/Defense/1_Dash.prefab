@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6442140895853613294}
-  - component: {fileID: 2702653607868329245}
   - component: {fileID: 5639671983956558113}
   m_Layer: 0
   m_Name: 1_Dash
@@ -33,19 +32,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2702653607868329245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 761216769171562013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efaae1f9c7043b34da0e71a03234647b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiSprite: {fileID: 21300000, guid: dd228dd925ac18a499305bdbd9ad3b38, type: 3}
 --- !u!114 &5639671983956558113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   programType: 1
+  uiSprite: {fileID: 21300000, guid: dd228dd925ac18a499305bdbd9ad3b38, type: 3}
   animSprites:
   - {fileID: 1913825983, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
   - {fileID: -1837697654, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
@@ -79,5 +66,7 @@ MonoBehaviour:
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMovement: {fileID: 0}
+  playerTargeting: {fileID: 0}
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
+  queueManager: {fileID: 0}

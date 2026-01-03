@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4032316322612978766}
   - component: {fileID: 8715872425920417230}
-  - component: {fileID: 6104957623177137885}
   - component: {fileID: 300015249756292785}
   - component: {fileID: 3895101798107475685}
   - component: {fileID: 2002489202364275933}
@@ -52,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   programType: 0
+  uiSprite: {fileID: 21300000, guid: 5d81b24853f5ba44cbf682e3cc454bdc, type: 3}
   animSprites:
   - {fileID: 168151508, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
   - {fileID: 511389809, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
@@ -89,21 +89,11 @@ MonoBehaviour:
     activationFrames: 08000000
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
+  playerMovement: {fileID: 0}
+  playerTargeting: {fileID: 0}
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
---- !u!114 &6104957623177137885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5029349081135307006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efaae1f9c7043b34da0e71a03234647b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiSprite: {fileID: 21300000, guid: 5d81b24853f5ba44cbf682e3cc454bdc, type: 3}
+  queueManager: {fileID: 0}
 --- !u!114 &300015249756292785
 MonoBehaviour:
   m_ObjectHideFlags: 0

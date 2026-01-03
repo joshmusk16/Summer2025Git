@@ -11,6 +11,8 @@ public class Program : MonoBehaviour
 {
     [Header("Program Type")]
     public ProgramType programType = ProgramType.Attack;
+    public Sprite uiSprite = null;
+    public bool isMovementProgram = false;
 
     [Header("Animation Data")]
     public Sprite[] animSprites;
