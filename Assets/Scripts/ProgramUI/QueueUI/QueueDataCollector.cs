@@ -21,7 +21,14 @@ public class QueueDataCollector : MonoBehaviour
         queueManager = FindObjectOfType<QueueListData>();
     }
 
-    public QueueParameter CollectQueueData(GameObject program, Vector2 newDestination)
+    public void IdentifyNextProgramToQueue(ProgramType programType)
+    {  
+        GameObject program = queueManager.IdentifyNextQueueProgram(programType);
+        CollectQueueData(program, programType, Vector2.zero);   //Vector.zero is a placeholder
+    }
+
+    //newDestination needs to be passed from the PlayerTargeting script which still needs to be modified to account for this
+    public void CollectQueueData(GameObject program, ProgramType programType, Vector2 newDestination)
     {
         Program programData = program.GetComponent<Program>();
 
@@ -52,7 +59,5 @@ public class QueueDataCollector : MonoBehaviour
         }
 
         queueManager.AddToQueue(queueParameter);
-        return queueParameter;
     }
-
 }

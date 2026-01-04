@@ -1,5 +1,4 @@
 using System;
-using System.Security.Permissions;
 using UnityEngine;
 
 public class ProgramInputManager : MonoBehaviour
@@ -74,7 +73,7 @@ public class ProgramInputManager : MonoBehaviour
         {
             if (Input.GetKeyDown(attackKey) && attackProgramList.AreProgramsAvailable())
             {
-                if(queueProgramList.amountInQueue == 0)
+                if(queueProgramList.queueList.Count == 0)
                 {
                     StartAttackProgram?.Invoke();
                     isAttacking = true;

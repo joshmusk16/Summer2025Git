@@ -48,6 +48,7 @@ public class ProgramUI : MonoBehaviour
 
         SetupNewHand();
         InitializeMouseHoverStates();
+        InitializeQueueUIStates();
 
         if (programInputManager != null)
         {
