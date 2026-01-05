@@ -9,18 +9,25 @@ public class PlayerTargeting : MonoBehaviour
 
     private Vector2 lastHoveredTileGridPos = new Vector2(-1, -1);
     private Vector2 cachedSelectedTile;
+    private Vector2 targetingOrigin;
+
+    private int targetingRange;
+    private const int DEFAULT_TARGETING_RANGE = 4;
 
     void Start()
     {
         tileGrid = FindObjectOfType<TileGrid>();
         mouseTracker = FindObjectOfType<MouseTracker>();
+        targetingRange = DEFAULT_TARGETING_RANGE;
     }
 
     void Update()
     {
-        Vector2 selectedTile = SelectedTile(4);
-        //Debug.Log(selectedTile);
+        Vector2 selectedTile = SelectedTile(targetingRange);
         debug.transform.position = Vector2.Lerp(debug.transform.position, selectedTile, Time.deltaTime * 20f);
+        
+        //To be removed later on when targeting system always recieves targeting origin from queue data collector properly
+        targetingOrigin = transform.position;
     }
 
     private Vector2 WorldToGridPosition(Vector2 worldPosition)
@@ -53,7 +60,6 @@ public class PlayerTargeting : MonoBehaviour
 
         // Mouse is over a new tile, update tracking
         lastHoveredTileGridPos = temp;
-        //Debug.Log(temp);
 
         //Check that temp's position is in the grid's bounds
         if (temp.x < tileGrid.gridWidth && temp.y < tileGrid.gridHeight && temp.x >= 0 && temp.y >= 0)
@@ -95,7 +101,7 @@ public class PlayerTargeting : MonoBehaviour
 
     private bool IsWithinRange(Vector2 targetGridPos, int range)
     {
-        Vector2 playerGridPos = WorldToGridPosition(transform.position);
+        Vector2 playerGridPos = WorldToGridPosition(targetingOrigin);
 
         float distance = Mathf.Max(
                 Mathf.Abs(targetGridPos.x - playerGridPos.x), 
@@ -106,7 +112,7 @@ public class PlayerTargeting : MonoBehaviour
 
     private Vector2 GetClosestInRangeTile(int range)
     {
-    Vector2 playerGridPos = WorldToGridPosition(transform.position);
+    Vector2 playerGridPos = WorldToGridPosition(targetingOrigin);
 
     int playerX = (int)playerGridPos.x;
     int playerY = (int)playerGridPos.y;
@@ -155,5 +161,17 @@ public class PlayerTargeting : MonoBehaviour
     }
 
     return closestTilePosition;
+    }
+
+    public Vector2 ProgressTargetingOrigin()
+    {
+        targetingOrigin = SelectedTile(targetingRange);
+        return targetingOrigin;
+    }
+
+    public void ChangeTargetingRange(int newRange)
+    {
+        if(newRange <= 0) return;
+        targetingRange = newRange;
     }
 }

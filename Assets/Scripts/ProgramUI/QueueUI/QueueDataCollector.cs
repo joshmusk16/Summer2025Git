@@ -13,26 +13,27 @@ public struct QueueParameter
 public class QueueDataCollector : MonoBehaviour
 {
     private MouseTracker mouseTracker;
-    private QueueListData queueManager;
+    private QueueListData queueListData;
+    private PlayerTargeting playerTargeting;
     
     void Start()
     {
         mouseTracker = FindObjectOfType<MouseTracker>();
-        queueManager = FindObjectOfType<QueueListData>();
+        queueListData = FindObjectOfType<QueueListData>();
+        playerTargeting = FindObjectOfType<PlayerTargeting>();
     }
 
     public void IdentifyNextProgramToQueue(ProgramType programType)
     {  
-        GameObject program = queueManager.IdentifyNextQueueProgram(programType);
-        CollectQueueData(program, programType, Vector2.zero);   //Vector.zero is a placeholder
+        GameObject program = queueListData.IdentifyNextQueueProgram(programType);
+        CollectQueueData(program, programType);   //Vector.zero is a placeholder
     }
 
     //newDestination needs to be passed from the PlayerTargeting script which still needs to be modified to account for this
-    public void CollectQueueData(GameObject program, ProgramType programType, Vector2 newDestination)
+    public void CollectQueueData(GameObject program, ProgramType programType)
     {
         Program programData = program.GetComponent<Program>();
 
-        Vector2 currentEndofQueuePos = queueManager.endOfQueueDestination;
         Vector2 currentMousePos = mouseTracker.worldPosition;
         QueueParameter queueParameter;
 
@@ -42,11 +43,11 @@ public class QueueDataCollector : MonoBehaviour
 
         if (programData.isMovementProgram)
         {
-            queueParameter.destination = newDestination;
+            queueParameter.destination = playerTargeting.ProgressTargetingOrigin();
         }
         else
         {
-            queueParameter.destination = currentEndofQueuePos; 
+            queueParameter.destination = queueListData.endOfQueueDestination; 
         }
         
         if(currentMousePos.x > queueParameter.destination.x)
@@ -58,6 +59,6 @@ public class QueueDataCollector : MonoBehaviour
             queueParameter.facedDirection = 0;
         }
 
-        queueManager.AddToQueue(queueParameter);
+        queueListData.AddToQueue(queueParameter);
     }
 }
