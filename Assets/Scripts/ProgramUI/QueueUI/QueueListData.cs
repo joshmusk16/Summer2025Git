@@ -9,17 +9,17 @@ public Vector2 endOfQueueDestination;
 
 private ProgramListData attackProgramList;
 private ProgramListData defenseProgramList;
+private QueueDataCollector queueDataCollector;
+
+public PlayerTargeting playerTargeting;
+
+public GameObject dashProgram;
 
 void Start()
 {
     attackProgramList = GameObject.Find("AttackUIManager").GetComponent<ProgramListData>();
     defenseProgramList = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
-}
-
-//Adds one program to the queue
-public void AddToQueue(QueueParameter newProgram)
-{
-    queueList.Add(newProgram);
+    queueDataCollector = FindObjectOfType<QueueDataCollector>();
 }
 
 //This method removes the designated index from the queue and every index after
@@ -32,6 +32,19 @@ void RemoveFromQueue(int startingIndex)
             queueList.RemoveAt(i);
         }
 }
+
+public void AddProgramToQueue(ProgramType programType)
+    {
+        QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(IdentifyNextQueueProgram(programType), programType);
+        queueList.Add(nextQueueProgram);
+        UpdateTargetingParameters(programType);
+    }
+
+private void UpdateTargetingParameters(ProgramType programType)
+    {
+        Program nextProgram = IdentifyNextQueueProgram(programType).GetComponent<Program>();
+        playerTargeting.ChangeTargetingRange(nextProgram.targetingRange, programType);
+    }
 
 public GameObject IdentifyNextQueueProgram(ProgramType programType)
 {
@@ -56,9 +69,9 @@ public GameObject IdentifyNextQueueProgram(ProgramType programType)
             return defenseProgramList.drawnPrograms[index];   
         }
     }
-    else
+    else if(programType == ProgramType.Dash)
     {
-        //How will dash program case be handled / returned?
+        return dashProgram;
     }
 
     return null;

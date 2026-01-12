@@ -4,30 +4,60 @@ public class PlayerTargeting : MonoBehaviour
 {
     private TileGrid tileGrid;
     private MouseTracker mouseTracker;
-    private TilePrefab nearestTileScript;
-    public GameObject debug;
 
-    private Vector2 lastHoveredTileGridPos = new Vector2(-1, -1);
-    private Vector2 cachedSelectedTile;
+    private Vector2 lastHoveredAttack = new(-1, -1);
+    private Vector2 lastHoveredDefense = new(-1, -1);
+    private Vector2 lastHoveredDash = new(-1, -1);
+
+    private Vector2 cachedAttackTile;
+    private Vector2 cachedDefenseTile;
+    private Vector2 cachedDashTile;
+
     private Vector2 targetingOrigin;
 
-    private int targetingRange;
+    public GameObject attackCursor;
+    public GameObject defenseCursor;
+    public GameObject dashCursor;
+
+    public int attackTargetingRange = 0;
+    public int defenseTargetingRange = 0;
+    public int dashTargetingRange = 0;
+
     private const int DEFAULT_TARGETING_RANGE = 4;
 
     void Start()
     {
         tileGrid = FindObjectOfType<TileGrid>();
         mouseTracker = FindObjectOfType<MouseTracker>();
-        targetingRange = DEFAULT_TARGETING_RANGE;
+
+        dashTargetingRange = DEFAULT_TARGETING_RANGE;
     }
 
     void Update()
     {
-        Vector2 selectedTile = SelectedTile(targetingRange);
-        debug.transform.position = Vector2.Lerp(debug.transform.position, selectedTile, Time.deltaTime * 20f);
+        if (attackTargetingRange > 0)
+        {
+            attackCursor.transform.position = Vector2.Lerp(attackCursor.transform.position, SelectedTile(attackTargetingRange, ProgramType.Attack), Time.deltaTime * 20f); 
+        }
+
+        if(defenseTargetingRange > 0)
+        {
+            defenseCursor.transform.position = Vector2.Lerp(defenseCursor.transform.position, SelectedTile(defenseTargetingRange, ProgramType.Defense), Time.deltaTime * 20f);
+        }
+
+        if (dashTargetingRange > 0)
+        {
+            dashCursor.transform.position = Vector2.Lerp(dashCursor.transform.position, SelectedTile(dashTargetingRange, ProgramType.Dash), Time.deltaTime * 20f);   
+        }
         
         //To be removed later on when targeting system always recieves targeting origin from queue data collector properly
         targetingOrigin = transform.position;
+    }
+
+    //Called in ProgramListData in DrawNewHand()
+    public void InitializeTargetingValue(Program firstProgram)
+    {
+        ChangeTargetingRange(firstProgram.targetingRange, firstProgram.programType);
     }
 
     private Vector2 WorldToGridPosition(Vector2 worldPosition)
@@ -42,61 +72,108 @@ public class PlayerTargeting : MonoBehaviour
         );
     }
 
-    public Vector2 SelectedTile(int range = 0)
+    public Vector2 SelectedTile(int range = 0, ProgramType programType = ProgramType.Attack)
     {
         if (tileGrid.tiles.Count == 0)
         {
-            nearestTileScript = null;
-            lastHoveredTileGridPos = new Vector2(-1, -1);
-            return mouseTracker.worldPosition;
+            ref Vector2 cachedTileEmpty = ref GetCacheForType(programType);
+            cachedTileEmpty = mouseTracker.worldPosition;
+            return cachedTileEmpty;
         }
 
-        Vector2 temp = WorldToGridPosition(mouseTracker.worldPosition);
+        Vector2 hoveredGridPos = WorldToGridPosition(mouseTracker.worldPosition);
 
-        if (temp == lastHoveredTileGridPos)
+        ref Vector2 cachedTile = ref GetCacheForType(programType);
+        ref Vector2 lastHovered = ref GetLastHoveredForType(programType);
+
+        // Return cached value if nothing changed
+        if (hoveredGridPos == lastHovered && range == GetRangeForType(programType))
         {
-            return cachedSelectedTile; // Return cached result
+            return cachedTile;
         }
 
-        // Mouse is over a new tile, update tracking
-        lastHoveredTileGridPos = temp;
+        lastHovered = hoveredGridPos;
 
-        //Check that temp's position is in the grid's bounds
-        if (temp.x < tileGrid.gridWidth && temp.y < tileGrid.gridHeight && temp.x >= 0 && temp.y >= 0)
+        // Check grid bounds
+        bool insideGrid =
+            hoveredGridPos.x >= 0 &&
+            hoveredGridPos.y >= 0 &&
+            hoveredGridPos.x < tileGrid.gridWidth &&
+            hoveredGridPos.y < tileGrid.gridHeight;
+
+        if (insideGrid)
         {
-            nearestTileScript = tileGrid.tileGrid[(int)temp.x, (int)temp.y].GetComponent<TilePrefab>();
-            if (nearestTileScript.state == 1)
+            TilePrefab tileScript =
+                tileGrid.tileGrid[(int)hoveredGridPos.x, (int)hoveredGridPos.y]
+                .GetComponent<TilePrefab>();
+
+            bool tileValid = tileScript.state == 1;
+            bool inRange = range <= 0 || IsWithinRange(hoveredGridPos, range);
+
+            if (tileValid && inRange)
             {
-                if (range > 0 && !IsWithinRange(temp, range))
-                {
-                    cachedSelectedTile = GetClosestInRangeTile(range);
-                    return cachedSelectedTile;
-                }
-                cachedSelectedTile = tileGrid.tileGrid[(int)temp.x, (int)temp.y].transform.position;
-                return cachedSelectedTile;
+                cachedTile = tileGrid
+                    .tileGrid[(int)hoveredGridPos.x, (int)hoveredGridPos.y]
+                    .transform.position;
+
+                return cachedTile;
             }
-            else
-            {
-                // Tile is not valid (state != 1), find closest valid in-range tile
-                if (range > 0)
-                {
-                    cachedSelectedTile = GetClosestInRangeTile(range);
-                    return cachedSelectedTile;
-                }
-                cachedSelectedTile = mouseTracker.worldPosition;
-                return cachedSelectedTile;
-            }
-        }
-        else if (range > 0)
-        {
-            // Mouse is outside grid bounds, find closest in-range tile
-            cachedSelectedTile = GetClosestInRangeTile(range);
-            return cachedSelectedTile;
         }
 
-        nearestTileScript = null;
-        cachedSelectedTile = mouseTracker.worldPosition;
-        return cachedSelectedTile;
+        // Fallbacks
+        if (range > 0)
+        {
+            cachedTile = GetClosestInRangeTile(range);
+            return cachedTile;
+        }
+
+        cachedTile = mouseTracker.worldPosition;
+        return cachedTile;
+    }
+
+    private ref Vector2 GetCacheForType(ProgramType programType)
+    {
+        switch (programType)
+        {
+            case ProgramType.Attack:
+                return ref cachedAttackTile;
+            case ProgramType.Defense:
+                return ref cachedDefenseTile;
+            case ProgramType.Dash:
+                return ref cachedDashTile;
+            default:
+                return ref cachedAttackTile;
+        }
+    }
+
+    private int GetRangeForType(ProgramType programType)
+    {
+        switch (programType)
+        {
+            case ProgramType.Attack:
+                return attackTargetingRange;
+            case ProgramType.Defense:
+                return defenseTargetingRange;
+            case ProgramType.Dash:
+                return dashTargetingRange;
+            default:
+                return 0;
+        }
+    }
+
+    private ref Vector2 GetLastHoveredForType(ProgramType programType)
+    {
+        switch (programType)
+        {
+            case ProgramType.Attack:  
+                return ref lastHoveredAttack;
+            case ProgramType.Defense: 
+                return ref lastHoveredDefense;
+            case ProgramType.Dash:    
+                return ref lastHoveredDash;
+            default:                  
+                return ref lastHoveredAttack;
+        }
     }
 
     private bool IsWithinRange(Vector2 targetGridPos, int range)
@@ -163,15 +240,58 @@ public class PlayerTargeting : MonoBehaviour
     return closestTilePosition;
     }
 
-    public Vector2 ProgressTargetingOrigin()
+    public Vector2 ProgressTargetingOrigin(ProgramType programType)
     {
-        targetingOrigin = SelectedTile(targetingRange);
+        if(programType == ProgramType.Attack)
+        {
+            targetingOrigin = SelectedTile(attackTargetingRange);   
+        }
+        else if(programType == ProgramType.Defense)
+        {
+            targetingOrigin = SelectedTile(defenseTargetingRange); 
+        }
+        else if(programType == ProgramType.Dash)
+        {
+            targetingOrigin = SelectedTile(dashTargetingRange); 
+        }
+
         return targetingOrigin;
     }
 
-    public void ChangeTargetingRange(int newRange)
+    public void ChangeTargetingRange(int newRange, ProgramType programType)
     {
-        if(newRange <= 0) return;
-        targetingRange = newRange;
+        if(newRange < 0) return;
+
+        Debug.Log($"ChangeTargetingRange called: range={newRange}, type={programType}");
+
+        GameObject cursor = null;
+
+        if(programType == ProgramType.Attack)
+        {
+            attackTargetingRange = newRange;
+            cursor = attackCursor; 
+        }
+        else if(programType == ProgramType.Defense)
+        {
+            defenseTargetingRange = newRange;
+            cursor = defenseCursor;
+        }
+        else if(programType == ProgramType.Dash)
+        {
+            dashTargetingRange = newRange; 
+            cursor = dashCursor;
+        }
+
+        if(cursor != null)
+        {
+            if(newRange == 0)
+            {
+                cursor.GetComponent<SpriteRenderer>().enabled = false;
+            }
+            else
+            {
+                cursor.GetComponent<SpriteRenderer>().enabled = true;
+            }
+        }
     }
 }

@@ -23,14 +23,8 @@ public class QueueDataCollector : MonoBehaviour
         playerTargeting = FindObjectOfType<PlayerTargeting>();
     }
 
-    public void IdentifyNextProgramToQueue(ProgramType programType)
-    {  
-        GameObject program = queueListData.IdentifyNextQueueProgram(programType);
-        CollectQueueData(program, programType);   //Vector.zero is a placeholder
-    }
-
     //newDestination needs to be passed from the PlayerTargeting script which still needs to be modified to account for this
-    public void CollectQueueData(GameObject program, ProgramType programType)
+    public QueueParameter CollectQueueData(GameObject program, ProgramType programType)
     {
         Program programData = program.GetComponent<Program>();
 
@@ -43,7 +37,7 @@ public class QueueDataCollector : MonoBehaviour
 
         if (programData.isMovementProgram)
         {
-            queueParameter.destination = playerTargeting.ProgressTargetingOrigin();
+            queueParameter.destination = playerTargeting.ProgressTargetingOrigin(programType);
         }
         else
         {
@@ -59,6 +53,6 @@ public class QueueDataCollector : MonoBehaviour
             queueParameter.facedDirection = 0;
         }
 
-        queueListData.AddToQueue(queueParameter);
+        return queueParameter;
     }
 }

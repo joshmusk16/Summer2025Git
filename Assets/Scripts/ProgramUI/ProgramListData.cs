@@ -15,6 +15,7 @@ public class ProgramListData : MonoBehaviour
     private GameObject currentProgram = null;
 
     public GameObject player;
+    public PlayerTargeting playerTargeting;
     private ProgramInputManager programInputManager = null;
 
     void Start()
@@ -52,6 +53,12 @@ public class ProgramListData : MonoBehaviour
         {
             DestroyCurrentProgram();
             currentProgram = Instantiate(drawnPrograms[0], player.transform);
+        }
+
+        if(playerTargeting != null)
+        {
+            Program firstProgram = drawnPrograms[0].GetComponent<Program>();
+            playerTargeting.InitializeTargetingValue(firstProgram);
         }
 
         UpdateCountUI();

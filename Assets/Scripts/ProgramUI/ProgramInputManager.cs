@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class ProgramInputManager : MonoBehaviour
 {
-    private const KeyCode attackKey = KeyCode.Mouse0;
-    private const KeyCode defenseKey = KeyCode.Mouse1;
-    private const KeyCode dashKey = KeyCode.Space;
-    private const KeyCode timeSlowKey = KeyCode.Tab;
+    private const KeyCode ATTACK_KEY = KeyCode.Mouse0;
+    private const KeyCode DEFENSE_KEY = KeyCode.Mouse1;
+    private const KeyCode DASH_KEY = KeyCode.Space;
+    private const KeyCode TIMESLOW_KEY = KeyCode.Tab;
 
     public bool canUseProgram;
     public bool isAttacking;
@@ -71,7 +71,7 @@ public class ProgramInputManager : MonoBehaviour
 
         if (canUseProgram)
         {
-            if (Input.GetKeyDown(attackKey) && attackProgramList.AreProgramsAvailable())
+            if (Input.GetKeyDown(ATTACK_KEY) && attackProgramList.AreProgramsAvailable())
             {
                 if(queueProgramList.queueList.Count == 0)
                 {
@@ -81,33 +81,40 @@ public class ProgramInputManager : MonoBehaviour
                 }
                 else
                 {
-                    attackProgramUI.UpdateQueueUIOnClick();
+                    attackProgramUI.UpdateQueueUIOnClick(); 
+                    //queueProgramList.AddProgramToQueue(ProgramType.Attack);
+                    //this will probably move to be called elsewhere after the queue 
+                    //is updated in QueueDataCollector / QueueListData
                 }
             }
 
-            if (Input.GetKeyDown(defenseKey) && defenseProgramList.AreProgramsAvailable())
+            if (Input.GetKeyDown(DEFENSE_KEY) && defenseProgramList.AreProgramsAvailable())
             {
                 StartDefenseProgram?.Invoke();
                 isDefending = true;
                 canUseProgram = false;
+
+                //queueProgramList.AddProgramToQueue(ProgramType.Defense);
             }
 
-            if (Input.GetKeyDown(dashKey) && dashChargeManager.IsDashChargeAvailable())
+            if (Input.GetKeyDown(DASH_KEY) && dashChargeManager.IsDashChargeAvailable())
             {
                 StartDash?.Invoke();
                 isDashing = true;
                 canUseProgram = false;
+
+                //queueProgramList.AddProgramToQueue(ProgramType.Dash);
             }       
         }
 
-        if (Input.GetKeyDown(timeSlowKey) && timeSlowTimerLogic.IsTimeSlowAboveZero())
+        if (Input.GetKeyDown(TIMESLOW_KEY) && timeSlowTimerLogic.IsTimeSlowAboveZero())
         {
             Debug.Log("Entering program rearrangement mode");
             OnSlowModeEnter?.Invoke();
             canUseProgram = false;
             inSlowTimeMode = true;
         }
-        else if (Input.GetKeyUp(timeSlowKey))
+        else if (Input.GetKeyUp(TIMESLOW_KEY))
         {
             Debug.Log("Exiting program rearrangement mode");
             OnSlowModeExit?.Invoke();

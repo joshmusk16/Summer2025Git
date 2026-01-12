@@ -1,28 +1,14 @@
-using UnityEngine;
-
-public class DashChargeFiring : MonoBehaviour
+public class DashChargeFiring : Program
 {
-    private const float dashSpeed = 20f;
-    private const int dashRange = 4;
-    private const int removeChargeAmount = 1;
+    private const float DASH_SPEED = 20f;
+    private const int DASH_RANGE = 4;
+    private const int REMOVE_CHARGE_AMOUNT = 1;
 
-    private ProgramInputManager programInputManager;
-    private PlayerMovement playerMovement;
-    private CustomAnimator playerAnimator;
-    private PlayerTargeting playerTargeting;
-    private PlayerLogic player;
     private DashChargeManager dashChargeManager;
-
-    [Header("Animation Data")]
-    public Sprite[] animSprites;
-    public float[] animFrames;
 
     void Start()
     {
-        programInputManager = FindAnyObjectByType<ProgramInputManager>();
-        playerMovement = FindObjectOfType<PlayerMovement>();
-        playerTargeting = FindObjectOfType<PlayerTargeting>();
-        player = FindObjectOfType<PlayerLogic>();
+        FindDependencies();
         dashChargeManager = FindAnyObjectByType<DashChargeManager>();
 
         if (player != null)
@@ -35,15 +21,15 @@ public class DashChargeFiring : MonoBehaviour
             playerAnimator.OnAnimationComplete += OnDashCompleted;
         }
 
-        if(programInputManager != null)
+        if(inputManager != null)
         {
-            programInputManager.StartDash += Dash;
+            inputManager.StartDash += Dash;
         }
     }
 
     public void Dash()
     {
-        playerMovement.MovePlayerLerp(playerTargeting.SelectedTile(dashRange), dashSpeed);
+        playerMovement.MovePlayerLerp(playerTargeting.SelectedTile(DASH_RANGE), DASH_SPEED);
         playerAnimator.PlayParameterDrivenAnimation(animSprites, animFrames, ProgramType.Dash, () => playerMovement.PlayerLerpProgress(), false);
     }
 
@@ -51,14 +37,14 @@ public class DashChargeFiring : MonoBehaviour
     {
         if(type == ProgramType.Dash)
         {
-        programInputManager.isDashing = false;
-        dashChargeManager.RemoveDashCharge(removeChargeAmount);   
+        inputManager.isDashing = false;
+        dashChargeManager.RemoveDashCharge(REMOVE_CHARGE_AMOUNT);   
         }
     }
 
     void OnDestroy()
     {
         playerAnimator.OnAnimationComplete -= OnDashCompleted;
-        programInputManager.StartDash -= Dash;
+        inputManager.StartDash -= Dash;
     }
 }
