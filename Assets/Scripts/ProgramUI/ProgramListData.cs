@@ -12,7 +12,7 @@ public class ProgramListData : MonoBehaviour
     public NumberUI currentDeckAmountDisplay;
     public NumberUI totalDeckAmountDisplay;
 
-    private GameObject currentProgram = null;
+    public GameObject currentProgram = null;
 
     public GameObject player;
     public PlayerTargeting playerTargeting;

@@ -16,11 +16,11 @@ public class LockLogic : Program
 
         if (inputManager != null)
         {
-            inputManager.StartDefenseProgram += Lock;
+            StartProgram += Lock;
         }
     }
 
-    void Lock()
+    void Lock(QueueParameter queueParameter)
     {
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Defense);
     }
@@ -46,7 +46,7 @@ public class LockLogic : Program
 
         if (inputManager != null)
         {
-            inputManager.StartDefenseProgram -= Lock;
+            StartProgram -= Lock;
         }
     }
 }

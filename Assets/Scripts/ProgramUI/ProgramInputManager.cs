@@ -31,7 +31,11 @@ public class ProgramInputManager : MonoBehaviour
     private ProgramListData defenseProgramList;
     private ProgramUI attackProgramUI;
     private ProgramUI defenseProgramUI;
+
     private QueueListData queueProgramList;
+
+    //temporary, ultimately all queueDataCollection is called from QueueDataList
+    private QueueDataCollector queueDataCollector;
 
     void Start()
     {
@@ -44,6 +48,9 @@ public class ProgramInputManager : MonoBehaviour
         queueProgramList = FindObjectOfType<QueueListData>();
         dashChargeManager = FindObjectOfType<DashChargeManager>();
         timeSlowTimerLogic = FindObjectOfType<TimeSlowTimerLogic>();
+
+        //temporary, ultimately all queueDataCollection is called from QueueDataList
+        queueDataCollector = FindObjectOfType<QueueDataCollector>();
     }
 
     public void ForceExitSlowMode()
@@ -75,7 +82,10 @@ public class ProgramInputManager : MonoBehaviour
             {
                 if(queueProgramList.queueList.Count == 0)
                 {
-                    StartAttackProgram?.Invoke();
+                    //Temporary code, just making a point that the queueParamter should pass through the new FireProgram method in Program class
+                    //Eventually the firing will be called in QueueListData when it gets set up correctly
+                    QueueParameter queueParameter = queueDataCollector.CollectQueueData(attackProgramList.currentProgram, ProgramType.Attack);
+                    attackProgramList.currentProgram.GetComponent<Program>().FireProgram(queueParameter);
                     isAttacking = true;
                     canUseProgram = false;    
                 }
@@ -90,7 +100,11 @@ public class ProgramInputManager : MonoBehaviour
 
             if (Input.GetKeyDown(DEFENSE_KEY) && defenseProgramList.AreProgramsAvailable())
             {
-                StartDefenseProgram?.Invoke();
+                //Temporary code, just making a point that the queueParamter should pass through the new FireProgram method in Program class
+                //Eventually the firing will be called in QueueListData when it gets set up correctly
+                QueueParameter queueParameter = queueDataCollector.CollectQueueData(defenseProgramList.currentProgram, ProgramType.Defense);
+                defenseProgramList.currentProgram.GetComponent<Program>().FireProgram(queueParameter);
+
                 isDefending = true;
                 canUseProgram = false;
 

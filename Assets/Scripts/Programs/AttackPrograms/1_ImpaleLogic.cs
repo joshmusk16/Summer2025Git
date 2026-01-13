@@ -11,11 +11,11 @@ public class ImpaleLogic : Program
 
         if (inputManager != null)
         {
-            inputManager.StartAttackProgram += Impale;
+            StartProgram += Impale;
         }
     }
 
-    void Impale()
+    void Impale(QueueParameter queueParameter)
     {
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Attack, false, true, hitboxTimings);
     }
@@ -29,7 +29,7 @@ public class ImpaleLogic : Program
 
         if (inputManager != null)
         {
-            inputManager.StartAttackProgram -= Impale;
+            StartProgram -= Impale;
         }
     }
 }

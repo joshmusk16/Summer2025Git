@@ -18,11 +18,11 @@ public class SlashLogic : Program
 
         if (inputManager != null)
         {
-            inputManager.StartAttackProgram += Slash;
+            StartProgram += Slash;
         }
     }
 
-    void Slash()
+    void Slash(QueueParameter queueParameter)
     {
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Attack, false, true, hitboxTimings);
     }
@@ -41,7 +41,7 @@ public class SlashLogic : Program
 
         if (inputManager != null)
         {
-            inputManager.StartAttackProgram -= Slash;
+            StartProgram -= Slash;
         }
     }
 }
