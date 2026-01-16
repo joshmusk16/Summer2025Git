@@ -1,17 +1,25 @@
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 public class QueueListData : MonoBehaviour
 {
+
+private GameObject currentProgram;
 
 public List<QueueParameter> queueList = new();
 public Vector2 endOfQueueDestination;
 
 private ProgramListData attackProgramList;
 private ProgramListData defenseProgramList;
+
+private ProgramUI attackProgramUI;
+private ProgramUI defenseProgramUI;
+
 private QueueDataCollector queueDataCollector;
 
 public PlayerTargeting playerTargeting;
+public CustomAnimator playerAnimator;
 
 public GameObject dashProgram;
 
@@ -19,7 +27,26 @@ void Start()
 {
     attackProgramList = GameObject.Find("AttackUIManager").GetComponent<ProgramListData>();
     defenseProgramList = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
+    attackProgramUI = GameObject.Find("AttackUIManager").GetComponent<ProgramUI>();
+    defenseProgramUI = GameObject.Find("DefenseUIManager").GetComponent<ProgramUI>();
     queueDataCollector = FindObjectOfType<QueueDataCollector>();
+
+    if(playerAnimator != null)
+        {
+            playerAnimator.OnAnimationComplete += ContinueQueue;
+        }
+}
+
+public void AddProgramToQueue(ProgramType programType)
+{
+    QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(IdentifyNextQueueProgram(programType), programType);
+    queueList.Add(nextQueueProgram);
+    UpdateTargetingParameters(programType);
+
+    if(queueList.Count == 0)
+    {
+        StartQueue();
+    }
 }
 
 //This method removes the designated index from the queue and every index after
@@ -33,18 +60,11 @@ void RemoveFromQueue(int startingIndex)
         }
 }
 
-public void AddProgramToQueue(ProgramType programType)
-    {
-        QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(IdentifyNextQueueProgram(programType), programType);
-        queueList.Add(nextQueueProgram);
-        UpdateTargetingParameters(programType);
-    }
-
 private void UpdateTargetingParameters(ProgramType programType)
-    {
-        Program nextProgram = IdentifyNextQueueProgram(programType).GetComponent<Program>();
-        playerTargeting.ChangeTargetingRange(nextProgram.targetingRange, programType);
-    }
+{
+    Program nextProgram = IdentifyNextQueueProgram(programType).GetComponent<Program>();
+    playerTargeting.ChangeTargetingRange(nextProgram.targetingRange, programType);
+}
 
 public GameObject IdentifyNextQueueProgram(ProgramType programType)
 {
@@ -79,12 +99,44 @@ public GameObject IdentifyNextQueueProgram(ProgramType programType)
 
 public void StartQueue()
 {
-        
+    currentProgram = Instantiate(queueList[0].program, gameObject.transform);
+    currentProgram.GetComponent<Program>().FireProgram(queueList[0]);
 }
 
-public void ContinueQueue()
+public void ContinueQueue(ProgramType completedType)
 {
-        
+    //First, remove and destroy the program that just completed
+    if(queueList.Count > 0 && queueList[0].programType == completedType)
+    {
+        Destroy(currentProgram);
+        queueList.RemoveAt(0);
+    }
+    else
+    {
+        return;
+    }
+
+    //Second, run the next in queue
+    StartQueue();
+
+    //Third, update ProgramUI and ProgramListData
+    if(completedType == ProgramType.Attack)
+    {
+        attackProgramUI.ScrollOrSetupNewHand();
+    }
+    else if(completedType == ProgramType.Defense)
+    {
+        defenseProgramUI.ScrollOrSetupNewHand();
+    }
+    else if(completedType == ProgramType.Dash)
+    {
+        //need to incorporate logic for dash UI to progress
+    }
+}
+
+void OnDestroy()
+{
+    playerAnimator.OnAnimationComplete -= ContinueQueue;
 }
 
 }
