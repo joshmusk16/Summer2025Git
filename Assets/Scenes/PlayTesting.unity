@@ -1694,6 +1694,7 @@ MonoBehaviour:
   isDefending: 0
   isDashing: 0
   inSlowTimeMode: 0
+  dashChargeFiring: {fileID: 1102729332}
 --- !u!4 &962996298
 Transform:
   m_ObjectHideFlags: 0
@@ -1987,8 +1988,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   programType: 2
   uiSprite: {fileID: -1842409223, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
-  isMovementProgram: 0
-  targetingRange: 0
+  isMovementProgram: 1
+  targetingRange: 4
   animSprites:
   - {fileID: 1913825983, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
   - {fileID: -1837697654, guid: 4e35791fd21ea9b48ba774cef6936a51, type: 3}
@@ -2923,7 +2924,7 @@ MonoBehaviour:
   endOfQueueDestination: {x: 0, y: 0}
   playerTargeting: {fileID: 1523212153}
   playerAnimator: {fileID: 1523212147}
-  dashProgram: {fileID: 8227784743392503687, guid: 150bc2f10a4b8c048b89f5550f86f885, type: 3}
+  dashProgramManager: {fileID: 1102729332}
 --- !u!4 &1398496898
 Transform:
   m_ObjectHideFlags: 0

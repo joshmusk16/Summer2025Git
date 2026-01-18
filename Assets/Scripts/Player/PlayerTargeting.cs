@@ -31,6 +31,8 @@ public class PlayerTargeting : MonoBehaviour
         mouseTracker = FindObjectOfType<MouseTracker>();
 
         dashTargetingRange = DEFAULT_TARGETING_RANGE;
+
+        targetingOrigin = transform.position;
     }
 
     void Update()
@@ -49,9 +51,6 @@ public class PlayerTargeting : MonoBehaviour
         {
             dashCursor.transform.position = Vector2.Lerp(dashCursor.transform.position, SelectedTile(dashTargetingRange, ProgramType.Dash), Time.deltaTime * 20f);   
         }
-        
-        //To be removed later on when targeting system always recieves targeting origin from queue data collector properly
-        targetingOrigin = transform.position;
     }
 
     //Called in ProgramListData in DrawNewHand()

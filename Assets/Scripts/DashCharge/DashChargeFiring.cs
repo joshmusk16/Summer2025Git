@@ -1,6 +1,6 @@
 public class DashChargeFiring : Program
 {
-    private const float DASH_SPEED = 20f;
+    private const float DASH_SPEED = 5f;
     private const int DASH_RANGE = 4;
     private const int REMOVE_CHARGE_AMOUNT = 1;
 
@@ -16,6 +16,7 @@ public class DashChargeFiring : Program
             playerAnimator = player.gameObject.GetComponent<CustomAnimator>();
         }
 
+        //Eventually remove this subscription and handle in QueueListData
         if (playerAnimator != null)
         {
             playerAnimator.OnAnimationComplete += OnDashCompleted;
@@ -23,28 +24,28 @@ public class DashChargeFiring : Program
 
         if(inputManager != null)
         {
-            inputManager.StartDash += Dash;
+            StartProgram += Dash;
         }
     }
 
-    public void Dash()
+    public void Dash(QueueParameter queueParameter)
     {
-        playerMovement.MovePlayerLerp(playerTargeting.SelectedTile(DASH_RANGE), DASH_SPEED);
+        playerMovement.MovePlayerLerp(queueParameter.destination, DASH_SPEED);
         playerAnimator.PlayParameterDrivenAnimation(animSprites, animFrames, ProgramType.Dash, () => playerMovement.PlayerLerpProgress(), false);
     }
 
-    void OnDashCompleted(ProgramType type)
+    public void OnDashCompleted(ProgramType type)
     {
         if(type == ProgramType.Dash)
         {
         inputManager.isDashing = false;
-        dashChargeManager.RemoveDashCharge(REMOVE_CHARGE_AMOUNT);   
+        dashChargeManager.RemoveDashCharge(REMOVE_CHARGE_AMOUNT);
         }
     }
 
     void OnDestroy()
     {
         playerAnimator.OnAnimationComplete -= OnDashCompleted;
-        inputManager.StartDash -= Dash;
+        StartProgram -= Dash;
     }
 }

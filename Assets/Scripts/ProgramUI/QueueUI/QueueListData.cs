@@ -21,7 +21,7 @@ private QueueDataCollector queueDataCollector;
 public PlayerTargeting playerTargeting;
 public CustomAnimator playerAnimator;
 
-public GameObject dashProgram;
+public GameObject dashProgramManager;
 
 void Start()
 {
@@ -45,7 +45,7 @@ public void AddProgramToQueue(ProgramType programType)
 
     if(queueList.Count == 0)
     {
-        StartQueue();
+        StartQueue(programType);
     }
 }
 
@@ -91,15 +91,25 @@ public GameObject IdentifyNextQueueProgram(ProgramType programType)
     }
     else if(programType == ProgramType.Dash)
     {
-        return dashProgram;
+        return dashProgramManager;
     }
 
     return null;
 }
 
-public void StartQueue()
+public void StartQueue(ProgramType programType)
 {
-    currentProgram = Instantiate(queueList[0].program, gameObject.transform);
+    if(programType == ProgramType.Attack ||
+    programType == ProgramType.Defense)
+        {
+            currentProgram = Instantiate(queueList[0].program, gameObject.transform);
+        }
+    else if (programType == ProgramType.Dash)
+        {
+            dashProgramManager.GetComponent<Program>().FireProgram(queueList[0]);
+            return;
+        }
+
     currentProgram.GetComponent<Program>().FireProgram(queueList[0]);
 }
 
@@ -116,10 +126,7 @@ public void ContinueQueue(ProgramType completedType)
         return;
     }
 
-    //Second, run the next in queue
-    StartQueue();
-
-    //Third, update ProgramUI and ProgramListData
+    //Second, update ProgramUI and ProgramListData
     if(completedType == ProgramType.Attack)
     {
         attackProgramUI.ScrollOrSetupNewHand();
@@ -130,7 +137,13 @@ public void ContinueQueue(ProgramType completedType)
     }
     else if(completedType == ProgramType.Dash)
     {
-        //need to incorporate logic for dash UI to progress
+        dashProgramManager.GetComponent<DashChargeFiring>().OnDashCompleted(completedType);
+    }
+
+    //Third, run the next in queue, if there is something left in the queue
+    if(queueList.Count > 0)
+    {
+        StartQueue(queueList[0].programType);   
     }
 }
 

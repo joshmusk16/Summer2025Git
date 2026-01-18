@@ -36,6 +36,7 @@ public class ProgramInputManager : MonoBehaviour
 
     //temporary, ultimately all queueDataCollection is called from QueueDataList
     private QueueDataCollector queueDataCollector;
+    public GameObject dashChargeFiring;
 
     void Start()
     {
@@ -113,7 +114,8 @@ public class ProgramInputManager : MonoBehaviour
 
             if (Input.GetKeyDown(DASH_KEY) && dashChargeManager.IsDashChargeAvailable())
             {
-                StartDash?.Invoke();
+                QueueParameter queueParameter = queueDataCollector.CollectQueueData(dashChargeFiring, ProgramType.Dash);
+                dashChargeFiring.GetComponent<Program>().FireProgram(queueParameter);
                 isDashing = true;
                 canUseProgram = false;
 

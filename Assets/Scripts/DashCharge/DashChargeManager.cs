@@ -9,9 +9,9 @@ private int currentDashCharges;
 public List<GameObject> dashCharges = new();
 public GameObject dashCharge;
 
-private const int startingDashChargeAmount = 4;
-private const int lowestAllowedDashChargeAmount = 1; 
-private const int lowestSortingOrder = 1;
+private const int STARTING_DASH_CHARGE_AMOUNT = 4;
+private const int LOWEST_ALLOWED_DASH_CHARGE_AMOUNT = 1; 
+private const int LOWEST_SORTING_ORDER = 1;
 
 [SerializeField] private int totalXLength;
 
@@ -22,10 +22,10 @@ void Start()
 
 void InitiateStartingDashCharges()
 {
-    totalDashCharges = startingDashChargeAmount;
-    currentDashCharges = startingDashChargeAmount;
+    totalDashCharges = STARTING_DASH_CHARGE_AMOUNT;
+    currentDashCharges = STARTING_DASH_CHARGE_AMOUNT;
 
-    for(int i = 0; i < startingDashChargeAmount; i++)
+    for(int i = 0; i < STARTING_DASH_CHARGE_AMOUNT; i++)
     {
         GameObject newDashCharge = Instantiate(dashCharge);
         dashCharges.Add(newDashCharge);
@@ -81,7 +81,7 @@ private void RearrangeDashCharges()
     for(int i = 0; i < dashCharges.Count; i++)
     {
         dashCharges[i].transform.position = StartingPosition() + new Vector2(ChargeSpacing() * i, 0);
-        dashCharges[i].GetComponent<SpriteRenderer>().sortingOrder = lowestSortingOrder + dashCharges.Count - i;        
+        dashCharges[i].GetComponent<SpriteRenderer>().sortingOrder = LOWEST_SORTING_ORDER + dashCharges.Count - i;        
     }
 }
 
@@ -113,7 +113,7 @@ public void AddTotalDashCharge(int amount)
 
 public void RemoveTotalDashCharge(int amount)
 {
-    if((totalDashCharges - amount) >= lowestAllowedDashChargeAmount)
+    if((totalDashCharges - amount) >= LOWEST_ALLOWED_DASH_CHARGE_AMOUNT)
     {
         totalDashCharges -= amount;
         currentDashCharges = Mathf.Max(0, currentDashCharges - amount);

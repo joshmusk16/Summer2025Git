@@ -14,7 +14,7 @@ public class LevelCollection : MonoBehaviour
     [SerializeField] private GameObject dummy;
     [SerializeField] private int amountOfDummies;
 
-    void Start()
+    void Awake()
     {
         tileGrid = FindObjectOfType<TileGrid>();
         player = FindObjectOfType<PlayerLogic>().gameObject;
