@@ -34,7 +34,7 @@ public class Program : MonoBehaviour
     
     public void FireProgram(QueueParameter queueParameter)
     {
-        StartProgram.Invoke(queueParameter);
+        StartProgram?.Invoke(queueParameter);
     }
 
     //In script for any program inheriting this class, run FindDependencies() in Start()
@@ -58,15 +58,6 @@ public class Program : MonoBehaviour
         if (player != null)
         {
             playerAnimator = player.gameObject.GetComponent<CustomAnimator>();
-        }
-    }
-
-    protected virtual void OnAnimationCompleted(ProgramType completedType)
-    {
-        // Only scroll if this animation type matches our program type
-        if (completedType == programType && programUI != null)
-        {
-            programUI.ScrollOrSetupNewHand();
         }
     }
 

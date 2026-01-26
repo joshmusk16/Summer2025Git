@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Collections;
 using UnityEngine;
 
 public class QueueListData : MonoBehaviour
@@ -18,6 +17,7 @@ private ProgramUI defenseProgramUI;
 
 private QueueDataCollector queueDataCollector;
 
+public GameObject player;
 public PlayerTargeting playerTargeting;
 public CustomAnimator playerAnimator;
 
@@ -39,11 +39,16 @@ void Start()
 
 public void AddProgramToQueue(ProgramType programType)
 {
-    QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(IdentifyNextQueueProgram(programType), programType);
-    queueList.Add(nextQueueProgram);
-    UpdateTargetingParameters(programType);
+    GameObject nextProgramObject = IdentifyNextQueueProgram(programType);
 
-    if(queueList.Count == 0)
+    QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(nextProgramObject, programType);
+    queueList.Add(nextQueueProgram);
+
+    Debug.Log("QueueParameter is ran");
+
+    UpdateTargetingParameters(nextProgramObject, programType);
+
+    if(queueList.Count == 1)
     {
         StartQueue(programType);
     }
@@ -60,9 +65,9 @@ void RemoveFromQueue(int startingIndex)
         }
 }
 
-private void UpdateTargetingParameters(ProgramType programType)
+private void UpdateTargetingParameters(GameObject programObject, ProgramType programType)
 {
-    Program nextProgram = IdentifyNextQueueProgram(programType).GetComponent<Program>();
+    Program nextProgram = programObject.GetComponent<Program>();
     playerTargeting.ChangeTargetingRange(nextProgram.targetingRange, programType);
 }
 
@@ -79,6 +84,8 @@ public GameObject IdentifyNextQueueProgram(ProgramType programType)
                 index++;
             }        
         }
+
+        Debug.Log("Index is " + index);
 
         if(programType == ProgramType.Attack)
         {
@@ -102,13 +109,16 @@ public void StartQueue(ProgramType programType)
     if(programType == ProgramType.Attack ||
     programType == ProgramType.Defense)
         {
-            currentProgram = Instantiate(queueList[0].program, gameObject.transform);
+            currentProgram = Instantiate(queueList[0].program, player.transform);
         }
     else if (programType == ProgramType.Dash)
         {
             dashProgramManager.GetComponent<Program>().FireProgram(queueList[0]);
             return;
         }
+
+    Debug.Log("Tried to run program with" + queueList[0].program + " "  + queueList[0].programType + " " 
+    + queueList[0].facedDirection + " "  + queueList[0].destination + " "  + queueList[0].previewSprite);
 
     currentProgram.GetComponent<Program>().FireProgram(queueList[0]);
 }

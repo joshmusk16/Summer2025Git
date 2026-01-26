@@ -2922,6 +2922,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   queueList: []
   endOfQueueDestination: {x: 0, y: 0}
+  player: {fileID: 1523212146}
   playerTargeting: {fileID: 1523212153}
   playerAnimator: {fileID: 1523212147}
   dashProgramManager: {fileID: 1102729332}

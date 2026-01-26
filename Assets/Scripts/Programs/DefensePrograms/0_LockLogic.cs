@@ -3,13 +3,12 @@ public class LockLogic : Program
     private const int hitBoxDeactivationFrame = 5;
     private const int hitBoxActivationFrame = 10;
 
-    void Start()
+    void Awake()
     {
         FindDependencies();
 
         if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete += OnAnimationCompleted;
             playerAnimator.OnFrameChanged += DisableHitbox;
             playerAnimator.OnFrameChanged += EnableHitbox;
         }
@@ -39,7 +38,6 @@ public class LockLogic : Program
     {
         if (playerAnimator != null && programUI != null)
         {
-            playerAnimator.OnAnimationComplete -= OnAnimationCompleted;
             playerAnimator.OnFrameChanged -= DisableHitbox;
             playerAnimator.OnFrameChanged -= EnableHitbox;
         }

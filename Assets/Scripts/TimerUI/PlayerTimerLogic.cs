@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerTimerLogic : MonoBehaviour
 {
-
     [Header("Player Timer Data")]
     public float playerTotalTime;
     public float playerCurrentTime;

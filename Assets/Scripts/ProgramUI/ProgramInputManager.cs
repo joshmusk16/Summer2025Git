@@ -29,29 +29,19 @@ public class ProgramInputManager : MonoBehaviour
     private DashChargeManager dashChargeManager;
     private ProgramListData attackProgramList;
     private ProgramListData defenseProgramList;
-    private ProgramUI attackProgramUI;
-    private ProgramUI defenseProgramUI;
 
     private QueueListData queueProgramList;
 
-    //temporary, ultimately all queueDataCollection is called from QueueDataList
-    private QueueDataCollector queueDataCollector;
     public GameObject dashChargeFiring;
 
     void Start()
     {
         attackProgramList = GameObject.Find("AttackUIManager").GetComponent<ProgramListData>();
-        attackProgramUI = GameObject.Find("AttackUIManager").GetComponent<ProgramUI>();
-
         defenseProgramList = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
-        defenseProgramUI = GameObject.Find("DefenseUIManager").GetComponent<ProgramUI>();
 
         queueProgramList = FindObjectOfType<QueueListData>();
         dashChargeManager = FindObjectOfType<DashChargeManager>();
         timeSlowTimerLogic = FindObjectOfType<TimeSlowTimerLogic>();
-
-        //temporary, ultimately all queueDataCollection is called from QueueDataList
-        queueDataCollector = FindObjectOfType<QueueDataCollector>();
     }
 
     public void ForceExitSlowMode()
@@ -81,45 +71,23 @@ public class ProgramInputManager : MonoBehaviour
         {
             if (Input.GetKeyDown(ATTACK_KEY) && attackProgramList.AreProgramsAvailable())
             {
-                if(queueProgramList.queueList.Count == 0)
-                {
-                    //Temporary code, just making a point that the queueParamter should pass through the new FireProgram method in Program class
-                    //Eventually the firing will be called in QueueListData when it gets set up correctly
-                    QueueParameter queueParameter = queueDataCollector.CollectQueueData(attackProgramList.currentProgram, ProgramType.Attack);
-                    attackProgramList.currentProgram.GetComponent<Program>().FireProgram(queueParameter);
-                    isAttacking = true;
-                    canUseProgram = false;    
-                }
-                else
-                {
-                    attackProgramUI.UpdateQueueUIOnClick(); 
-                    //queueProgramList.AddProgramToQueue(ProgramType.Attack);
-                    //this will probably move to be called elsewhere after the queue 
-                    //is updated in QueueDataCollector / QueueListData
-                }
+                queueProgramList.AddProgramToQueue(ProgramType.Attack);
+                isAttacking = true;
+                canUseProgram = false;    
             }
 
             if (Input.GetKeyDown(DEFENSE_KEY) && defenseProgramList.AreProgramsAvailable())
             {
-                //Temporary code, just making a point that the queueParamter should pass through the new FireProgram method in Program class
-                //Eventually the firing will be called in QueueListData when it gets set up correctly
-                QueueParameter queueParameter = queueDataCollector.CollectQueueData(defenseProgramList.currentProgram, ProgramType.Defense);
-                defenseProgramList.currentProgram.GetComponent<Program>().FireProgram(queueParameter);
-
+                queueProgramList.AddProgramToQueue(ProgramType.Defense);
                 isDefending = true;
                 canUseProgram = false;
-
-                //queueProgramList.AddProgramToQueue(ProgramType.Defense);
             }
 
             if (Input.GetKeyDown(DASH_KEY) && dashChargeManager.IsDashChargeAvailable())
             {
-                QueueParameter queueParameter = queueDataCollector.CollectQueueData(dashChargeFiring, ProgramType.Dash);
-                dashChargeFiring.GetComponent<Program>().FireProgram(queueParameter);
+                queueProgramList.AddProgramToQueue(ProgramType.Dash);
                 isDashing = true;
                 canUseProgram = false;
-
-                //queueProgramList.AddProgramToQueue(ProgramType.Dash);
             }       
         }
 

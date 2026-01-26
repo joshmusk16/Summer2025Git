@@ -1,7 +1,7 @@
 public class SlashLogic : Program
 {
 
-    void Start()
+    void Awake()
     {
         FindDependencies();
 
@@ -9,11 +9,6 @@ public class SlashLogic : Program
         {
             player.MouseLeftOrRightChanged += ChangeTransform;
             ChangeTransform(player.currentMouseLeftOrRight);
-        }
-
-        if (playerAnimator != null && programUI != null)
-        {
-            playerAnimator.OnAnimationComplete += OnAnimationCompleted;
         }
 
         if (inputManager != null)
@@ -32,11 +27,6 @@ public class SlashLogic : Program
         if (player != null)
         {
             player.MouseLeftOrRightChanged -= ChangeTransform;
-        }
-
-        if (playerAnimator != null && programUI != null)
-        {
-            playerAnimator.OnAnimationComplete -= OnAnimationCompleted;
         }
 
         if (inputManager != null)

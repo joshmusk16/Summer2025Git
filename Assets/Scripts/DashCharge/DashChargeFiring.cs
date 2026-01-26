@@ -1,7 +1,6 @@
 public class DashChargeFiring : Program
 {
-    private const float DASH_SPEED = 5f;
-    private const int DASH_RANGE = 4;
+    private const float DASH_SPEED = 15f;
     private const int REMOVE_CHARGE_AMOUNT = 1;
 
     private DashChargeManager dashChargeManager;
@@ -14,12 +13,6 @@ public class DashChargeFiring : Program
         if (player != null)
         {
             playerAnimator = player.gameObject.GetComponent<CustomAnimator>();
-        }
-
-        //Eventually remove this subscription and handle in QueueListData
-        if (playerAnimator != null)
-        {
-            playerAnimator.OnAnimationComplete += OnDashCompleted;
         }
 
         if(inputManager != null)
@@ -45,7 +38,6 @@ public class DashChargeFiring : Program
 
     void OnDestroy()
     {
-        playerAnimator.OnAnimationComplete -= OnDashCompleted;
         StartProgram -= Dash;
     }
 }

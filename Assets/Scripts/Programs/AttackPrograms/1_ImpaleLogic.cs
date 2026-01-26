@@ -1,13 +1,8 @@
 public class ImpaleLogic : Program
 {
-    void Start()
+    void Awake()
     {
         FindDependencies();
-
-        if (playerAnimator != null && programUI != null)
-        {
-            playerAnimator.OnAnimationComplete += OnAnimationCompleted;
-        }
 
         if (inputManager != null)
         {
@@ -22,11 +17,6 @@ public class ImpaleLogic : Program
 
     void OnDestroy()
     {
-        if (playerAnimator != null && programUI != null)
-        {
-            playerAnimator.OnAnimationComplete -= OnAnimationCompleted;
-        }
-
         if (inputManager != null)
         {
             StartProgram -= Impale;
