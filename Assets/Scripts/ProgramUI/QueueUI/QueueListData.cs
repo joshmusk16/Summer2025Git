@@ -32,19 +32,32 @@ void Start()
     queueDataCollector = FindObjectOfType<QueueDataCollector>();
 
     if(playerAnimator != null)
-        {
-            playerAnimator.OnAnimationComplete += ContinueQueue;
-        }
+    {
+        playerAnimator.OnAnimationComplete += ContinueQueue;
+    }
 }
 
 public void AddProgramToQueue(ProgramType programType)
 {
-    GameObject nextProgramObject = IdentifyNextQueueProgram(programType);
+    GameObject nextProgramObject;
+
+    if(programType == ProgramType.Attack)
+    {
+        nextProgramObject = attackProgramList.NextProgramInQueue();   
+    }
+    else if(programType == ProgramType.Defense)
+    {
+        nextProgramObject = defenseProgramList.NextProgramInQueue();
+    }
+    else
+    {
+        nextProgramObject = dashProgramManager;
+    }
+
+    if(nextProgramObject == null) return;
 
     QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(nextProgramObject, programType);
     queueList.Add(nextQueueProgram);
-
-    Debug.Log("QueueParameter is ran");
 
     UpdateTargetingParameters(nextProgramObject, programType);
 
@@ -71,39 +84,6 @@ private void UpdateTargetingParameters(GameObject programObject, ProgramType pro
     playerTargeting.ChangeTargetingRange(nextProgram.targetingRange, programType);
 }
 
-public GameObject IdentifyNextQueueProgram(ProgramType programType)
-{
-    if(programType == ProgramType.Attack || programType == ProgramType.Defense)
-    {
-        int index = 0;
-
-        foreach(QueueParameter queueProgram in queueList)
-        {
-            if (programType == queueProgram.programType)
-            {
-                index++;
-            }        
-        }
-
-        Debug.Log("Index is " + index);
-
-        if(programType == ProgramType.Attack)
-        {
-            return attackProgramList.drawnPrograms[index];  
-        }
-        else if(programType == ProgramType.Defense)
-        {
-            return defenseProgramList.drawnPrograms[index];   
-        }
-    }
-    else if(programType == ProgramType.Dash)
-    {
-        return dashProgramManager;
-    }
-
-    return null;
-}
-
 public void StartQueue(ProgramType programType)
 {
     if(programType == ProgramType.Attack ||
@@ -116,9 +96,6 @@ public void StartQueue(ProgramType programType)
             dashProgramManager.GetComponent<Program>().FireProgram(queueList[0]);
             return;
         }
-
-    Debug.Log("Tried to run program with" + queueList[0].program + " "  + queueList[0].programType + " " 
-    + queueList[0].facedDirection + " "  + queueList[0].destination + " "  + queueList[0].previewSprite);
 
     currentProgram.GetComponent<Program>().FireProgram(queueList[0]);
 }
@@ -153,6 +130,7 @@ public void ContinueQueue(ProgramType completedType)
     //Third, run the next in queue, if there is something left in the queue
     if(queueList.Count > 0)
     {
+        Debug.Log("Trying to start queue again...");
         StartQueue(queueList[0].programType);   
     }
 }

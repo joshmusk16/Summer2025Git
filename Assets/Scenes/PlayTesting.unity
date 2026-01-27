@@ -1073,9 +1073,9 @@ MonoBehaviour:
   drawnPrograms: []
   currentDeckAmountDisplay: {fileID: 344789025}
   totalDeckAmountDisplay: {fileID: 344789024}
-  currentProgram: {fileID: 0}
   player: {fileID: 1523212146}
   playerTargeting: {fileID: 1523212153}
+  queueListData: {fileID: 1398496897}
 --- !u!114 &611740129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1355,9 +1355,9 @@ MonoBehaviour:
   drawnPrograms: []
   currentDeckAmountDisplay: {fileID: 399228516425387552}
   totalDeckAmountDisplay: {fileID: 399228516425387551}
-  currentProgram: {fileID: 0}
   player: {fileID: 1523212146}
   playerTargeting: {fileID: 1523212153}
+  queueListData: {fileID: 1398496897}
 --- !u!1001 &701670845
 PrefabInstance:
   m_ObjectHideFlags: 0

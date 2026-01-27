@@ -6,24 +6,16 @@ public class DashLogic : Program
     void Awake()
     {
         FindDependencies();
-
-        if (inputManager != null)
-        {
-            inputManager.StartDefenseProgram += Dash;
-        }
     }
 
-    void Dash()
+    public override void FireProgram(QueueParameter queueParameter)
+    {
+        Dash(queueParameter);
+    }
+
+    void Dash(QueueParameter queueParameter)
     {
         playerMovement.MovePlayerLerp(playerTargeting.SelectedTile(dashRange), dashSpeed);
         playerAnimator.PlayParameterDrivenAnimation(animSprites, animFrames, ProgramType.Defense, () => playerMovement.PlayerLerpProgress(), false);
-    }
-
-    void OnDestroy()
-    {
-        if (inputManager != null)
-        {
-            inputManager.StartDefenseProgram -= Dash;
-        }
     }
 }

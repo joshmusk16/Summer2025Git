@@ -29,12 +29,10 @@ public class Program : MonoBehaviour
     [HideInInspector] public PlayerTargeting playerTargeting;
     [HideInInspector] public ProgramUI programUI;
     [HideInInspector] public ProgramInputManager inputManager;
-
-    public event Action<QueueParameter> StartProgram;
     
-    public void FireProgram(QueueParameter queueParameter)
+    public virtual void FireProgram(QueueParameter queueParameter)
     {
-        StartProgram?.Invoke(queueParameter);
+        
     }
 
     //In script for any program inheriting this class, run FindDependencies() in Start()

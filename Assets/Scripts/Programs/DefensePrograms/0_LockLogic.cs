@@ -12,11 +12,11 @@ public class LockLogic : Program
             playerAnimator.OnFrameChanged += DisableHitbox;
             playerAnimator.OnFrameChanged += EnableHitbox;
         }
+    }
 
-        if (inputManager != null)
-        {
-            StartProgram += Lock;
-        }
+    public override void FireProgram(QueueParameter queueParameter)
+    {
+        Lock(queueParameter);
     }
 
     void Lock(QueueParameter queueParameter)
@@ -40,11 +40,6 @@ public class LockLogic : Program
         {
             playerAnimator.OnFrameChanged -= DisableHitbox;
             playerAnimator.OnFrameChanged -= EnableHitbox;
-        }
-
-        if (inputManager != null)
-        {
-            StartProgram -= Lock;
         }
     }
 }

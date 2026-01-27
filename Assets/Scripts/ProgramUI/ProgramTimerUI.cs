@@ -20,11 +20,11 @@ public class ProgramTimerUI : MonoBehaviour
         {
             if (programType == ProgramType.Attack)
             {
-                inputManager.StartAttackProgram += StartUpdatingBar;
+                //inputManager.StartAttackProgram += StartUpdatingBar;
             }
             else if (programType == ProgramType.Defense)
             {
-                inputManager.StartDefenseProgram += StartUpdatingBar;
+                //inputManager.StartDefenseProgram += StartUpdatingBar;
             }
         }
 
@@ -84,8 +84,8 @@ public class ProgramTimerUI : MonoBehaviour
     {
         if (inputManager != null)
         {
-            inputManager.StartAttackProgram -= StartUpdatingBar;
-            inputManager.StartDefenseProgram -= StartUpdatingBar;
+            //inputManager.StartAttackProgram -= StartUpdatingBar;
+            //inputManager.StartDefenseProgram -= StartUpdatingBar;
         }
 
         if (playerAnimator != null)

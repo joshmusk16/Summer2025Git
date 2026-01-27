@@ -125,7 +125,6 @@ public class ProgramUI : MonoBehaviour
         //First, reset the hand size to starting hand size
         displayedProgramUICount = startingHandSize;
         int handSize = programsListData.DetermineHandSize(displayedProgramUICount);
-        Debug.Log(handSize);
 
         //Second, draw a new hand based on that handsize
         programsListData.DrawNewHand(handSize);

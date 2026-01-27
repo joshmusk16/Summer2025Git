@@ -12,18 +12,25 @@ public class ProgramListData : MonoBehaviour
     public NumberUI currentDeckAmountDisplay;
     public NumberUI totalDeckAmountDisplay;
 
-    private GameObject currentProgram = null;
-
     public GameObject player;
     public PlayerTargeting playerTargeting;
-    private ProgramInputManager programInputManager = null;
+
+    private int nextInQueueIndex = 0;
 
     void Start()
     {
         totalProgramAmount = programs.Count;
         UpdateCountUI();
+    }
 
-        programInputManager = FindObjectOfType<ProgramInputManager>();
+    public GameObject NextProgramInQueue()
+    {
+        if(drawnPrograms != null && nextInQueueIndex < drawnPrograms.Count)
+        {
+            return drawnPrograms[nextInQueueIndex++];        
+        }
+
+        return null;
     }
 
     public int DetermineHandSize(int handSize)
@@ -38,6 +45,8 @@ public class ProgramListData : MonoBehaviour
 
         if(handSize <= 0) return;
 
+        nextInQueueIndex = 0;
+
         handSize = Mathf.Min(handSize, drawPilePrograms.Count);
 
         drawnPrograms.Clear();
@@ -47,12 +56,6 @@ public class ProgramListData : MonoBehaviour
             int randomIndex = Random.Range(0, drawPilePrograms.Count);
             drawnPrograms.Add(drawPilePrograms[randomIndex]);
             drawPilePrograms.RemoveAt(randomIndex);
-        }
-
-        if(drawnPrograms.Count > 0)
-        {
-            DestroyCurrentProgram();
-            currentProgram = Instantiate(drawnPrograms[0], player.transform);
         }
 
         if(playerTargeting != null)
@@ -74,14 +77,9 @@ public class ProgramListData : MonoBehaviour
 
     public void ScrollCurrentProgram()
     {
-        DestroyCurrentProgram();
         drawnPrograms.RemoveAt(0);
         
-        if(drawnPrograms.Count > 0)
-        {
-            currentProgram = Instantiate(drawnPrograms[0], player.transform);
-        }
-        
+        nextInQueueIndex--;
         UpdateCountUI();
     }
 
@@ -126,22 +124,6 @@ public class ProgramListData : MonoBehaviour
             GameObject movedProgram = drawnPrograms[startIndex];
             drawnPrograms.RemoveAt(startIndex);
             drawnPrograms.Insert(endIndex, movedProgram);
-            
-            if(endIndex == 0 || startIndex == 0)
-            {
-                DestroyCurrentProgram();
-                currentProgram = Instantiate(drawnPrograms[0], player.transform);
-            }
-        }
-    }
-
-    public void DestroyCurrentProgram()
-    {
-        if (currentProgram != null)
-        {
-            Destroy(currentProgram);
-            programInputManager.isAttacking = false;
-            programInputManager.isDefending = false;
         }
     }
 

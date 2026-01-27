@@ -14,12 +14,6 @@ public class ProgramInputManager : MonoBehaviour
     public bool isDashing;
     public bool inSlowTimeMode;
 
-    //In each program logic script, the main attack method (such as Slash() in the SlashLogic script) 
-    //will be subscribed to the StartAttackProgram event on Start() in that program logic script.
-    public event Action StartAttackProgram;
-    public event Action StartDefenseProgram;
-    public event Action StartDash;
-
     //These events are to be subscribed to by animations or effects that need to begin or end upon
     //slow mode enter and exit
     public event Action OnSlowModeEnter;
@@ -47,22 +41,15 @@ public class ProgramInputManager : MonoBehaviour
     public void ForceExitSlowMode()
     {
         inSlowTimeMode = false;
-
-        if (isAttacking == false && isDefending == false)
-        {
-            canUseProgram = true;
-        }
-        else
-        {
-            canUseProgram = false;
-        }
+        canUseProgram = false;
     }
 
     void Update()
     {
 
-        if (canUseProgram == false && isAttacking == false && isDefending == false 
-        && isDashing == false && inSlowTimeMode == false)
+        //Must add parameters here that track whether or not a attack vs defense program can be queued
+
+        if (inSlowTimeMode == false)
         {
             canUseProgram = true;
         }
@@ -73,21 +60,21 @@ public class ProgramInputManager : MonoBehaviour
             {
                 queueProgramList.AddProgramToQueue(ProgramType.Attack);
                 isAttacking = true;
-                canUseProgram = false;    
+                //canUseProgram = false;    
             }
 
             if (Input.GetKeyDown(DEFENSE_KEY) && defenseProgramList.AreProgramsAvailable())
             {
                 queueProgramList.AddProgramToQueue(ProgramType.Defense);
                 isDefending = true;
-                canUseProgram = false;
+                //canUseProgram = false;
             }
 
             if (Input.GetKeyDown(DASH_KEY) && dashChargeManager.IsDashChargeAvailable())
             {
                 queueProgramList.AddProgramToQueue(ProgramType.Dash);
                 isDashing = true;
-                canUseProgram = false;
+                //canUseProgram = false;
             }       
         }
 

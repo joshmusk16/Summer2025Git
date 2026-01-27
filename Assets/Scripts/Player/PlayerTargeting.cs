@@ -261,7 +261,7 @@ public class PlayerTargeting : MonoBehaviour
     {
         if(newRange < 0) return;
 
-        Debug.Log($"ChangeTargetingRange called: range={newRange}, type={programType}");
+        //Debug.Log($"ChangeTargetingRange called: range={newRange}, type={programType}");
 
         GameObject cursor = null;
 

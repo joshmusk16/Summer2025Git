@@ -14,11 +14,11 @@ public class DashChargeFiring : Program
         {
             playerAnimator = player.gameObject.GetComponent<CustomAnimator>();
         }
+    }
 
-        if(inputManager != null)
-        {
-            StartProgram += Dash;
-        }
+    public override void FireProgram(QueueParameter queueParameter)
+    {
+        Dash(queueParameter);
     }
 
     public void Dash(QueueParameter queueParameter)
@@ -34,10 +34,5 @@ public class DashChargeFiring : Program
         inputManager.isDashing = false;
         dashChargeManager.RemoveDashCharge(REMOVE_CHARGE_AMOUNT);
         }
-    }
-
-    void OnDestroy()
-    {
-        StartProgram -= Dash;
     }
 }

@@ -10,11 +10,11 @@ public class SlashLogic : Program
             player.MouseLeftOrRightChanged += ChangeTransform;
             ChangeTransform(player.currentMouseLeftOrRight);
         }
+    }
 
-        if (inputManager != null)
-        {
-            StartProgram += Slash;
-        }
+    public override void FireProgram(QueueParameter queueParameter)
+    {
+        Slash(queueParameter);
     }
 
     void Slash(QueueParameter queueParameter)
@@ -27,11 +27,6 @@ public class SlashLogic : Program
         if (player != null)
         {
             player.MouseLeftOrRightChanged -= ChangeTransform;
-        }
-
-        if (inputManager != null)
-        {
-            StartProgram -= Slash;
         }
     }
 }
