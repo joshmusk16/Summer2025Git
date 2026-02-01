@@ -126,6 +126,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1edb14f557f8db841b4a331c5ea200eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inactiveSprite: {fileID: 0}
-  activeAttackSprite: {fileID: 0}
-  activeDefenseSprite: {fileID: 0}
+  inactiveSprite: {fileID: -554672978, guid: 5eb8338384255ad479f93f00cb0f4c1e, type: 3}
+  activeAttackSprite: {fileID: -949413354, guid: 5eb8338384255ad479f93f00cb0f4c1e, type: 3}
+  activeDefenseSprite: {fileID: 2106132024, guid: 5eb8338384255ad479f93f00cb0f4c1e, type: 3}

@@ -25,15 +25,14 @@ public class ProgramUI : MonoBehaviour
     [Header("Queue UI Elements")]
     public Vector2 queueUIOffsetVector;
     public GameObject queuePrefab;
+    private Dictionary<GameObject, bool> queueUIStates = new();
     private List<GameObject> queueUIObjects = new();
     private List<Vector2> queueUIPositions = new();
-    private Dictionary<GameObject, bool> queueUIStates = new();
 
     [Header("Dependencies")]
     public MouseTracker mouse;
     public ProgramListData programsListData;
     private ProgramInputManager programInputManager;
-    private QueueDataCollector queueDataCollector;
 
     //UI State Management
     private int heldProgramFirstIndex;
@@ -44,11 +43,9 @@ public class ProgramUI : MonoBehaviour
     void Start()
     {
         programInputManager = FindObjectOfType<ProgramInputManager>();
-        queueDataCollector = FindObjectOfType<QueueDataCollector>();
 
         SetupNewHand();
         InitializeMouseHoverStates();
-        InitializeQueueUIStates();
 
         if (programInputManager != null)
         {
@@ -158,6 +155,12 @@ public class ProgramUI : MonoBehaviour
         SetQueueUISprites();
     }
 
+    public void UpdateQueueUIOnScroll()
+    {   
+        UpdateLastQueueUIInactiveState();
+        SetQueueUISprites();
+    }
+
     void UpdateSortingOrders()
     {
         //if(uiPrograms.Count == 0 || uiPrograms.Count != queueUIObjects.Count) return;
@@ -197,6 +200,7 @@ public class ProgramUI : MonoBehaviour
     void SetupQueueUIOnStart()
     {
         InstantiateQueueUI();
+        InitializeQueueUIStates();
         SetQueueUIPositions();
         AssignQueueUIPositions();
         UpdateSortingOrders();
@@ -509,7 +513,8 @@ public class ProgramUI : MonoBehaviour
         }
 
         LerpQueueUIToPositions();
-
+        
+        UpdateQueueUIOnScroll();
         programsListData.ScrollCurrentProgram();
     }
 
@@ -529,12 +534,44 @@ public class ProgramUI : MonoBehaviour
         }
     }
 
-    public void UpdateNextQueueUIActiveState()
+    void UpdateNextQueueUIActiveState()
     {
         if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count ||
         queueUIStates == null) return;
 
         queueUIStates[queueUIObjects[GetInitialIndexNew()]] = true;
+    }
+
+    void UpdateLastQueueUIInactiveState()
+    {
+        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count ||
+        queueUIStates == null) return;
+
+        bool allProgramsAreQueued = true;
+
+        foreach(GameObject queueUIObject in queueUIObjects)
+        {
+            if(queueUIStates[queueUIObject] == false)
+            {
+                allProgramsAreQueued = false;
+            }
+        }
+
+        if(allProgramsAreQueued == true) return; 
+
+        GameObject lastActiveQueueUI = null;
+
+        foreach(GameObject queueUIObject in queueUIObjects)
+        {
+            if(queueUIStates[queueUIObject] == true)
+            {
+                lastActiveQueueUI = queueUIObject;
+            }
+        }
+
+        if(lastActiveQueueUI == null) return;
+
+        queueUIStates[lastActiveQueueUI] = false;
     }
 
 #region Index Offseting Methods
@@ -597,7 +634,7 @@ public class ProgramUI : MonoBehaviour
             }
         }
 
-        return offset;
+        return Mathf.Min(offset, queueUIObjects.Count - 1);
     }
 
 #endregion
@@ -701,9 +738,9 @@ public class ProgramUI : MonoBehaviour
  
         for (int i = 0; i < queueUIObjects.Count; i++)
         {
-            if (uiPrograms[i] != null)
+            if (queueUIObjects[i] != null)
             {
-                mouseHoverStates[queueUIObjects[i]] = false;
+                queueUIStates[queueUIObjects[i]] = false;
             }
         }
     }

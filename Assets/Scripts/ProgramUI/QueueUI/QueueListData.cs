@@ -56,6 +56,15 @@ public void AddProgramToQueue(ProgramType programType)
 
     if(nextProgramObject == null) return;
 
+    if(programType == ProgramType.Attack)
+    {
+        attackProgramUI.UpdateQueueUIOnClick();   
+    }
+    else if (programType == ProgramType.Defense)
+    {
+        defenseProgramUI.UpdateQueueUIOnClick();      
+    } 
+
     QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(nextProgramObject, programType);
     queueList.Add(nextQueueProgram);
 
