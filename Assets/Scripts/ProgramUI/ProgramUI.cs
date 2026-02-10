@@ -157,7 +157,6 @@ public class ProgramUI : MonoBehaviour
 
     public void UpdateQueueUIOnScroll()
     {   
-        UpdateLastQueueUIInactiveState();
         SetQueueUISprites();
     }
 
@@ -492,6 +491,8 @@ public class ProgramUI : MonoBehaviour
         mouseHoverStates.Remove(uiPrograms[0]);
         uiPrograms.RemoveAt(0);
 
+        ScrollQueueUIStates();
+
         if(queueUIObjects.Count > 1)
         {
             Destroy(queueUIObjects[^1]);
@@ -542,36 +543,15 @@ public class ProgramUI : MonoBehaviour
         queueUIStates[queueUIObjects[GetInitialIndexNew()]] = true;
     }
 
-    void UpdateLastQueueUIInactiveState()
+    void ScrollQueueUIStates()
     {
-        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count ||
+        if(queueUIObjects.Count == 0 || queueUIObjects.Count <= 1 || 
         queueUIStates == null) return;
 
-        bool allProgramsAreQueued = true;
-
-        foreach(GameObject queueUIObject in queueUIObjects)
+        for(int i = 0; i < queueUIObjects.Count - 1; i++)
         {
-            if(queueUIStates[queueUIObject] == false)
-            {
-                allProgramsAreQueued = false;
-            }
+            queueUIStates[queueUIObjects[i]] = queueUIStates[queueUIObjects[i + 1]];
         }
-
-        if(allProgramsAreQueued == true) return; 
-
-        GameObject lastActiveQueueUI = null;
-
-        foreach(GameObject queueUIObject in queueUIObjects)
-        {
-            if(queueUIStates[queueUIObject] == true)
-            {
-                lastActiveQueueUI = queueUIObject;
-            }
-        }
-
-        if(lastActiveQueueUI == null) return;
-
-        queueUIStates[lastActiveQueueUI] = false;
     }
 
 #region Index Offseting Methods
