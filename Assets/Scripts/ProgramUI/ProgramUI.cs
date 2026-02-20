@@ -393,30 +393,19 @@ public class ProgramUI : MonoBehaviour
 
 #region Add/Remove Methods
 
-    public void AddProgramsToHand(GameObject[] addPrograms, int[] indices)
+    public void AddProgramsToHand(GameObject[] addPrograms)
     {
-        if(addPrograms.Length != indices.Length) return;
-
-        for(int i = 0; i < indices.Length; i++)
-        {
-            // If index is out of range, set it to insert at the end
-            if(indices[i] < 0 || indices[i] > uiPrograms.Count + i)
-            {
-                indices[i] = uiPrograms.Count + i;
-            }
-        }
-
-        programsListData.AddProgramsToHand(addPrograms, indices);
+        programsListData.AddProgramsToHand(addPrograms);
 
         for(int i = 0; i < addPrograms.Length; i++)
         {
             GameObject newProgram = Instantiate(emptyProgramPrefab, gameObject.transform);
             mouseHoverStates.Add(newProgram, false);
-            uiPrograms.Insert(indices[i], newProgram);
+            uiPrograms.Add(newProgram);
 
             GameObject newQueueUI = Instantiate(queuePrefab, gameObject.transform);
             queueUIStates.Add(newQueueUI, false);
-            queueUIObjects.Insert(indices[i], newQueueUI);
+            queueUIObjects.Add(newQueueUI);
         }
 
         int handSize  = uiPrograms.Count;
@@ -426,8 +415,8 @@ public class ProgramUI : MonoBehaviour
 
         for(int i = 0; i < addPrograms.Length; i++)
         {
-            uiPrograms[indices[i]].transform.position = uiPositions[indices[i]];
-            queueUIObjects[indices[i]].transform.position = queueUIPositions[indices[i]];
+            uiPrograms[handSize - i - 1].transform.position = uiPositions[handSize - i - 1];
+            queueUIObjects[handSize - i - 1].transform.position = queueUIPositions[handSize - i - 1];
         }
 
         LerpUIProgramsToPositions();

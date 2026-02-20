@@ -83,21 +83,11 @@ public class ProgramListData : MonoBehaviour
         UpdateCountUI();
     }
 
-    public void AddProgramsToHand(GameObject[] addPrograms, int[] indices)
+    public void AddProgramsToHand(GameObject[] addPrograms)
     {
-        if(addPrograms.Length != indices.Length) return;
-        
-        foreach(int index in indices)
-        {
-            if(index == 0)
-            {
-                return;
-            }
-        }
-
         for(int i = 0; i < addPrograms.Length; i++)
         {
-            drawnPrograms.Insert(indices[i], addPrograms[i]);
+            drawnPrograms.Add(addPrograms[i]);
         }
     }
 

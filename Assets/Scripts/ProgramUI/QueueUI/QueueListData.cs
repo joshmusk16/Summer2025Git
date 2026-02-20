@@ -18,6 +18,7 @@ private ProgramUI defenseProgramUI;
 private QueueDataCollector queueDataCollector;
 
 public GameObject player;
+public PlayerLogic playerLogic;
 public PlayerTargeting playerTargeting;
 public CustomAnimator playerAnimator;
 
@@ -34,6 +35,11 @@ void Start()
     if(playerAnimator != null)
     {
         playerAnimator.OnAnimationComplete += ContinueQueue;
+    }
+
+    if(player != null)
+    {
+        playerLogic = player.GetComponent<PlayerLogic>();
     }
 }
 
@@ -137,10 +143,15 @@ public void ContinueQueue(ProgramType completedType)
     }
 
     //Third, run the next in queue, if there is something left in the queue
+    //If nothing is left in queue, return to player idle animation state
     if(queueList.Count > 0)
     {
         Debug.Log("Trying to start queue again...");
         StartQueue(queueList[0].programType);   
+    }
+    else
+    {
+        playerLogic.StartIdleAnimation(ProgramType.Other);
     }
 }
 

@@ -7,14 +7,13 @@ public class DebugAddAndRemove : MonoBehaviour
     public ProgramUI defenseUI;
 
     public GameObject[] addPrograms;
-    public int[] addIndices;
     public int[] removeIndices;
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            attackUI.AddProgramsToHand(addPrograms, addIndices);
+            attackUI.AddProgramsToHand(addPrograms);
         }
 
         if (Input.GetKeyDown(KeyCode.X))

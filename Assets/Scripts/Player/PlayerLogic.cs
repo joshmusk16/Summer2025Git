@@ -30,7 +30,6 @@ public class PlayerLogic : MonoBehaviour
             playerHurtBox.OnHit += playerTimerLogic.RemovePlayerHealth;
         }
 
-        //playerAnimator.OnAnimationComplete += StartIdleAnimation;
         StartIdleAnimation(ProgramType.Other);
     }
 
@@ -81,7 +80,6 @@ public class PlayerLogic : MonoBehaviour
 
     private void OnDestroy()
     {
-        playerAnimator.OnAnimationComplete -= StartIdleAnimation;
         playerHurtBox.OnHit -= playerTimerLogic.RemovePlayerHealth;
     }
 }
