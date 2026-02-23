@@ -20,6 +20,7 @@ public class SlashLogic : Program
     void Slash(QueueParameter queueParameter)
     {
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Attack, false, true, hitboxTimings);
+        //ChangeTransform(queueParameter.facedDirection);
     }
 
     void OnDestroy()

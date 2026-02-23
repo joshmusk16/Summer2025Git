@@ -9,7 +9,7 @@ private int currentDashCharges;
 public List<GameObject> dashCharges = new();
 public GameObject dashCharge;
 
-private const int STARTING_DASH_CHARGE_AMOUNT = 4;
+public int STARTING_DASH_CHARGE_AMOUNT = 10;
 private const int LOWEST_ALLOWED_DASH_CHARGE_AMOUNT = 1; 
 private const int LOWEST_SORTING_ORDER = 1;
 

@@ -60,7 +60,7 @@ public class CustomAnimator : MonoBehaviour
     private void UpdateTimeDrivenAnimation()
     {
         // Update frame timer
-        frameTimer += Time.deltaTime;
+        frameTimer += Time.deltaTime * TimeManager.timeMultiplier;
 
         // Check if we need to change frames based on time thresholds
         if (currentFrameIndex < frameTimeThresholds.Length - 1 && frameTimer >= frameTimeThresholds[currentFrameIndex + 1])

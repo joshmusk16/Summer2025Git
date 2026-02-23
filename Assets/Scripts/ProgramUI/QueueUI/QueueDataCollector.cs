@@ -23,7 +23,6 @@ public class QueueDataCollector : MonoBehaviour
         playerTargeting = FindObjectOfType<PlayerTargeting>();
     }
 
-    //newDestination needs to be passed from the PlayerTargeting script which still needs to be modified to account for this
     public QueueParameter CollectQueueData(GameObject program, ProgramType programType)
     {
         Program programData = program.GetComponent<Program>();

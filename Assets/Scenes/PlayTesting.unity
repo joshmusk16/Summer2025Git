@@ -558,6 +558,53 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 244087055979113184, guid: dbaf622051810f145a4122292a8fb35f, type: 3}
   m_PrefabInstance: {fileID: 701670845}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &245275693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 245275695}
+  - component: {fileID: 245275694}
+  m_Layer: 0
+  m_Name: TimeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &245275694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245275693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b29818bd2fe8145b6ed782122a0a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseDuration: 1
+  pauseElapsed: 0
+  programInputManager: {fileID: 962996297}
+--- !u!4 &245275695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245275693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &324567515
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,7 +893,6 @@ MonoBehaviour:
   addPrograms:
   - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
   - {fileID: 5029349081135307006, guid: 18c486d47a6674342a5672e39c64b4ca, type: 3}
-  addIndices: 0200000003000000
   removeIndices: 0200000003000000
 --- !u!4 &469638357
 Transform:
@@ -1075,7 +1121,6 @@ MonoBehaviour:
   totalDeckAmountDisplay: {fileID: 344789024}
   player: {fileID: 1523212146}
   playerTargeting: {fileID: 1523212153}
-  queueListData: {fileID: 1398496897}
 --- !u!114 &611740129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1357,7 +1402,6 @@ MonoBehaviour:
   totalDeckAmountDisplay: {fileID: 399228516425387551}
   player: {fileID: 1523212146}
   playerTargeting: {fileID: 1523212153}
-  queueListData: {fileID: 1398496897}
 --- !u!1001 &701670845
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1958,7 +2002,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashCharges: []
   dashCharge: {fileID: 6011220970149492049, guid: c34507a056ba11844bc16cefce4d47ed, type: 3}
-  totalXLength: 2
+  STARTING_DASH_CHARGE_AMOUNT: 10
+  totalXLength: 4
 --- !u!4 &1102729334
 Transform:
   m_ObjectHideFlags: 0
@@ -2630,7 +2675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef326d8cbe3917849ae1f80f041f0da0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeSlowTotalTime: 100
+  timeSlowTotalTime: 5
   timeSlowCurrentTime: 1
   timerSpeedDecreaseMultiplier: 1
   timerSpeedIncreaseMultiplier: 1
@@ -2923,6 +2968,7 @@ MonoBehaviour:
   queueList: []
   endOfQueueDestination: {x: 0, y: 0}
   player: {fileID: 1523212146}
+  playerLogic: {fileID: 0}
   playerTargeting: {fileID: 1523212153}
   playerAnimator: {fileID: 1523212147}
   dashProgramManager: {fileID: 1102729332}
@@ -4373,6 +4419,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 245275695}
   - {fileID: 852259961}
   - {fileID: 519420032}
   - {fileID: 1648717281}

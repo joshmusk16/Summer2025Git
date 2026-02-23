@@ -82,7 +82,6 @@ public class ProgramInputManager : MonoBehaviour
         {
             Debug.Log("Entering program rearrangement mode");
             OnSlowModeEnter?.Invoke();
-            canUseProgram = false;
             inSlowTimeMode = true;
         }
         else if (Input.GetKeyUp(TIMESLOW_KEY))

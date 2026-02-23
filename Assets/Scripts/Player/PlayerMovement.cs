@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isMoving)
         {
-            moveElapsedTime += Time.deltaTime * moveSpeed;
+            moveElapsedTime += Time.deltaTime * moveSpeed * TimeManager.timeMultiplier;
             float t = Mathf.Clamp01(moveElapsedTime / totalDistance);
             
             // EaseInQuadratic formula: t^2

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerLogic : MonoBehaviour
 {
-
     private CustomAnimator playerAnimator;
     private PlayerTimerLogic playerTimerLogic;
     public MouseTracker mouseTracker;
