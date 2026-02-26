@@ -25,6 +25,7 @@ public class DashChargeFiring : Program
     {
         playerMovement.MovePlayerLerp(queueParameter.destination, DASH_SPEED);
         playerAnimator.PlayParameterDrivenAnimation(animSprites, animFrames, ProgramType.Dash, () => playerMovement.PlayerLerpProgress(), false);
+        ChangeTransform(queueParameter.facedDirection);
     }
 
     public void OnDashCompleted(ProgramType type)

@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerTargeting : MonoBehaviour
 {
     private TileGrid tileGrid;
-    private MouseTracker mouseTracker;
+    public MouseTracker mouseTracker;
 
     private Vector2 lastHoveredAttack = new(-1, -1);
     private Vector2 lastHoveredDefense = new(-1, -1);
@@ -25,10 +25,11 @@ public class PlayerTargeting : MonoBehaviour
 
     private const int DEFAULT_TARGETING_RANGE = 4;
 
+    public GameObject debugTargetingOrigin;
+
     void Start()
     {
         tileGrid = FindObjectOfType<TileGrid>();
-        mouseTracker = FindObjectOfType<MouseTracker>();
 
         dashTargetingRange = DEFAULT_TARGETING_RANGE;
 
@@ -49,7 +50,8 @@ public class PlayerTargeting : MonoBehaviour
 
         if (dashTargetingRange > 0)
         {
-            dashCursor.transform.position = Vector2.Lerp(dashCursor.transform.position, SelectedTile(dashTargetingRange, ProgramType.Dash), Time.deltaTime * 20f);   
+            dashCursor.transform.position = Vector2.Lerp(dashCursor.transform.position, SelectedTile(dashTargetingRange, ProgramType.Dash), Time.deltaTime * 20f);
+            //Debug.Log("Running");   
         }
     }
 
@@ -73,14 +75,16 @@ public class PlayerTargeting : MonoBehaviour
 
     public Vector2 SelectedTile(int range = 0, ProgramType programType = ProgramType.Attack)
     {
+        Vector2 currentMousePosition = mouseTracker.GetWorldMousePosition();
+
         if (tileGrid.tiles.Count == 0)
         {
             ref Vector2 cachedTileEmpty = ref GetCacheForType(programType);
-            cachedTileEmpty = mouseTracker.worldPosition;
+            cachedTileEmpty = currentMousePosition;
             return cachedTileEmpty;
         }
 
-        Vector2 hoveredGridPos = WorldToGridPosition(mouseTracker.worldPosition);
+        Vector2 hoveredGridPos = WorldToGridPosition(currentMousePosition);
 
         ref Vector2 cachedTile = ref GetCacheForType(programType);
         ref Vector2 lastHovered = ref GetLastHoveredForType(programType);
@@ -126,7 +130,7 @@ public class PlayerTargeting : MonoBehaviour
             return cachedTile;
         }
 
-        cachedTile = mouseTracker.worldPosition;
+        cachedTile = currentMousePosition;
         return cachedTile;
     }
 
@@ -189,6 +193,7 @@ public class PlayerTargeting : MonoBehaviour
     private Vector2 GetClosestInRangeTile(int range)
     {
     Vector2 playerGridPos = WorldToGridPosition(targetingOrigin);
+    Vector2 currentMousePosition = mouseTracker.GetWorldMousePosition();
 
     int playerX = (int)playerGridPos.x;
     int playerY = (int)playerGridPos.y;
@@ -200,7 +205,7 @@ public class PlayerTargeting : MonoBehaviour
     int maxY = Mathf.Min(tileGrid.gridHeight - 1, playerY + range);
 
     float closestDistance = float.MaxValue;
-    Vector2 closestTilePosition = mouseTracker.worldPosition;
+    Vector2 closestTilePosition = currentMousePosition;
 
     // Step 1: Build array of valid tiles within range
     System.Collections.Generic.List<GameObject> validTilesInRange = new();
@@ -221,13 +226,13 @@ public class PlayerTargeting : MonoBehaviour
     // Step 2: Find closest tile to mouse from the filtered array
     if (validTilesInRange.Count == 0)
     {
-        return mouseTracker.worldPosition;
+        return currentMousePosition;
     }
 
     foreach (GameObject tile in validTilesInRange)
     {
         Vector2 tileWorldPos = tile.transform.position;
-        float distanceToMouse = Vector2.Distance(tileWorldPos, mouseTracker.worldPosition);
+        float distanceToMouse = Vector2.Distance(tileWorldPos, currentMousePosition);
         
         if (distanceToMouse < closestDistance)
         {
@@ -254,6 +259,12 @@ public class PlayerTargeting : MonoBehaviour
             targetingOrigin = SelectedTile(dashTargetingRange); 
         }
 
+        debugTargetingOrigin.transform.position = targetingOrigin;
+        return targetingOrigin;
+    }
+
+    public Vector2 ReturnTargetingOrigin()
+    {
         return targetingOrigin;
     }
 

@@ -13,5 +13,6 @@ public class ImpaleLogic : Program
     void Impale(QueueParameter queueParameter)
     {
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Attack, false, true, hitboxTimings);
+        ChangeTransform(queueParameter.facedDirection);
     }
 }

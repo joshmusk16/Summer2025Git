@@ -27,12 +27,21 @@ public class QueueDataCollector : MonoBehaviour
     {
         Program programData = program.GetComponent<Program>();
 
-        Vector2 currentMousePos = mouseTracker.worldPosition;
+        Vector2 currentMousePos = mouseTracker.GetWorldMousePosition();
         QueueParameter queueParameter;
 
         queueParameter.program = program;
         queueParameter.programType = programData.programType;
         queueParameter.previewSprite = programData.animSprites[0];
+
+        if(currentMousePos.x > playerTargeting.ReturnTargetingOrigin().x)
+        {
+            queueParameter.facedDirection = 1;
+        }
+        else
+        {
+            queueParameter.facedDirection = -1;
+        }
 
         if (programData.isMovementProgram)
         {
@@ -40,16 +49,7 @@ public class QueueDataCollector : MonoBehaviour
         }
         else
         {
-            queueParameter.destination = queueListData.endOfQueueDestination; 
-        }
-        
-        if(currentMousePos.x > queueParameter.destination.x)
-        {
-            queueParameter.facedDirection = 1;
-        }
-        else
-        {
-            queueParameter.facedDirection = 0;
+            queueParameter.destination = queueListData.EndOfQueueDestination(); 
         }
 
         return queueParameter;

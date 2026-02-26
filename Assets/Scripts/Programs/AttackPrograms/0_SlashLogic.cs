@@ -1,15 +1,8 @@
 public class SlashLogic : Program
 {
-
     void Awake()
     {
         FindDependencies();
-
-        if (player != null)
-        {
-            player.MouseLeftOrRightChanged += ChangeTransform;
-            ChangeTransform(player.currentMouseLeftOrRight);
-        }
     }
 
     public override void FireProgram(QueueParameter queueParameter)
@@ -20,14 +13,6 @@ public class SlashLogic : Program
     void Slash(QueueParameter queueParameter)
     {
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Attack, false, true, hitboxTimings);
-        //ChangeTransform(queueParameter.facedDirection);
-    }
-
-    void OnDestroy()
-    {
-        if (player != null)
-        {
-            player.MouseLeftOrRightChanged -= ChangeTransform;
-        }
+        ChangeTransform(queueParameter.facedDirection);
     }
 }

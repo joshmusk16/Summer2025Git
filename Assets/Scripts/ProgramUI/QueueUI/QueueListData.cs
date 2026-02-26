@@ -7,7 +7,6 @@ public class QueueListData : MonoBehaviour
 private GameObject currentProgram;
 
 public List<QueueParameter> queueList = new();
-public Vector2 endOfQueueDestination;
 
 private ProgramListData attackProgramList;
 private ProgramListData defenseProgramList;
@@ -40,6 +39,18 @@ void Start()
     if(player != null)
     {
         playerLogic = player.GetComponent<PlayerLogic>();
+    }
+}
+
+public Vector2 EndOfQueueDestination()
+{
+    if(queueList.Count == 0)
+    {   
+        return player.transform.position; 
+    }
+    else
+    {
+        return queueList[^1].destination;   
     }
 }
 
@@ -147,7 +158,7 @@ public void ContinueQueue(ProgramType completedType)
     if(queueList.Count > 0)
     {
         Debug.Log("Trying to start queue again...");
-        StartQueue(queueList[0].programType);   
+        StartQueue(queueList[0].programType);  
     }
     else
     {

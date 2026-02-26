@@ -14,7 +14,7 @@ public class PlayerLogic : MonoBehaviour
     public float[] idleFrames;
 
     public event Action<int> MouseLeftOrRightChanged;
-    public int currentMouseLeftOrRight = 1;
+    private int currentMouseLeftOrRight = 1;
 
     //start method for debugging, ideally the idle animation is started and stopped manually upon other animations ending
 
@@ -30,11 +30,6 @@ public class PlayerLogic : MonoBehaviour
         }
 
         StartIdleAnimation(ProgramType.Other);
-    }
-
-    void Update()
-    {
-        MouseLeftOrRightOfPlayer();
     }
 
     #region Player HurtBox Methods
@@ -59,7 +54,7 @@ public class PlayerLogic : MonoBehaviour
     }
 
     //returns -1 for mouse left of the player and 1 for mouse right of the player
-    public void MouseLeftOrRightOfPlayer()
+    private void MouseLeftOrRightOfPlayer()
     {
         if (mouseTracker.GetWorldMousePosition().x <= gameObject.transform.position.x &&
         currentMouseLeftOrRight == 1)
@@ -74,6 +69,18 @@ public class PlayerLogic : MonoBehaviour
             transform.localScale *= new Vector2(-1, 1f);
             MouseLeftOrRightChanged?.Invoke(1);
             currentMouseLeftOrRight = 1;
+        }
+    }
+
+    public void ChangeTransform(int direction)
+    {
+        if(direction == 1)
+        {
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), 1f, 1f);
+        }
+        else if (direction == -1)
+        {
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), 1f, 1f);
         }
     }
 

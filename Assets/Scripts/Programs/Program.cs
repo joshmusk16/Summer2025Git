@@ -64,6 +64,8 @@ public class Program : MonoBehaviour
     //See SlashLogic Script for reference
     protected virtual void ChangeTransform(int direction)
     {
+        player.ChangeTransform(direction);
+
         foreach (HitboxTiming timing in hitboxTimings)
         {
             HitBox temp = timing.hitbox;
