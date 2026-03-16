@@ -23,6 +23,7 @@ public class ProgramInputManager : MonoBehaviour
     private DashChargeManager dashChargeManager;
     private ProgramListData attackProgramList;
     private ProgramListData defenseProgramList;
+    private PanelsUI panelsUI;
 
     private QueueListData queueProgramList;
 
@@ -36,6 +37,7 @@ public class ProgramInputManager : MonoBehaviour
         queueProgramList = FindObjectOfType<QueueListData>();
         dashChargeManager = FindObjectOfType<DashChargeManager>();
         timeSlowTimerLogic = FindObjectOfType<TimeSlowTimerLogic>();
+        panelsUI = FindObjectOfType<PanelsUI>();
     }
 
     public void ForceExitSlowMode()
@@ -46,12 +48,13 @@ public class ProgramInputManager : MonoBehaviour
 
     void Update()
     {
-
-        //Must add parameters here that track whether or not a attack vs defense program can be queued
-
-        if (inSlowTimeMode == false)
+        if (panelsUI.isInLeftOrRightZone == false)
         {
             canUseProgram = true;
+        }
+        else
+        {
+            canUseProgram = false;
         }
 
         if (canUseProgram)
@@ -60,21 +63,18 @@ public class ProgramInputManager : MonoBehaviour
             {
                 queueProgramList.AddProgramToQueue(ProgramType.Attack);
                 isAttacking = true;
-                //canUseProgram = false;    
             }
 
             if (Input.GetKeyDown(DEFENSE_KEY) && defenseProgramList.AreProgramsAvailable())
             {
                 queueProgramList.AddProgramToQueue(ProgramType.Defense);
                 isDefending = true;
-                //canUseProgram = false;
             }
 
             if (Input.GetKeyDown(DASH_KEY) && dashChargeManager.IsDashChargeAvailable())
             {
                 queueProgramList.AddProgramToQueue(ProgramType.Dash);
                 isDashing = true;
-                //canUseProgram = false;
             }       
         }
 

@@ -8,6 +8,7 @@ public struct QueueParameter
     public Vector2 destination;        //movement destination for movement programs
     public Sprite previewSprite;       //rendered sprite on the board after queue
     public int facedDirection;         //0 for left, 1 for right
+    public bool isMovementProgram;     //true for yes, false for no
 }
 
 public class QueueDataCollector : MonoBehaviour
@@ -43,7 +44,9 @@ public class QueueDataCollector : MonoBehaviour
             queueParameter.facedDirection = -1;
         }
 
-        if (programData.isMovementProgram)
+        queueParameter.isMovementProgram = programData.isMovementProgram;
+
+        if (queueParameter.isMovementProgram)
         {
             queueParameter.destination = playerTargeting.ProgressTargetingOrigin(programType);
         }

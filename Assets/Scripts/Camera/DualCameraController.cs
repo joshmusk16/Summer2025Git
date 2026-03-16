@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class DualCameraManager : MonoBehaviour
@@ -14,11 +15,31 @@ public class DualCameraManager : MonoBehaviour
     public float uiCameraSize = 5f;        // Fixed orthographic size for UI camera
     public float uiCameraDistance = 10f;   // Distance from UI elements
     
+    private bool isZooming = false;
+    private float zoomDestination;
+    private float zoomLerpSpeed;
+    public event Action OnZoomLerpFinish;
+
     void Start()
     {
         SetupCameras();
     }
     
+    void Update()
+    {
+        if (isZooming)
+        {
+            mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, zoomDestination, Time.deltaTime * zoomLerpSpeed);
+
+            if (Mathf.Abs(mainCamera.fieldOfView - zoomDestination) < 0.01f)
+            {
+                mainCamera.fieldOfView = zoomDestination;
+                OnZoomLerpFinish?.Invoke();
+                isZooming = false;
+            }
+        }
+    }
+
     void SetupCameras()
     {
         // Configure Main Camera (Game Camera)
@@ -57,4 +78,16 @@ public class DualCameraManager : MonoBehaviour
             uiCamera.orthographicSize = newSize;
         }
     }
+
+
+    public void ZoomMainCameraLerp(float destination, float speed)
+    {
+        if (mainCamera.fieldOfView != destination)
+        {
+            isZooming = true;
+            zoomDestination = destination;
+            zoomLerpSpeed = speed;
+        }
+    }
+
 }

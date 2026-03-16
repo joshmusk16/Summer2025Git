@@ -171,4 +171,16 @@ void OnDestroy()
     playerAnimator.OnAnimationComplete -= ContinueQueue;
 }
 
+bool AreThereMovementProgramsAhead()
+{
+    foreach(QueueParameter queueProgram in queueList)
+    {
+        if (queueProgram.isMovementProgram)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 }

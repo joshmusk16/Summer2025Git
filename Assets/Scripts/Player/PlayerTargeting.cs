@@ -25,7 +25,7 @@ public class PlayerTargeting : MonoBehaviour
 
     private const int DEFAULT_TARGETING_RANGE = 4;
 
-    public GameObject debugTargetingOrigin;
+    public GameObject currentTargetingOrigin;
 
     void Start()
     {
@@ -50,8 +50,7 @@ public class PlayerTargeting : MonoBehaviour
 
         if (dashTargetingRange > 0)
         {
-            dashCursor.transform.position = Vector2.Lerp(dashCursor.transform.position, SelectedTile(dashTargetingRange, ProgramType.Dash), Time.deltaTime * 20f);
-            //Debug.Log("Running");   
+            dashCursor.transform.position = Vector2.Lerp(dashCursor.transform.position, SelectedTile(dashTargetingRange, ProgramType.Dash), Time.deltaTime * 20f);  
         }
     }
 
@@ -259,7 +258,8 @@ public class PlayerTargeting : MonoBehaviour
             targetingOrigin = SelectedTile(dashTargetingRange); 
         }
 
-        debugTargetingOrigin.transform.position = targetingOrigin;
+        currentTargetingOrigin.transform.position = targetingOrigin;
+
         return targetingOrigin;
     }
 

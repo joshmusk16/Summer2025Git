@@ -274,6 +274,7 @@ GameObject:
   m_Component:
   - component: {fileID: 125615887}
   - component: {fileID: 125615886}
+  - component: {fileID: 125615888}
   m_Layer: 5
   m_Name: LeftPanel
   m_TagString: Untagged
@@ -349,8 +350,21 @@ Transform:
   - {fileID: 1817938740}
   - {fileID: 1304852685}
   - {fileID: 1094448278}
+  - {fileID: 684479107}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &125615888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125615885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1808a762517ec4469655d8097838065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &139990331 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4836442385984647665, guid: 4168dc3ff1860a54f9df289104dc6bed, type: 3}
@@ -373,7 +387,7 @@ GameObject:
   - component: {fileID: 142319923}
   - component: {fileID: 142319922}
   m_Layer: 0
-  m_Name: Debug
+  m_Name: NextQueuePositionUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -419,13 +433,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 100
-  m_Sprite: {fileID: 588194566, guid: 1933ff320cea1d042bdd24da4558ba16, type: 3}
+  m_SortingOrder: 19
+  m_Sprite: {fileID: 21300000, guid: 38a6f9d01255e4a43944731ef1e57584, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2, y: 2.375}
+  m_Size: {x: 0.3, y: 0.36}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -463,7 +477,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &189774943
 Transform:
   m_ObjectHideFlags: 0
@@ -1235,15 +1249,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 611740127}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.25, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -25.5, y: 1.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 911204013}
   - {fileID: 1233447213}
   - {fileID: 344789023}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1339430217}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &622653286
 GameObject:
@@ -1445,15 +1459,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684479105}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.37, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 24.980001, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2108919444}
   - {fileID: 1785273640}
   - {fileID: 1314485524}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 125615887}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &684479108
 MonoBehaviour:
@@ -1798,6 +1812,7 @@ GameObject:
   m_Component:
   - component: {fileID: 962996298}
   - component: {fileID: 962996297}
+  - component: {fileID: 962996299}
   m_Layer: 0
   m_Name: ProgramInputManager
   m_TagString: Untagged
@@ -1838,6 +1853,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &962996299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 962996296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f51033621761994fb439d77a207555c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  programInputManager: {fileID: 962996297}
+  mouse: {fileID: 672980304}
+  cameraManager: {fileID: 1648717280}
+  leftUIPanel: {fileID: 1094448279}
+  rightUIPanel: {fileID: 1975210295}
+  leftPanelLerp: {fileID: 125615888}
+  rightPanelLerp: {fileID: 1339430218}
+  leftPanelStartPos: {x: 0, y: 0}
+  rightPanelStartPos: {x: 0, y: 0}
+  rightPanelActiveSprite: {fileID: 21300000, guid: 1f489634b7a893843bcec27ebc37084b, type: 3}
+  rightPanelInactiveSprite: {fileID: 21300000, guid: 60667f1411ab91940bd6c06d4cac7cf8, type: 3}
+  leftPanelActiveSprite: {fileID: 21300000, guid: 59756ec40df5e5e42b61de982dcedd6e, type: 3}
+  leftPanelInactiveSprite: {fileID: 21300000, guid: 371ee38ba5594354db21f0e9a2e53b87, type: 3}
+  isInLeftOrRightZone: 0
+  canUpdatePanelStates: 0
 --- !u!1 &964110764
 GameObject:
   m_ObjectHideFlags: 0
@@ -2779,6 +2821,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1339430217}
   - component: {fileID: 1339430216}
+  - component: {fileID: 1339430218}
   m_Layer: 5
   m_Name: RightPanel
   m_TagString: Untagged
@@ -2854,8 +2897,21 @@ Transform:
   - {fileID: 1654047996}
   - {fileID: 964110765}
   - {fileID: 1975210294}
+  - {fileID: 611740130}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1339430218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339430215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1808a762517ec4469655d8097838065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1350415310 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4324310157023659457, guid: 4d72256aeb616da48a4b32415bd763a7, type: 3}
@@ -3050,7 +3106,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   queueList: []
-  endOfQueueDestination: {x: 0, y: 0}
   player: {fileID: 1523212146}
   playerLogic: {fileID: 0}
   playerTargeting: {fileID: 1523212153}
@@ -3345,7 +3400,7 @@ MonoBehaviour:
   attackTargetingRange: 0
   defenseTargetingRange: 0
   dashTargetingRange: 0
-  debugTargetingOrigin: {fileID: 142319921}
+  currentTargetingOrigin: {fileID: 142319921}
 --- !u!1 &1527855675 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 244087055979113184, guid: dbaf622051810f145a4122292a8fb35f, type: 3}
@@ -4509,20 +4564,16 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 1648717281}
   - {fileID: 672980303}
-  - {fileID: 189774943}
   - {fileID: 417636059}
   - {fileID: 1785922077}
   - {fileID: 1240184829}
   - {fileID: 969360205}
   - {fileID: 962996298}
   - {fileID: 1102729334}
-  - {fileID: 684479107}
-  - {fileID: 611740130}
   - {fileID: 1398496898}
   - {fileID: 1850997520}
-  - {fileID: 37177296}
-  - {fileID: 1339430217}
   - {fileID: 125615887}
+  - {fileID: 1339430217}
   - {fileID: 1523212149}
   - {fileID: 1337945984}
   - {fileID: 469638357}
@@ -4530,3 +4581,5 @@ SceneRoots:
   - {fileID: 1365229716}
   - {fileID: 591770914}
   - {fileID: 142319923}
+  - {fileID: 189774943}
+  - {fileID: 37177296}
