@@ -80,7 +80,11 @@ public void AddProgramToQueue(ProgramType programType)
     else if (programType == ProgramType.Defense)
     {
         defenseProgramUI.UpdateQueueUIOnClick();      
-    } 
+    }
+    else
+    {
+        dashProgramManager.GetComponent<DashChargeFiring>().OnDashQueued(programType);
+    }
 
     QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(nextProgramObject, programType);
     queueList.Add(nextQueueProgram);

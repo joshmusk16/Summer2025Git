@@ -1872,14 +1872,11 @@ MonoBehaviour:
   rightUIPanel: {fileID: 1975210295}
   leftPanelLerp: {fileID: 125615888}
   rightPanelLerp: {fileID: 1339430218}
-  leftPanelStartPos: {x: 0, y: 0}
-  rightPanelStartPos: {x: 0, y: 0}
   rightPanelActiveSprite: {fileID: 21300000, guid: 1f489634b7a893843bcec27ebc37084b, type: 3}
   rightPanelInactiveSprite: {fileID: 21300000, guid: 60667f1411ab91940bd6c06d4cac7cf8, type: 3}
   leftPanelActiveSprite: {fileID: 21300000, guid: 59756ec40df5e5e42b61de982dcedd6e, type: 3}
   leftPanelInactiveSprite: {fileID: 21300000, guid: 371ee38ba5594354db21f0e9a2e53b87, type: 3}
   isInLeftOrRightZone: 0
-  canUpdatePanelStates: 0
 --- !u!1 &964110764
 GameObject:
   m_ObjectHideFlags: 0
@@ -2801,14 +2798,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef326d8cbe3917849ae1f80f041f0da0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeSlowTotalTime: 5
+  timeSlowTotalTime: 10
   timeSlowCurrentTime: 1
   timerSpeedDecreaseMultiplier: 1
-  timerSpeedIncreaseMultiplier: 1
+  timerSpeedIncreaseMultiplier: 2
   timeSlowTimerIsDecreasing: 0
   timeSlowTimerIsIncreasing: 0
   rechargeDelayRunning: 0
-  rechargeDelayTotalTime: 2
+  rechargeDelayTotalTime: 0.5
   rechargeDelayCurrentTime: 0
   timeSlowBar: {fileID: 324567515}
 --- !u!1 &1339430215

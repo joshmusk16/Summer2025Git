@@ -564,25 +564,7 @@ public class ProgramUI : MonoBehaviour
     {
         if (programInputManager == null) return 0;
 
-        bool shouldOffset = false;
-
-        if (uiType == ProgramType.Attack)
-        {
-            shouldOffset = programInputManager.isAttacking;
-        }
-        else if (uiType == ProgramType.Defense)
-        {
-            shouldOffset = programInputManager.isDefending;
-        }
-
-        if (shouldOffset)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
+        return 0;   
     }
 
     int GetInitialIndexNew()
@@ -610,7 +592,7 @@ public class ProgramUI : MonoBehaviour
 
     void SortByYPosition()
     {
-        int startIndex = GetInitialIndex();
+        int startIndex = GetInitialIndexNew();
         int endIndex = GetProgramUICount();
 
         if (endIndex - startIndex <= 1) return;
@@ -640,7 +622,7 @@ public class ProgramUI : MonoBehaviour
     {
         if (list.Count == 0) return null;
         
-        int startIndex = GetInitialIndex();
+        int startIndex = GetInitialIndexNew();
         if (startIndex >= list.Count) return null;
         
         GameObject closestObj = list[startIndex];
@@ -720,7 +702,7 @@ public class ProgramUI : MonoBehaviour
     {
         GameObject closest = ClosestUIToMouse(uiPrograms);
         
-        for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
+        for (int i = GetInitialIndexNew(); i < GetProgramUICount(); i++)
         {
             if (uiPrograms[i] != null)
             {
@@ -779,7 +761,7 @@ public class ProgramUI : MonoBehaviour
 
     void ResetMouseExitScales()
     {
-        for (int i = GetInitialIndex(); i < GetProgramUICount(); i++)
+        for (int i = GetInitialIndexNew(); i < GetProgramUICount(); i++)
         {
             if (i == 0)
             {

@@ -60,8 +60,6 @@ public class Program : MonoBehaviour
     }
 
     //When given a direction of -1 or 1 in in direction, this method will change the transform of the hitboxes 
-    //appropriately. This is intended to be subscribed to MouseLeftOrRightOfPlayer() in the PlayerHandler script
-    //See SlashLogic Script for reference
     protected virtual void ChangeTransform(int direction)
     {
         player.ChangeTransform(direction);
@@ -70,13 +68,9 @@ public class Program : MonoBehaviour
         {
             HitBox temp = timing.hitbox;
 
-            if (direction == 1)
+            if (direction == -1)
             {
-                temp.offset.x = Mathf.Abs(temp.offset.x);
-            }
-            else if (direction == -1)
-            {
-                temp.offset.x = -Mathf.Abs(temp.offset.x);
+                temp.offset.x *= -1;
             }
         }
     }

@@ -50,7 +50,7 @@ public class PlayerTargeting : MonoBehaviour
 
         if (dashTargetingRange > 0)
         {
-            dashCursor.transform.position = Vector2.Lerp(dashCursor.transform.position, SelectedTile(dashTargetingRange, ProgramType.Dash), Time.deltaTime * 20f);  
+            dashCursor.transform.position = Vector2.Lerp(dashCursor.transform.position, SelectedTile(dashTargetingRange, ProgramType.Dash), Time.deltaTime * 40f);  
         }
     }
 

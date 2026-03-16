@@ -42,8 +42,9 @@ public class ProgramInputManager : MonoBehaviour
 
     public void ForceExitSlowMode()
     {
+        OnSlowModeExit?.Invoke();
         inSlowTimeMode = false;
-        canUseProgram = false;
+        canUseProgram = true;
     }
 
     void Update()
@@ -84,10 +85,9 @@ public class ProgramInputManager : MonoBehaviour
             OnSlowModeEnter?.Invoke();
             inSlowTimeMode = true;
         }
-        else if (Input.GetKeyUp(TIMESLOW_KEY))
+        else if (Input.GetKeyUp(TIMESLOW_KEY) && timeSlowTimerLogic.IsTimeSlowAboveZero())
         {
             Debug.Log("Exiting program rearrangement mode");
-            OnSlowModeExit?.Invoke();
             ForceExitSlowMode();
         }
     }

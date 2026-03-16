@@ -33,7 +33,14 @@ public class DashChargeFiring : Program
         if(type == ProgramType.Dash)
         {
         inputManager.isDashing = false;
-        dashChargeManager.RemoveDashCharge(REMOVE_CHARGE_AMOUNT);
+        }
+    }
+
+    public void OnDashQueued(ProgramType type)
+    {
+        if(type == ProgramType.Dash)
+        {
+            dashChargeManager.RemoveDashCharge(REMOVE_CHARGE_AMOUNT);
         }
     }
 }
