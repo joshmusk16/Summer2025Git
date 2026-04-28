@@ -3,8 +3,9 @@ using UnityEngine;
 public class ComboBarLogic : MonoBehaviour
 {
 
-[SerializeField] private int currentCombo;
+public int currentCombo;
 private const int MAX_COMBO_ALLOWED = 500;
+public int startingComboAmount = 1;
 public ComboBarUI comboBarUI;
 
 void Update()
@@ -14,6 +15,20 @@ void Update()
         currentCombo = Random.Range(0, 500);
         Debug.Log("Trying to display" + currentCombo);
         AddToCombo(0);
+    }
+}
+
+void Start()
+{
+    InitializeComboBar();
+}
+
+public void InitializeComboBar()
+{
+    if(startingComboAmount > 0 && startingComboAmount < MAX_COMBO_ALLOWED)
+    {
+        currentCombo = startingComboAmount;
+        comboBarUI.UpdateComboNumber(currentCombo);   
     }
 }
 

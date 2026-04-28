@@ -29,6 +29,7 @@ public class Program : MonoBehaviour
     [HideInInspector] public PlayerTargeting playerTargeting;
     [HideInInspector] public ProgramUI programUI;
     [HideInInspector] public ProgramInputManager inputManager;
+    [HideInInspector] public ComboBarLogic comboBar;
     
     public virtual void FireProgram(QueueParameter queueParameter)
     {
@@ -52,10 +53,19 @@ public class Program : MonoBehaviour
         playerMovement = FindObjectOfType<PlayerMovement>();
         playerTargeting = FindObjectOfType<PlayerTargeting>();
         inputManager = FindObjectOfType<ProgramInputManager>();
+        comboBar = FindObjectOfType<ComboBarLogic>();
 
         if (player != null)
         {
             playerAnimator = player.gameObject.GetComponent<CustomAnimator>();
+        }
+    }
+
+    protected virtual void AssignHitboxDamages(int amount)
+    {
+        foreach(HitboxTiming hitboxTiming in hitboxTimings)
+        {
+            hitboxTiming.hitbox.damage = amount;
         }
     }
 

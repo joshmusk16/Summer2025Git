@@ -48,6 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   programType: 0
   uiSprite: {fileID: 21300000, guid: f74f95e1922531e4c97d0288f51ad3f7, type: 3}
+  isMovementProgram: 0
+  targetingRange: 0
   animSprites:
   - {fileID: -1250718021, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
   - {fileID: 247456802, guid: 31db126675f6d834596d1214342d3d8b, type: 3}
@@ -75,7 +77,7 @@ MonoBehaviour:
   playerTargeting: {fileID: 0}
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
-  queueManager: {fileID: 0}
+  comboBar: {fileID: 0}
 --- !u!114 &2564874997129578755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,7 +98,7 @@ MonoBehaviour:
   damage: 2
   hitboxTags:
   - default
-  multiHit: 1
+  multiHit: 0
   multiHitInterval: 0.5
   maxHits: -1
 --- !u!114 &5118383221459371758
@@ -119,6 +121,6 @@ MonoBehaviour:
   damage: 2
   hitboxTags:
   - default
-  multiHit: 1
+  multiHit: 0
   multiHitInterval: 0.5
   maxHits: -1

@@ -9,13 +9,14 @@ private List<GameObject> Digits = new();
 private List<int> IntegerDigits = new();
 public Sprite[] numberSprites = new Sprite[10];
 private const int SPACE_LENGTH = 2;
+private const float Y_OFFSET = 0.25f;
 
 public void UpdateComboNumber(int number)
 {
     DestroyDigits();
     AddDigitsToList(number);
     int numberOfDigits = CountDigits(number);
-    Vector2 offset = new(0f,0f);
+    Vector2 offset = new(0f, -Y_OFFSET);
 
     for(int i = 0; i < numberOfDigits; i++)
     {
