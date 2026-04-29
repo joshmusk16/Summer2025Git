@@ -13,6 +13,7 @@ public class Program : MonoBehaviour
     [Header("Program Type")]
     public ProgramType programType = ProgramType.Attack;
     public Sprite uiSprite = null;
+    public int rewardType;
 
     [Header("Player Targeting Parameters")]
     public bool isMovementProgram = false;

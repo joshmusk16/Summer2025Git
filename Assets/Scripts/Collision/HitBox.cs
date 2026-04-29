@@ -9,6 +9,7 @@ public class HitBox : CollisionBox
     [Header("Hitbox Properties")]
     public int damage = 1;
     public string[] hitboxTags = { "default" };
+    public bool hasHitOnce = false;
 
     [Header("Hitbox Behavior")]
     public bool multiHit = true;
@@ -89,6 +90,7 @@ public class HitBox : CollisionBox
         };
 
         // Trigger events
+        hasHitOnce = true;
         OnHit?.Invoke(hurtbox, hitInfo);
         Debug.Log(gameObject.name + " is hitting " + hurtbox.name + " at " + Time.time);
         hurtbox.TakeHit(hitInfo);
