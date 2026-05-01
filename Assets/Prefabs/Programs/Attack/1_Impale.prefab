@@ -52,6 +52,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   programType: 0
   uiSprite: {fileID: 21300000, guid: 5d81b24853f5ba44cbf682e3cc454bdc, type: 3}
+  isMovementProgram: 0
+  targetingRange: 0
   animSprites:
   - {fileID: 168151508, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
   - {fileID: 511389809, guid: 5236d36fd74e26c47bb4b5a5c47872f3, type: 3}
@@ -87,13 +89,17 @@ MonoBehaviour:
     activationFrames: 08000000
   - hitbox: {fileID: 1770317936504277919}
     activationFrames: 08000000
+  rewardRequirementType: 2
+  rewardType: 1
+  amountToChangeComboBar: 2
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMovement: {fileID: 0}
   playerTargeting: {fileID: 0}
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
-  queueManager: {fileID: 0}
+  comboBar: {fileID: 0}
+  hitboxTracker: {fileID: 0}
 --- !u!114 &300015249756292785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +120,7 @@ MonoBehaviour:
   damage: 7
   hitboxTags:
   - default
+  hasHitOnce: 0
   multiHit: 1
   multiHitInterval: 0.1
   maxHits: -1
@@ -137,6 +144,7 @@ MonoBehaviour:
   damage: 7
   hitboxTags:
   - default
+  hasHitOnce: 0
   multiHit: 1
   multiHitInterval: 0.1
   maxHits: -1
@@ -160,6 +168,7 @@ MonoBehaviour:
   damage: 5
   hitboxTags:
   - default
+  hasHitOnce: 0
   multiHit: 1
   multiHitInterval: 0.1
   maxHits: -1
@@ -183,6 +192,7 @@ MonoBehaviour:
   damage: 5
   hitboxTags:
   - default
+  hasHitOnce: 0
   multiHit: 1
   multiHitInterval: 0.1
   maxHits: -1
@@ -206,6 +216,7 @@ MonoBehaviour:
   damage: 3
   hitboxTags:
   - default
+  hasHitOnce: 0
   multiHit: 1
   multiHitInterval: 0.1
   maxHits: -1
@@ -229,6 +240,7 @@ MonoBehaviour:
   damage: 3
   hitboxTags:
   - default
+  hasHitOnce: 0
   multiHit: 1
   multiHitInterval: 0.1
   maxHits: -1

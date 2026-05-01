@@ -13,7 +13,6 @@ public class Program : MonoBehaviour
     [Header("Program Type")]
     public ProgramType programType = ProgramType.Attack;
     public Sprite uiSprite = null;
-    public int rewardType;
 
     [Header("Player Targeting Parameters")]
     public bool isMovementProgram = false;
@@ -24,6 +23,13 @@ public class Program : MonoBehaviour
     public float[] animFrames;
     public HitboxTiming[] hitboxTimings;
 
+    [Header("Reward Data")]
+    public int rewardRequirementType;
+    public int rewardType;
+    public int amountToChangeComboBar;
+    //Reward Requirement types : 1 = HasAnyHitboxHit, 2 = HasEveryHitboxHit
+    //Types: Adding to combo = 1, Removing from combo = 2, multiply combo = 3, divide combo = 4.
+
     [HideInInspector] public PlayerLogic player;
     [HideInInspector] public CustomAnimator playerAnimator;
     [HideInInspector] public PlayerMovement playerMovement;
@@ -31,6 +37,7 @@ public class Program : MonoBehaviour
     [HideInInspector] public ProgramUI programUI;
     [HideInInspector] public ProgramInputManager inputManager;
     [HideInInspector] public ComboBarLogic comboBar;
+    [HideInInspector] public HitboxTracker hitboxTracker;
     
     public virtual void FireProgram(QueueParameter queueParameter)
     {
@@ -55,10 +62,16 @@ public class Program : MonoBehaviour
         playerTargeting = FindObjectOfType<PlayerTargeting>();
         inputManager = FindObjectOfType<ProgramInputManager>();
         comboBar = FindObjectOfType<ComboBarLogic>();
+        hitboxTracker = FindObjectOfType<HitboxTracker>();
 
         if (player != null)
         {
             playerAnimator = player.gameObject.GetComponent<CustomAnimator>();
+        }
+
+        if(hitboxTracker != null)
+        {
+            hitboxTracker.RegisterHitboxGroup(gameObject, hitboxTimings, hitboxTimings.Length);
         }
     }
 
@@ -84,5 +97,10 @@ public class Program : MonoBehaviour
                 temp.offset.x *= -1;
             }
         }
+    }
+
+    protected virtual void OnDestroy()
+    {
+        hitboxTracker.UnregisterHitboxGroup(gameObject);
     }
 }

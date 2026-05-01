@@ -5,6 +5,14 @@ public class HitboxTracker : MonoBehaviour
 {
 
 private Dictionary<GameObject, List<HitBox>> hitboxGroups = new();
+public static HitboxTracker Instance { get; private set; }
+public ComboBarLogic comboBar;
+
+private void Awake()
+{
+    Instance = this;
+    comboBar = FindObjectOfType<ComboBarLogic>();
+}
 
 public void RegisterHitboxGroup(GameObject program, HitboxTiming[] hitboxTimings, int hitboxAmount)
 {  
@@ -23,11 +31,11 @@ public void UnregisterHitboxGroup(GameObject program)
     hitboxGroups.Remove(program);
 }
 
-public void CheckForReward(GameObject program, int rewardType)
+public void CheckForReward(GameObject program, int rewardRequirementType, int rewardType, int amount)
 {
     bool shouldGiveReward = false;
 
-    switch (rewardType)
+    switch (rewardRequirementType)
     {
         case 1: 
             shouldGiveReward = HasAnyHitboxHit(program);
@@ -39,10 +47,12 @@ public void CheckForReward(GameObject program, int rewardType)
 
     if (shouldGiveReward)
     {
-        GiveReward();
+        comboBar.ChangeComboBar(rewardType, amount);
         UnregisterHitboxGroup(program);
     }
 }
+
+//Reward Requirement types : 1 = HasAnyHitboxHit, 2 = HasEveryHitboxHit
 
 private bool HasAnyHitboxHit(GameObject program)
 {
@@ -66,11 +76,6 @@ private bool HasEveryHitboxHit(GameObject program)
         }
     }
     return true;
-}
-
-public void GiveReward()
-{
-
 }
 
 }

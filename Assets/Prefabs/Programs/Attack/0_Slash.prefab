@@ -71,6 +71,9 @@ MonoBehaviour:
     activationFrames: 03000000
   - hitbox: {fileID: 5118383221459371758}
     activationFrames: 03000000
+  rewardRequirementType: 1
+  rewardType: 1
+  amountToChangeComboBar: 1
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMovement: {fileID: 0}
@@ -78,6 +81,7 @@ MonoBehaviour:
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
   comboBar: {fileID: 0}
+  hitboxTracker: {fileID: 0}
 --- !u!114 &2564874997129578755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +102,7 @@ MonoBehaviour:
   damage: 2
   hitboxTags:
   - default
+  hasHitOnce: 0
   multiHit: 0
   multiHitInterval: 0.5
   maxHits: -1
@@ -121,6 +126,7 @@ MonoBehaviour:
   damage: 2
   hitboxTags:
   - default
+  hasHitOnce: 0
   multiHit: 0
   multiHitInterval: 0.5
   maxHits: -1

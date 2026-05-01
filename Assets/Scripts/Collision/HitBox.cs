@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Program))]
 public class HitBox : CollisionBox
 {
-
     [Header("Hitbox Properties")]
     public int damage = 1;
     public string[] hitboxTags = { "default" };
@@ -20,6 +20,13 @@ public class HitBox : CollisionBox
     private Dictionary<HurtBox, int> hitCounts = new();
 
     public event Action<HurtBox, HitInfo> OnHit;
+
+    private Program programData;
+
+    private void Awake()
+    {
+        programData = GetComponent<Program>();
+    }
 
     protected override void OnDrawGizmos()
     {
@@ -91,6 +98,9 @@ public class HitBox : CollisionBox
 
         // Trigger events
         hasHitOnce = true;
+        HitboxTracker.Instance.CheckForReward(gameObject, programData.rewardRequirementType, 
+        programData.rewardType, programData.amountToChangeComboBar);
+        
         OnHit?.Invoke(hurtbox, hitInfo);
         Debug.Log(gameObject.name + " is hitting " + hurtbox.name + " at " + Time.time);
         hurtbox.TakeHit(hitInfo);
