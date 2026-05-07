@@ -11,11 +11,7 @@ GameObject:
   - component: {fileID: 4032316322612978766}
   - component: {fileID: 8715872425920417230}
   - component: {fileID: 300015249756292785}
-  - component: {fileID: 3895101798107475685}
-  - component: {fileID: 2002489202364275933}
-  - component: {fileID: 5526543442466315078}
   - component: {fileID: 5722256575395598471}
-  - component: {fileID: 1770317936504277919}
   m_Layer: 0
   m_Name: 1_Impale
   m_TagString: Untagged
@@ -79,19 +75,11 @@ MonoBehaviour:
   hitboxTimings:
   - hitbox: {fileID: 300015249756292785}
     activationFrames: 06000000
-  - hitbox: {fileID: 3895101798107475685}
-    activationFrames: 06000000
-  - hitbox: {fileID: 2002489202364275933}
-    activationFrames: 07000000
-  - hitbox: {fileID: 5526543442466315078}
-    activationFrames: 07000000
   - hitbox: {fileID: 5722256575395598471}
-    activationFrames: 08000000
-  - hitbox: {fileID: 1770317936504277919}
-    activationFrames: 08000000
+    activationFrames: 06000000
   rewardRequirementType: 2
   rewardType: 1
-  amountToChangeComboBar: 2
+  amountToChangeComboBar: 3
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMovement: {fileID: 0}
@@ -112,88 +100,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 2.4, y: 0.9}
-  size: {x: 2, y: 1.2}
+  offset: {x: 4.6, y: 0.9}
+  size: {x: 6, y: 1.2}
   isActive: 0
   showDebugGizmo: 1
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}
-  damage: 7
+  damage: 3
   hitboxTags:
   - default
   hasHitOnce: 0
-  multiHit: 1
-  multiHitInterval: 0.1
-  maxHits: -1
---- !u!114 &3895101798107475685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5029349081135307006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: {x: -2.4, y: 0.9}
-  size: {x: 2, y: 1.2}
-  isActive: 0
-  showDebugGizmo: 1
-  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
-  damage: 7
-  hitboxTags:
-  - default
-  hasHitOnce: 0
-  multiHit: 1
-  multiHitInterval: 0.1
-  maxHits: -1
---- !u!114 &2002489202364275933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5029349081135307006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: {x: 4.5, y: 0.9}
-  size: {x: 2, y: 1.2}
-  isActive: 0
-  showDebugGizmo: 1
-  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
-  damage: 5
-  hitboxTags:
-  - default
-  hasHitOnce: 0
-  multiHit: 1
-  multiHitInterval: 0.1
-  maxHits: -1
---- !u!114 &5526543442466315078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5029349081135307006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: {x: -4.5, y: 0.9}
-  size: {x: 2, y: 1.2}
-  isActive: 0
-  showDebugGizmo: 1
-  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
-  damage: 5
-  hitboxTags:
-  - default
-  hasHitOnce: 0
-  multiHit: 1
+  multiHit: 0
   multiHitInterval: 0.1
   maxHits: -1
 --- !u!114 &5722256575395598471
@@ -208,8 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 6.6, y: 0.9}
-  size: {x: 2, y: 1.2}
+  offset: {x: -4.6, y: 0.9}
+  size: {x: 6, y: 1.2}
   isActive: 0
   showDebugGizmo: 1
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}
@@ -217,30 +133,6 @@ MonoBehaviour:
   hitboxTags:
   - default
   hasHitOnce: 0
-  multiHit: 1
-  multiHitInterval: 0.1
-  maxHits: -1
---- !u!114 &1770317936504277919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5029349081135307006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: {x: -6.6, y: 0.9}
-  size: {x: 2, y: 1.2}
-  isActive: 0
-  showDebugGizmo: 1
-  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
-  damage: 3
-  hitboxTags:
-  - default
-  hasHitOnce: 0
-  multiHit: 1
+  multiHit: 0
   multiHitInterval: 0.1
   maxHits: -1

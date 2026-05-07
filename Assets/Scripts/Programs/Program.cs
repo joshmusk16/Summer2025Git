@@ -37,16 +37,22 @@ public class Program : MonoBehaviour
     [HideInInspector] public ProgramUI programUI;
     [HideInInspector] public ProgramInputManager inputManager;
     [HideInInspector] public ComboBarLogic comboBar;
-    [HideInInspector] public HitboxTracker hitboxTracker;
     
     public virtual void FireProgram(QueueParameter queueParameter)
     {
         
     }
 
+    void Awake()
+    {
+        FindDependencies();
+    }
+    
     //In script for any program inheriting this class, run FindDependencies() in Start()
     protected virtual void FindDependencies()
     {
+        HitboxTracker.Instance.RegisterHitboxGroup(gameObject, hitboxTimings, hitboxTimings.Length);
+
         //Be aware that changing the AttackUIManager name in the editor will break GameObject.Find()
         if (programType == ProgramType.Attack)
         {
@@ -62,16 +68,10 @@ public class Program : MonoBehaviour
         playerTargeting = FindObjectOfType<PlayerTargeting>();
         inputManager = FindObjectOfType<ProgramInputManager>();
         comboBar = FindObjectOfType<ComboBarLogic>();
-        hitboxTracker = FindObjectOfType<HitboxTracker>();
 
         if (player != null)
         {
             playerAnimator = player.gameObject.GetComponent<CustomAnimator>();
-        }
-
-        if(hitboxTracker != null)
-        {
-            hitboxTracker.RegisterHitboxGroup(gameObject, hitboxTimings, hitboxTimings.Length);
         }
     }
 
@@ -101,6 +101,6 @@ public class Program : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        hitboxTracker.UnregisterHitboxGroup(gameObject);
+        HitboxTracker.Instance.UnregisterHitboxGroup(gameObject);
     }
 }

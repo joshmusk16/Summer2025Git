@@ -2355,7 +2355,6 @@ MonoBehaviour:
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
   comboBar: {fileID: 0}
-  hitboxTracker: {fileID: 0}
 --- !u!1001 &1155204018
 PrefabInstance:
   m_ObjectHideFlags: 0

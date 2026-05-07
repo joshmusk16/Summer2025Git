@@ -1,10 +1,5 @@
 public class ImpaleLogic : Program
 {
-    void Awake()
-    {
-        FindDependencies();
-    }
-
     public override void FireProgram(QueueParameter queueParameter)
     {
         Impale(queueParameter);
@@ -12,6 +7,7 @@ public class ImpaleLogic : Program
     
     void Impale(QueueParameter queueParameter)
     {
+        AssignHitboxDamages(comboBar.currentCombo + 2);
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Attack, false, true, hitboxTimings);
         ChangeTransform(queueParameter.facedDirection);
     }

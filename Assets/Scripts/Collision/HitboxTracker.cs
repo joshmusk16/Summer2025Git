@@ -24,15 +24,19 @@ public void RegisterHitboxGroup(GameObject program, HitboxTiming[] hitboxTimings
     }
 
     hitboxGroups[program] = new List<HitBox>(temp); 
+    Debug.Log("Registered Hitbox Group" + program);
 }
 
 public void UnregisterHitboxGroup(GameObject program)
 {
     hitboxGroups.Remove(program);
+    Debug.Log("Unregistered Hitbox Group" + program);
 }
 
 public void CheckForReward(GameObject program, int rewardRequirementType, int rewardType, int amount)
 {
+    if(!hitboxGroups.ContainsKey(program)) return;
+    
     bool shouldGiveReward = false;
 
     switch (rewardRequirementType)

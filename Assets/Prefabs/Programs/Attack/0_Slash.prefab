@@ -81,7 +81,6 @@ MonoBehaviour:
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
   comboBar: {fileID: 0}
-  hitboxTracker: {fileID: 0}
 --- !u!114 &2564874997129578755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,8 +117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 0, y: -0.8}
-  size: {x: 3, y: 1}
+  offset: {x: 0.75, y: -0.8}
+  size: {x: 1.5, y: 1}
   isActive: 0
   showDebugGizmo: 1
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}

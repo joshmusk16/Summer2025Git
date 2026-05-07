@@ -1,10 +1,5 @@
 public class SlashLogic : Program
 {
-    void Awake()
-    {
-        FindDependencies();
-    }
-
     public override void FireProgram(QueueParameter queueParameter)
     {
         Slash(queueParameter);

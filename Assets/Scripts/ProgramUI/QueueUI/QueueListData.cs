@@ -161,7 +161,7 @@ public void ContinueQueue(ProgramType completedType)
     //If nothing is left in queue, return to player idle animation state
     if(queueList.Count > 0)
     {
-        Debug.Log("Trying to start queue again...");
+        //Debug.Log("Trying to start queue again...");
         StartQueue(queueList[0].programType);  
     }
     else
