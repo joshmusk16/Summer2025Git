@@ -4262,9 +4262,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ad610e7cbb7ff4a811cd588ccc89ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputText: ON HIT REWARDS/NCOMBO
+  inputText: ON HIT DEAL/NREWARDS +1 COMBO/NTESTING THIRD/NLALPLOLILLLLL
   fontAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
   prefabCharacter: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
+  backgroundPrefab: {fileID: 746954336410844439, guid: 2b153120ea970b345bb67d0d8fa7e33f, type: 3}
+  isUsingBackground: 1
 --- !u!4 &1913718342
 Transform:
   m_ObjectHideFlags: 0
