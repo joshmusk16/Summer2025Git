@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -14,7 +15,7 @@ private List<GameObject> letters = new List<GameObject>();
 private const float LETTER_OFFSET_LENGTH = 2f;
 private const float SPACE_LENGTH = 1.25f;
 private const int SORTING_ORDER = 100;
-private const float TEXT_SCALE = 0.5f;
+private const float TEXT_SCALE = 0.75f;
 private const float NEW_LINE_OFFSET = 0.5f;
 private const float TEXT_PPU = 16f;
 
@@ -80,6 +81,7 @@ public void GenerateText(string input)
     letters.Clear();
     Vector3 offset = Vector3.zero;
     int numberOfNewLines = 0;
+    float lastLetterHalfWidth = 0;
     maxTextWidth = 0;
     maxTextHeight = 0;
 
@@ -87,7 +89,8 @@ public void GenerateText(string input)
     {
         if (input[i] == ' ')
         {
-            offset += new Vector3((SPACE_LENGTH + (LETTER_OFFSET_LENGTH / TEXT_PPU)) * TEXT_SCALE, 0, 0);
+            offset += new Vector3(SPACE_LENGTH * TEXT_SCALE, 0, 0);
+            lastLetterHalfWidth = 0;
             continue;
         }
         else if(input[i] == '/' && i != input.Length - 1)
@@ -99,10 +102,11 @@ public void GenerateText(string input)
 
                 if(maxTextWidth < offset.x)
                 {
-                    maxTextWidth = offset.x;       
+                    maxTextWidth = offset.x + (lastLetterHalfWidth - LETTER_OFFSET_LENGTH / TEXT_PPU) * TEXT_SCALE;      
                 }
 
                 offset = new Vector3(0, -(lineHeight + NEW_LINE_OFFSET) * numberOfNewLines) * TEXT_SCALE;
+                lastLetterHalfWidth = 0;
                 continue;
             }
         }
@@ -124,14 +128,15 @@ public void GenerateText(string input)
         }
 
         offset += new Vector3((letterWidth + (LETTER_OFFSET_LENGTH / TEXT_PPU)) * TEXT_SCALE, 0, 0);
+        lastLetterHalfWidth = fontWidths[char.ToUpper(input[i]).ToString()] / 2f;
     }
 
     if (offset.x > maxTextWidth)
     {
-        maxTextWidth = offset.x;   
+        maxTextWidth = offset.x + (lastLetterHalfWidth - LETTER_OFFSET_LENGTH / TEXT_PPU) * TEXT_SCALE;
     }
 
-    maxTextHeight = (numberOfNewLines + 1) * (lineHeight + NEW_LINE_OFFSET) * TEXT_SCALE;
+    maxTextHeight = ((numberOfNewLines + 1) * lineHeight + (numberOfNewLines * NEW_LINE_OFFSET)) * TEXT_SCALE;
 
     if (isUsingBackground)
     {
@@ -144,13 +149,16 @@ private void GenerateTextBackground()
     if(maxTextHeight == 0 || maxTextWidth == 0 
     || isUsingBackground == false) return;
     
-    GameObject background = Instantiate(backgroundPrefab);
+    GameObject background = Instantiate(backgroundPrefab, gameObject.transform);
     Canvas backgroundCanvas = background.GetComponent<Canvas>();
     RectTransform backgroundTransform = background.GetComponent<RectTransform>();
 
     backgroundCanvas.sortingOrder = SORTING_ORDER - 1;
     backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxTextWidth + BACKGROUND_BUFFER);
     backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxTextHeight + BACKGROUND_BUFFER);
+    backgroundTransform.localPosition = GetTightTopLeft(letters[0].GetComponent<SpriteRenderer>().sprite, letters[0].transform) + 
+    new Vector2(maxTextWidth, -maxTextHeight) / 2f;
+    Debug.Log(GetTightTopLeft(letters[0].GetComponent<SpriteRenderer>().sprite, letters[0].transform));
 
 }
 
@@ -221,6 +229,44 @@ private float GetTightHeight(Sprite sprite)
 
     float tightHeightPixels = maxY - minY + 1;
     return tightHeightPixels / sprite.pixelsPerUnit;
+}
+
+private Vector2 GetTightTopLeft(Sprite sprite, Transform spriteTransform)
+{
+    Texture2D tex = sprite.texture;
+    RectInt rect = new RectInt(
+        (int)sprite.textureRect.x,
+        (int)sprite.textureRect.y,
+        (int)sprite.textureRect.width,
+        (int)sprite.textureRect.height
+    );
+
+    int minX = rect.xMax;
+    int maxY = rect.yMin;
+
+    for (int x = rect.xMin; x < rect.xMax; x++)
+        for (int y = rect.yMin; y < rect.yMax; y++)
+            if (tex.GetPixel(x, y).a > 0.01f)
+            {
+                minX = Mathf.Min(minX, x);
+                maxY = Mathf.Max(maxY, y);
+            }
+
+    // Fallback if fully transparent
+    if (minX > rect.xMax - 1 || maxY < rect.yMin)
+    {
+        Debug.LogWarning($"GetTightTopLeft fallback triggered for: {sprite.name}");
+        Bounds b = sprite.bounds;
+        Vector3 worldPos = spriteTransform.TransformPoint(new Vector3(b.min.x, b.max.y, 0));
+        return new Vector2(worldPos.x, worldPos.y);
+    }
+
+    float localX = (minX - sprite.textureRect.x - sprite.pivot.x) / sprite.pixelsPerUnit;
+    float localY = (maxY - sprite.textureRect.y - sprite.pivot.y + 1) / sprite.pixelsPerUnit;
+
+    //Transform local sprite space to world space
+    Vector3 worldPoint = spriteTransform.TransformPoint(new Vector3(localX, localY, 0));
+    return new Vector2(worldPoint.x, worldPoint.y);
 }
 
 #endregion
