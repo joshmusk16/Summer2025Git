@@ -4262,10 +4262,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ad610e7cbb7ff4a811cd588ccc89ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textInput: TESTING TEXT/NINPUT FOR NEW/NSYSTEM
+  textInput: ONHIT DEAL COMBO/NADD +1 TO COMBO
   fontAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
   prefabCharacter: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
-  isUsingHeader: 0
+  isUsingHeader: 1
   headerInput: SLASH
   backgroundPrefab: {fileID: 746954336410844439, guid: 2b153120ea970b345bb67d0d8fa7e33f, type: 3}
   isUsingBackground: 1

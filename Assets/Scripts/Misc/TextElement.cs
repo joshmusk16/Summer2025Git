@@ -6,11 +6,10 @@ public class TextElement : MonoBehaviour
 {
 
 [Header("Text Attributes")]
+private GameObject textParent;
 public string textInput;
 public SpriteAtlas fontAtlas;
 public GameObject prefabCharacter;
-
-private GameObject textParent;
 
 private List<GameObject> letters = new List<GameObject>();
 private const float LETTER_OFFSET_LENGTH = 2f;
@@ -33,8 +32,9 @@ private const float HEADER_NEW_LINE_OFFSET = 8f;
 
 [Header("Background Attributes")]
 public GameObject backgroundPrefab;
+private GameObject textBackground;
 public bool isUsingBackground = true;
-private const float BACKGROUND_BUFFER = 0f;
+private const float BACKGROUND_BUFFER = 1.25f;
 private float maxTextHeight;
 private float maxTextWidth;
 
@@ -46,9 +46,7 @@ void Update()
 {
     if (Input.GetKeyDown(KeyCode.I))
     {
-        DestroyText();
-        GenerateHeader(headerInput);
-        GenerateText(textInput);
+        GenerateTextElement();
     } 
 }
 
@@ -89,6 +87,26 @@ void FindLineHeight()
     }
 }
 
+public void GenerateTextElement()
+{
+    GenerateText(textInput);
+
+    if (isUsingHeader)
+    {
+        GenerateHeader(headerInput);
+        headerParent.transform.position = Vector2.zero;
+        maxTextHeight += headerHeight;
+        
+        if(maxTextWidth < headerWidth)
+        {
+            maxTextWidth = headerWidth;
+        }
+    }
+
+    textParent.transform.position = new Vector2(0, -headerHeight);
+    GenerateTextBackground(maxTextWidth, maxTextHeight);
+}
+
 public void GenerateHeader(string headerInput)
 {
     headerLetters.Clear();
@@ -97,7 +115,9 @@ public void GenerateHeader(string headerInput)
     Vector3 offset = Vector2.zero;
     headerParent = Instantiate(prefabCharacter, gameObject.transform);
     headerParent.name = "Header";
-    float lastLetterHalfWidth = 0;
+
+    GameObject letter = null;
+    Sprite sprite = null;
 
     for (int i = 0; i < headerInput.Length; i++)
         {
@@ -108,8 +128,9 @@ public void GenerateHeader(string headerInput)
             }
 
         string spriteName = char.ToUpper(headerInput[i]).ToString();
-        Sprite sprite = fontAtlas.GetSprite(spriteName);
-        GameObject letter = Instantiate(prefabCharacter, gameObject.transform.position + offset, Quaternion.identity, gameObject.transform);
+        sprite = fontAtlas.GetSprite(spriteName);
+        
+        letter = Instantiate(prefabCharacter, gameObject.transform.position + offset, Quaternion.identity, gameObject.transform);
         letter.name = spriteName;
         letter.transform.localScale = Vector3.one * HEADER_SCALE;
         letter.GetComponent<SpriteRenderer>().sprite = sprite;
@@ -123,19 +144,16 @@ public void GenerateHeader(string headerInput)
         }
 
         offset += new Vector3((letterWidth + (HEADER_LETTER_OFFSET_LENGTH / TEXT_PPU)) * HEADER_SCALE, 0, 0);
-        lastLetterHalfWidth = fontWidths[char.ToUpper(headerInput[i]).ToString()] / 2f;
         }
 
     headerParent.transform.position = GetTightTopLeft(fontAtlas.GetSprite(headerLetters[0].name), headerLetters[0].transform);
-    foreach(GameObject letter in headerLetters)
+    foreach(GameObject character in headerLetters)
     {
-        letter.transform.SetParent(headerParent.transform);
+        character.transform.SetParent(headerParent.transform);
     }
 
-    offset += new Vector3(0, -(lineHeight * TEXT_SCALE) -(HEADER_NEW_LINE_OFFSET / TEXT_PPU * HEADER_SCALE));
-
-    headerWidth = offset.x + (lastLetterHalfWidth - HEADER_LETTER_OFFSET_LENGTH / TEXT_PPU) * HEADER_SCALE;
-    headerHeight = lineHeight * HEADER_SCALE;
+    headerWidth = Mathf.Abs(headerParent.transform.position.x - GetTightBottomRight(sprite, letter.transform).x);
+    headerHeight = (lineHeight + (HEADER_NEW_LINE_OFFSET / TEXT_PPU)) * HEADER_SCALE;
 }
 
 
@@ -153,17 +171,18 @@ public void GenerateText(string input)
     float xLocation = 0;
 
     bool lasterLetterWasNewLine = false;
-    float lastLetterHalfWidth = 0;
 
     textParent = Instantiate(prefabCharacter, gameObject.transform);
     textParent.name = "Text";
+
+    GameObject letter = null;
+    Sprite sprite = null;
 
     for (int i = 0; i < input.Length; i++)
     {
         if (input[i] == ' ')
         {
             offset += new Vector3(SPACE_LENGTH * TEXT_SCALE, 0, 0);
-            lastLetterHalfWidth = 0;
             continue;
         }
         else if(input[i] == '/' && i != input.Length - 1)
@@ -173,22 +192,21 @@ public void GenerateText(string input)
                 i++;
                 numberOfNewLines++;
 
-                if(maxTextWidth < offset.x)
+                if(maxTextWidth < offset.x && letter != null && sprite != null)
                 {
-                    maxTextWidth = offset.x + (lastLetterHalfWidth - LETTER_OFFSET_LENGTH / TEXT_PPU) * TEXT_SCALE;      
+                    maxTextWidth = Mathf.Abs(xLocation - GetTightBottomRight(sprite, letter.transform).x);      
                 }
 
                 offset = new Vector3(xLocation, (-(lineHeight * numberOfNewLines + NEW_LINE_OFFSET / TEXT_PPU * numberOfNewLines)) * TEXT_SCALE);                
-                lastLetterHalfWidth = 0;
                 lasterLetterWasNewLine = true;
                 continue;
             }
         }
 
         string spriteName = char.ToUpper(input[i]).ToString();
-        Sprite sprite = fontAtlas.GetSprite(spriteName);
+        sprite = fontAtlas.GetSprite(spriteName);
 
-        GameObject letter = Instantiate(prefabCharacter, gameObject.transform.position + offset, Quaternion.identity, gameObject.transform);
+        letter = Instantiate(prefabCharacter, gameObject.transform.position + offset, Quaternion.identity, gameObject.transform);
         letter.name = spriteName;
         letter.transform.localScale = Vector3.one * TEXT_SCALE;
         letter.GetComponent<SpriteRenderer>().sprite = sprite;
@@ -200,10 +218,13 @@ public void GenerateText(string input)
             xLocation = GetTightBottomLeft(sprite, letter.transform).x;
         }
 
-        if(i == 0 || lasterLetterWasNewLine == true)
+        if (i == 0 || lasterLetterWasNewLine == true)
         {
-            offset = new Vector3(GetTightBottomLeft(sprite, letter.transform).x - offset.x, offset.y);
-            letter.transform.position = offset;
+            float tightLeft = GetTightBottomLeft(sprite, letter.transform).x;
+            float correction = xLocation - tightLeft;
+
+            letter.transform.position += new Vector3(correction, 0, 0);
+            offset.x += correction;
         }
         
         float letterWidth = fontWidths[spriteName] / 2;
@@ -213,54 +234,39 @@ public void GenerateText(string input)
         }
 
         offset += new Vector3((letterWidth + (LETTER_OFFSET_LENGTH / TEXT_PPU)) * TEXT_SCALE, 0, 0);
-        lastLetterHalfWidth = fontWidths[char.ToUpper(input[i]).ToString()] / 2f;
         lasterLetterWasNewLine = false;
     }
 
     textParent.transform.position = GetTightTopLeft(fontAtlas.GetSprite(letters[0].name), letters[0].transform);
-    foreach(GameObject letter in letters)
+    foreach(GameObject character in letters)
     {
-        letter.transform.SetParent(textParent.transform);
+        character.transform.SetParent(textParent.transform);
     }
 
     if (offset.x > maxTextWidth)
     {
-        maxTextWidth = offset.x + (lastLetterHalfWidth - LETTER_OFFSET_LENGTH / TEXT_PPU) * TEXT_SCALE;
+        maxTextWidth = Mathf.Abs(xLocation - GetTightBottomRight(sprite, letter.transform).x); 
     }
 
     maxTextHeight = ((numberOfNewLines + 1) * lineHeight + (numberOfNewLines * NEW_LINE_OFFSET / TEXT_PPU)) * TEXT_SCALE;
-
-    if (isUsingBackground)
-    {
-        GenerateTextBackground();
-    }
 }
 
-private void GenerateTextBackground()
+private void GenerateTextBackground(float backgroundWidth, float backgroundHeight)
 {
-    if(maxTextHeight == 0 || maxTextWidth == 0 
+    if(backgroundWidth == 0 || backgroundHeight == 0 
     || isUsingBackground == false) return;
+
+    Destroy(textBackground);
     
-    GameObject background = Instantiate(backgroundPrefab, gameObject.transform);
-    Canvas backgroundCanvas = background.GetComponent<Canvas>();
-    RectTransform backgroundTransform = background.GetComponent<RectTransform>();
+    textBackground = Instantiate(backgroundPrefab, gameObject.transform);
+    Canvas backgroundCanvas = textBackground.GetComponent<Canvas>();
+    RectTransform backgroundTransform = textBackground.GetComponent<RectTransform>();
 
     backgroundCanvas.sortingOrder = SORTING_ORDER - 1;
-    backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, maxTextWidth + BACKGROUND_BUFFER);
-    backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, maxTextHeight + BACKGROUND_BUFFER);
-    backgroundTransform.localPosition = GetTightTopLeft(letters[0].GetComponent<SpriteRenderer>().sprite, letters[0].transform) + 
-    new Vector2(maxTextWidth, -maxTextHeight) / 2f;
-    Debug.Log(GetTightTopLeft(letters[0].GetComponent<SpriteRenderer>().sprite, letters[0].transform));
-
-}
-
-private void DestroyText()
-{
-    foreach(GameObject letter in letters)
-    {
-        Destroy(letter);    
-    }     
-    letters.Clear();
+    backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, backgroundWidth + BACKGROUND_BUFFER);
+    backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, backgroundHeight + BACKGROUND_BUFFER);
+    backgroundTransform.localPosition = gameObject.transform.position + 
+    new Vector3(backgroundWidth, -backgroundHeight) / 2f;
 }
 
 #region Sprite Sampling Helper Methods
@@ -421,7 +427,7 @@ private Vector2 GetTightBottomRight(Sprite sprite, Transform spriteTransform)
             }
 
     //Fallback if fully transparent
-    if (maxX < rect.xMin + 1 || minY > rect.yMax - 1)
+    if (maxX < rect.xMin - 1 || minY > rect.yMax - 1)
     {
         Debug.LogWarning($"GetTightBottomRight fallback triggered for: {sprite.name}");
         Bounds b = sprite.bounds;
@@ -429,7 +435,7 @@ private Vector2 GetTightBottomRight(Sprite sprite, Transform spriteTransform)
         return new Vector2(worldPos.x, worldPos.y);
     }
 
-    float localX = (maxX - sprite.textureRect.x - sprite.pivot.x) / sprite.pixelsPerUnit;
+    float localX = (maxX - sprite.textureRect.x - sprite.pivot.x + 1) / sprite.pixelsPerUnit;
     float localY = (minY - sprite.textureRect.y - sprite.pivot.y) / sprite.pixelsPerUnit;
 
     //Transform local sprite space to world space
