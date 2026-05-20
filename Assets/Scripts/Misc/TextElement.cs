@@ -170,7 +170,8 @@ public void GenerateText(string input)
 
     float xLocation = 0;
 
-    bool lasterLetterWasNewLine = false;
+    bool lastLetterWasNewLine = false;
+    bool lastLetterWasSpace = false;
 
     textParent = Instantiate(prefabCharacter, gameObject.transform);
     textParent.name = "Text";
@@ -183,6 +184,7 @@ public void GenerateText(string input)
         if (input[i] == ' ')
         {
             offset += new Vector3(SPACE_LENGTH * TEXT_SCALE, 0, 0);
+            lastLetterWasSpace = true;
             continue;
         }
         else if(input[i] == '/' && i != input.Length - 1)
@@ -198,7 +200,7 @@ public void GenerateText(string input)
                 }
 
                 offset = new Vector3(xLocation, (-(lineHeight * numberOfNewLines + NEW_LINE_OFFSET / TEXT_PPU * numberOfNewLines)) * TEXT_SCALE);                
-                lasterLetterWasNewLine = true;
+                lastLetterWasNewLine = true;
                 continue;
             }
         }
@@ -218,10 +220,19 @@ public void GenerateText(string input)
             xLocation = GetTightBottomLeft(sprite, letter.transform).x;
         }
 
-        if (i == 0 || lasterLetterWasNewLine == true)
+        if (i == 0 || lastLetterWasNewLine == true || lastLetterWasSpace == true)
         {
             float tightLeft = GetTightBottomLeft(sprite, letter.transform).x;
-            float correction = xLocation - tightLeft;
+            float correction = 0;
+
+            if(lastLetterWasNewLine == true || i == 0)
+                {
+                    correction = xLocation - tightLeft;   
+                }
+            else if(lastLetterWasSpace == true)
+                {
+                    correction = offset.x - tightLeft;  
+                }
 
             letter.transform.position += new Vector3(correction, 0, 0);
             offset.x += correction;
@@ -234,7 +245,8 @@ public void GenerateText(string input)
         }
 
         offset += new Vector3((letterWidth + (LETTER_OFFSET_LENGTH / TEXT_PPU)) * TEXT_SCALE, 0, 0);
-        lasterLetterWasNewLine = false;
+        lastLetterWasNewLine = false;
+        lastLetterWasSpace = false;
     }
 
     textParent.transform.position = GetTightTopLeft(fontAtlas.GetSprite(letters[0].name), letters[0].transform);
