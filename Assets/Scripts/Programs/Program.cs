@@ -30,6 +30,10 @@ public class Program : MonoBehaviour
     //Reward Requirement types : 1 = HasAnyHitboxHit, 2 = HasEveryHitboxHit
     //Types: Adding to combo = 1, Removing from combo = 2, multiply combo = 3, divide combo = 4.
 
+    [Header("Description Box Data")]
+    public string programName;
+    public string programDescription;
+
     [HideInInspector] public PlayerLogic player;
     [HideInInspector] public CustomAnimator playerAnimator;
     [HideInInspector] public PlayerMovement playerMovement;

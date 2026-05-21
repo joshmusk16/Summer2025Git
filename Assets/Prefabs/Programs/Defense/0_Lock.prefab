@@ -46,6 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   programType: 1
   uiSprite: {fileID: 21300000, guid: 2898974b8fd93dc42a2479d7f7b8af71, type: 3}
+  isMovementProgram: 0
+  targetingRange: 0
   animSprites:
   - {fileID: 1627330701, guid: 1124f6f129a1d4949bee46edb7161741, type: 3}
   - {fileID: -528368184, guid: 1124f6f129a1d4949bee46edb7161741, type: 3}
@@ -77,10 +79,15 @@ MonoBehaviour:
   - 0.075
   - 0.15
   hitboxTimings: []
+  rewardRequirementType: 0
+  rewardType: 0
+  amountToChangeComboBar: 0
+  programName: LOCK
+  programDescription: PROVIDES TEMPORARY/NINVULNERABILITY
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMovement: {fileID: 0}
   playerTargeting: {fileID: 0}
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
-  queueManager: {fileID: 0}
+  comboBar: {fileID: 0}

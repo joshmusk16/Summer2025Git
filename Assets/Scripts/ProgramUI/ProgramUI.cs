@@ -33,6 +33,7 @@ public class ProgramUI : MonoBehaviour
     public MouseTracker mouse;
     public ProgramListData programsListData;
     private ProgramInputManager programInputManager;
+    private DescriptionManager descriptionManager;
 
     //UI State Management
     private int heldProgramFirstIndex;
@@ -43,6 +44,7 @@ public class ProgramUI : MonoBehaviour
     void Start()
     {
         programInputManager = FindObjectOfType<ProgramInputManager>();
+        descriptionManager = FindObjectOfType<DescriptionManager>();
 
         SetupNewHand();
         InitializeMouseHoverStates();
@@ -731,6 +733,8 @@ public class ProgramUI : MonoBehaviour
         if (attackProgram == heldProgram) return;
 
         attackProgram.GetComponent<SpriteRenderer>().sortingOrder = LOWEST_SORTING_ORDER + uiPrograms.Count + 1;
+        descriptionManager.DisplayDescription(attackProgram, 
+        programsListData.drawnPrograms[uiPrograms.IndexOf(attackProgram)].GetComponent<Program>(), uiType);
 
         if (uiPrograms.IndexOf(attackProgram) == 0)
         {
@@ -748,6 +752,7 @@ public class ProgramUI : MonoBehaviour
 
         int index = uiPrograms.IndexOf(attackProgram);
         attackProgram.GetComponent<SpriteRenderer>().sortingOrder = LOWEST_SORTING_ORDER + uiPrograms.Count - index;
+        descriptionManager.DestroyTextElement();
 
         if (index == 0)
         {

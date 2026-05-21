@@ -34,9 +34,9 @@ private const float HEADER_NEW_LINE_OFFSET = 8f;
 public GameObject backgroundPrefab;
 private GameObject textBackground;
 public bool isUsingBackground = true;
-private const float BACKGROUND_BUFFER = 1.25f;
-private float maxTextHeight;
-private float maxTextWidth;
+public const float BACKGROUND_BUFFER = 1.25f;
+public float maxTextHeight;
+public float maxTextWidth;
 
 private Dictionary<string, float> fontWidths = new Dictionary<string, float>();
 private float lineHeight = 0;
@@ -89,12 +89,13 @@ void FindLineHeight()
 
 public void GenerateTextElement()
 {
+
     GenerateText(textInput);
 
     if (isUsingHeader)
     {
         GenerateHeader(headerInput);
-        headerParent.transform.position = Vector2.zero;
+        headerParent.transform.position = gameObject.transform.position;
         maxTextHeight += headerHeight;
         
         if(maxTextWidth < headerWidth)
@@ -103,14 +104,38 @@ public void GenerateTextElement()
         }
     }
 
-    textParent.transform.position = new Vector2(0, -headerHeight);
+    textParent.transform.position = gameObject.transform.position + new Vector3(0, -headerHeight);
     GenerateTextBackground(maxTextWidth, maxTextHeight);
+}
+
+public void DestroyTextElement()
+{
+    if(textParent != null)
+    {
+        maxTextHeight = 0;
+        maxTextWidth = 0; 
+        letters.Clear();
+        DestroyImmediate(textParent);      
+    }
+
+    if (isUsingHeader && headerParent != null)
+    {
+        headerHeight = 0;
+        headerWidth = 0;
+        headerLetters.Clear();
+        DestroyImmediate(headerParent);       
+    }
+
+    if (isUsingBackground)
+    {
+        DestroyImmediate(textBackground);   
+    }
 }
 
 public void GenerateHeader(string headerInput)
 {
     headerLetters.Clear();
-    Destroy(headerParent);
+    DestroyImmediate(headerParent);
 
     Vector3 offset = Vector2.zero;
     headerParent = Instantiate(prefabCharacter, gameObject.transform);
@@ -130,7 +155,7 @@ public void GenerateHeader(string headerInput)
         string spriteName = char.ToUpper(headerInput[i]).ToString();
         sprite = fontAtlas.GetSprite(spriteName);
         
-        letter = Instantiate(prefabCharacter, gameObject.transform.position + offset, Quaternion.identity, gameObject.transform);
+        letter = Instantiate(prefabCharacter, offset, Quaternion.identity, gameObject.transform);
         letter.name = spriteName;
         letter.transform.localScale = Vector3.one * HEADER_SCALE;
         letter.GetComponent<SpriteRenderer>().sprite = sprite;
@@ -160,7 +185,7 @@ public void GenerateHeader(string headerInput)
 public void GenerateText(string input)
 {
     letters.Clear();
-    Destroy(textParent);
+    DestroyImmediate(textParent);
 
     Vector3 offset = Vector3.zero;
     maxTextWidth = 0;
@@ -208,7 +233,7 @@ public void GenerateText(string input)
         string spriteName = char.ToUpper(input[i]).ToString();
         sprite = fontAtlas.GetSprite(spriteName);
 
-        letter = Instantiate(prefabCharacter, gameObject.transform.position + offset, Quaternion.identity, gameObject.transform);
+        letter = Instantiate(prefabCharacter, offset, Quaternion.identity, gameObject.transform);
         letter.name = spriteName;
         letter.transform.localScale = Vector3.one * TEXT_SCALE;
         letter.GetComponent<SpriteRenderer>().sprite = sprite;
@@ -268,7 +293,7 @@ private void GenerateTextBackground(float backgroundWidth, float backgroundHeigh
     if(backgroundWidth == 0 || backgroundHeight == 0 
     || isUsingBackground == false) return;
 
-    Destroy(textBackground);
+    DestroyImmediate(textBackground);
     
     textBackground = Instantiate(backgroundPrefab, gameObject.transform);
     Canvas backgroundCanvas = textBackground.GetComponent<Canvas>();
@@ -277,7 +302,7 @@ private void GenerateTextBackground(float backgroundWidth, float backgroundHeigh
     backgroundCanvas.sortingOrder = SORTING_ORDER - 1;
     backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, backgroundWidth + BACKGROUND_BUFFER);
     backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, backgroundHeight + BACKGROUND_BUFFER);
-    backgroundTransform.localPosition = gameObject.transform.position + 
+    backgroundTransform.localPosition = 
     new Vector3(backgroundWidth, -backgroundHeight) / 2f;
 }
 

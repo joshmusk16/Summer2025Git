@@ -2348,6 +2348,8 @@ MonoBehaviour:
   rewardRequirementType: 0
   rewardType: 0
   amountToChangeComboBar: 0
+  programName: 
+  programDescription: 
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMovement: {fileID: 0}
@@ -4161,6 +4163,57 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1831982929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1831982931}
+  - component: {fileID: 1831982930}
+  m_Layer: 0
+  m_Name: DescriptionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1831982930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831982929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82fa4d7febd600a409d09f13b3f5445c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textInput: PROVIDES TEMPORARY/NINVULNERABILITY
+  fontAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
+  prefabCharacter: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
+  isUsingHeader: 1
+  headerInput: LOCK
+  backgroundPrefab: {fileID: 746954336410844439, guid: 2b153120ea970b345bb67d0d8fa7e33f, type: 3}
+  isUsingBackground: 1
+--- !u!4 &1831982931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831982929}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1850997519
 GameObject:
   m_ObjectHideFlags: 0
@@ -4808,3 +4861,4 @@ SceneRoots:
   - {fileID: 754926359}
   - {fileID: 701312444}
   - {fileID: 1913718342}
+  - {fileID: 1831982931}

@@ -80,6 +80,8 @@ MonoBehaviour:
   rewardRequirementType: 2
   rewardType: 1
   amountToChangeComboBar: 3
+  programName: IMPALE
+  programDescription: ONHIT EACH SIDE/NADDS +3 COMBO
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMovement: {fileID: 0}
@@ -87,7 +89,6 @@ MonoBehaviour:
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
   comboBar: {fileID: 0}
-  hitboxTracker: {fileID: 0}
 --- !u!114 &300015249756292785
 MonoBehaviour:
   m_ObjectHideFlags: 0

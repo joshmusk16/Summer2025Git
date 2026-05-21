@@ -74,6 +74,8 @@ MonoBehaviour:
   rewardRequirementType: 1
   rewardType: 1
   amountToChangeComboBar: 1
+  programName: SLASH
+  programDescription: ONHIT DEAL COMBO/NADD +1 TO COMBO
   player: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMovement: {fileID: 0}
