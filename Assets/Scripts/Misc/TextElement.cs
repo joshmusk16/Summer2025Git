@@ -15,7 +15,7 @@ private List<GameObject> letters = new List<GameObject>();
 private const float LETTER_OFFSET_LENGTH = 2f;
 private const float SPACE_LENGTH = 1.25f;
 private const int SORTING_ORDER = 100;
-private const float TEXT_SCALE = 0.6f;
+private const float TEXT_SCALE = 0.5f;
 private const float NEW_LINE_OFFSET = 4f;
 private const float TEXT_PPU = 16f;
 
@@ -26,7 +26,7 @@ private float headerHeight;
 private List<GameObject> headerLetters = new List<GameObject>();
 public bool isUsingHeader;
 public string headerInput;
-private const float HEADER_SCALE = 0.8f;
+private const float HEADER_SCALE = 0.7f;
 private const float HEADER_LETTER_OFFSET_LENGTH = 2f;
 private const float HEADER_NEW_LINE_OFFSET = 8f;
 
@@ -40,15 +40,6 @@ public float maxTextWidth;
 
 private Dictionary<string, float> fontWidths = new Dictionary<string, float>();
 private float lineHeight = 0;
-
-//Debugging Update Method
-void Update()
-{
-    if (Input.GetKeyDown(KeyCode.I))
-    {
-        GenerateTextElement();
-    } 
-}
 
 void Awake()
 {

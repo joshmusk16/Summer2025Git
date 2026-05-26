@@ -11,7 +11,7 @@ public class DummyLogic : MonoBehaviour
     public CustomAnimator animator;
     public EnemyHealthBar health;
 
-    void Start()
+    void Awake()
     {
         if (hurtbox != null)
         {

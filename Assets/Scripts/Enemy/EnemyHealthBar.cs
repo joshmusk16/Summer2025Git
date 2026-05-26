@@ -5,10 +5,19 @@ public class EnemyHealthBar : MonoBehaviour
 
     public EnemyData data;
     public GameObject healthBar;
+    private ProgramInputManager inputManager;
+    public CountElement healthNumber;
 
-    void Awake()
+    void Start()
     {
         UpdateHealthBar();
+        inputManager = FindObjectOfType<ProgramInputManager>();
+
+        if(inputManager != null)
+        {
+            inputManager.OnSlowModeEnter += DisplayHealthNumber;
+            inputManager.OnSlowModeExit += RemoveHealthNumber;
+        }
     }
 
     public void DamageHealthBar(HitInfo hitInfo)
@@ -24,7 +33,6 @@ public class EnemyHealthBar : MonoBehaviour
 
         UpdateHealthBar();
     }
-
 
     public void HealHealthBar(int healing)
     {
@@ -44,6 +52,17 @@ public class EnemyHealthBar : MonoBehaviour
     {
         float temp = (float) data.currentHealth / data.totalHealth;
         healthBar.transform.localScale = new Vector2(temp, healthBar.transform.localScale.y);
+        healthNumber.UpdateNumber(data.currentHealth, data.totalHealth);
+    }
+
+    public void DisplayHealthNumber()
+    {
+        
+    }
+
+    public void RemoveHealthNumber()
+    {
+        
     }
 
 }

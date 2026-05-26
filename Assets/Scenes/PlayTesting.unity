@@ -2614,6 +2614,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1233447213}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1233420928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1233420930}
+  - component: {fileID: 1233420929}
+  m_Layer: 0
+  m_Name: CountDebug
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1233420929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233420928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73c8d722318a80419007fed03c51fde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberAtlas: {fileID: 100100200, guid: 151f9695a7dda8f45bb48249b249d485, type: 3}
+  prefabCharacter: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
+--- !u!4 &1233420930
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233420928}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1233447210
 GameObject:
   m_ObjectHideFlags: 0
@@ -4199,6 +4245,8 @@ MonoBehaviour:
   headerInput: LOCK
   backgroundPrefab: {fileID: 746954336410844439, guid: 2b153120ea970b345bb67d0d8fa7e33f, type: 3}
   isUsingBackground: 1
+  maxTextHeight: 0
+  maxTextWidth: 0
 --- !u!4 &1831982931
 Transform:
   m_ObjectHideFlags: 0
@@ -4286,57 +4334,6 @@ MonoBehaviour:
   timerSpeedMultiplier: 4
   playerTimerIsRunning: 0
   timerUpdateInterval: 0.25
---- !u!1 &1913718340
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1913718342}
-  - component: {fileID: 1913718341}
-  m_Layer: 5
-  m_Name: TextDebugging
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1913718341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913718340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30ad610e7cbb7ff4a811cd588ccc89ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textInput: ONHIT DEAL COMBO/NADD +1 TO COMBO
-  fontAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
-  prefabCharacter: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
-  isUsingHeader: 1
-  headerInput: SLASH
-  backgroundPrefab: {fileID: 746954336410844439, guid: 2b153120ea970b345bb67d0d8fa7e33f, type: 3}
-  isUsingBackground: 1
---- !u!4 &1913718342
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913718340}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1923254195
 GameObject:
   m_ObjectHideFlags: 0
@@ -4860,5 +4857,5 @@ SceneRoots:
   - {fileID: 37177296}
   - {fileID: 754926359}
   - {fileID: 701312444}
-  - {fileID: 1913718342}
   - {fileID: 1831982931}
+  - {fileID: 1233420930}

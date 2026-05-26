@@ -65,6 +65,7 @@ public class ProgramUI : MonoBehaviour
             {
                 heldProgram = ClosestUIToMouse(uiPrograms);
                 heldProgram.GetComponent<SpriteRenderer>().sortingOrder += uiPrograms.Count;
+                descriptionManager.DestroyTextElement();
 
                 if (uiPrograms.IndexOf(heldProgram) == 0)
                 {
@@ -703,7 +704,10 @@ public class ProgramUI : MonoBehaviour
     void UpdateMouseHoverStates()
     {
         GameObject closest = ClosestUIToMouse(uiPrograms);
-        
+
+        List<GameObject> toEnter = new();
+        List<GameObject> toExit = new();
+
         for (int i = GetInitialIndexNew(); i < GetProgramUICount(); i++)
         {
             if (uiPrograms[i] != null)
@@ -714,18 +718,19 @@ public class ProgramUI : MonoBehaviour
 
                 mouseHoverStates[uiPrograms[i]] = isClosestAndHovered;
 
-                // Mouse entered and is closest
                 if (isClosestAndHovered && !previouslyClosestAndHovered)
-                {
-                    OnMouseEntering(uiPrograms[i]);
-                }
-                // Mouse exited or is no longer closest
+                    toEnter.Add(uiPrograms[i]);
                 else if (!isClosestAndHovered && previouslyClosestAndHovered)
-                {
-                    OnMouseExiting(uiPrograms[i]);
-                }
+                    toExit.Add(uiPrograms[i]);
             }
         }
+
+        // Always process exits first, then enters
+        foreach (GameObject program in toExit)
+            OnMouseExiting(program);
+
+        foreach (GameObject program in toEnter)
+            OnMouseEntering(program);
     }
 
     void OnMouseEntering(GameObject attackProgram)
@@ -734,7 +739,7 @@ public class ProgramUI : MonoBehaviour
 
         attackProgram.GetComponent<SpriteRenderer>().sortingOrder = LOWEST_SORTING_ORDER + uiPrograms.Count + 1;
         descriptionManager.DisplayDescription(attackProgram, 
-        programsListData.drawnPrograms[uiPrograms.IndexOf(attackProgram)].GetComponent<Program>(), uiType);
+        programsListData.drawnPrograms[uiPrograms.IndexOf(attackProgram)].GetComponent<Program>(), uiType);   
 
         if (uiPrograms.IndexOf(attackProgram) == 0)
         {
