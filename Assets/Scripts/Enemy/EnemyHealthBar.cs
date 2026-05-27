@@ -8,6 +8,8 @@ public class EnemyHealthBar : MonoBehaviour
     private ProgramInputManager inputManager;
     public CountElement healthNumber;
 
+    private const float VERTICAL_OFFSET = 10f;
+
     void Start()
     {
         UpdateHealthBar();
@@ -52,7 +54,7 @@ public class EnemyHealthBar : MonoBehaviour
     {
         float temp = (float) data.currentHealth / data.totalHealth;
         healthBar.transform.localScale = new Vector2(temp, healthBar.transform.localScale.y);
-        healthNumber.UpdateNumber(data.currentHealth, data.totalHealth);
+        healthNumber.UpdateNumber(data.currentHealth, data.totalHealth, new Vector2(0, VERTICAL_OFFSET));
     }
 
     public void DisplayHealthNumber()
