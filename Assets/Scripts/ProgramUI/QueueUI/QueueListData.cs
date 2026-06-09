@@ -155,6 +155,7 @@ public void ContinueQueue(ProgramType completedType)
     else if(completedType == ProgramType.Dash)
     {
         dashProgramManager.GetComponent<DashChargeFiring>().OnDashCompleted(completedType);
+        playerLogic.OnPlayerPositionChange();
     }
 
     //Third, run the next in queue, if there is something left in the queue

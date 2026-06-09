@@ -14,6 +14,7 @@ public class PlayerLogic : MonoBehaviour
     public float[] idleFrames;
 
     public event Action<int> MouseLeftOrRightChanged;
+    public event Action<Vector2> PlayerChangedPosition;
     private int currentMouseLeftOrRight = 1;
 
     //start method for debugging, ideally the idle animation is started and stopped manually upon other animations ending
@@ -70,6 +71,11 @@ public class PlayerLogic : MonoBehaviour
             MouseLeftOrRightChanged?.Invoke(1);
             currentMouseLeftOrRight = 1;
         }
+    }
+
+    public void OnPlayerPositionChange()
+    {
+        PlayerChangedPosition?.Invoke((Vector2)gameObject.transform.position);
     }
 
     public void ChangeTransform(int direction)

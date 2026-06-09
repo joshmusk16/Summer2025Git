@@ -237,6 +237,43 @@ public class TileGrid : MonoBehaviour
         return;
     }
 
+    public GameObject FindNearestTileToGameObject(GameObject obj)
+    {
+        if (tiles.Count != 0)
+        {
+            Vector2 correction = new(tileWidth / 2f, -tileHeight / 2f);
+            Vector2 temp = (Vector2)obj.transform.position - (Vector2)tileGrid[0, 0].transform.position + correction;
+            temp = new Vector2(Mathf.FloorToInt(temp.x / tileWidth), Mathf.FloorToInt(-temp.y / tileHeight));
+
+            if (temp.x < gridWidth && temp.y < gridHeight && temp.x >= 0 && temp.y >= 0)
+            {
+                nearestTileX = (int)temp.x;
+                nearestTileY = (int)temp.y;
+                nearestTile = tileGrid[(int)temp.x, (int)temp.y];
+                nearestTileScript = tileGrid[(int)temp.x, (int)temp.y].GetComponent<TilePrefab>();
+                return nearestTile;
+            }
+        }
+
+        return null;
+    }
+
+    public int GetTileDistanceBetweenObjects(GameObject objA, GameObject objB)
+    {
+        if (tiles.Count == 0) return 0;
+
+        Vector2 correction = new(tileWidth / 2f, -tileHeight / 2f);
+        Vector2 origin = (Vector2)tileGrid[0, 0].transform.position;
+
+        Vector2 tempA = (Vector2)objA.transform.position - origin + correction;
+        tempA = new Vector2(Mathf.FloorToInt(tempA.x / tileWidth), Mathf.FloorToInt(-tempA.y / tileHeight));
+
+        Vector2 tempB = (Vector2)objB.transform.position - origin + correction;
+        tempB = new Vector2(Mathf.FloorToInt(tempB.x / tileWidth), Mathf.FloorToInt(-tempB.y / tileHeight));
+
+        return Mathf.Max(Mathf.Abs((int)tempB.x - (int)tempA.x), Mathf.Abs((int)tempB.y - (int)tempA.y));
+    }
+
     public void ClearGrid()
     {
         foreach (GameObject tile in tiles)
