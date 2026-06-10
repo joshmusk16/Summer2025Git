@@ -1,12 +1,18 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 [Serializable]
-public struct AnimationInfo
+public struct BehaviorInfo
 {
     public Sprite[] animSprites;
     public float[] animFrames;
     public HitboxTiming[] hitboxTimings;
+
+    public bool isRangeBasedBehavior;
+    public int range; //0 if not range dependent
+
+    public int[] weights; //size should be equal to range, each member should be between 1-10, 10 most likely to occur, 1 least likely
 }
 
 public class EnemyAI : MonoBehaviour
@@ -23,8 +29,9 @@ private PlayerLogic playerLogic;
 public int tileTargetingRange;
 
 [Header("Animation Data")]
-public AnimationInfo idleAnimation;
-public AnimationInfo attackAnimation;
+public BehaviorInfo idleAnimation;
+
+public List<BehaviorInfo> behaviors = new();
 
 void Awake()
 {
@@ -34,7 +41,7 @@ void Awake()
 
     if(playerLogic != null)
     {
-        playerLogic.PlayerChangedPosition += PlayerInRangeBehavior;
+        playerLogic.PlayerChangedPosition += CheckRangeBasedBehaviors;
     }
 }
 
@@ -60,9 +67,47 @@ private bool CheckForTargetInRange()
     }
 }
 
-private void PlayerInRangeBehavior(Vector2 vector)
+private void CheckRangeBasedBehaviors()
 {
-    //Need to go back to playerLogic and create a new variable for lastTilePosition, if lastTilePositon == newOne, dont run the event
+    
+}
+
+private BehaviorInfo PickWeightedRangeBasedBehavior(int tileDistanceToPlayer)
+{
+    //First, fill the array with the proper weight values
+    List<int> weights = new List<int>();
+    List<BehaviorInfo> weightedBehaviors = new List<BehaviorInfo>();
+
+    foreach (BehaviorInfo behavior in behaviors)
+    {
+        if (behavior.isRangeBasedBehavior && tileDistanceToPlayer <= behavior.range)
+        {
+            weights.Add(behavior.weights[tileDistanceToPlayer]);
+            weightedBehaviors.Add(behavior);
+        }
+    }
+
+    //Second, run the weighted roll and see which behavior wins
+    int total = 0;
+    foreach (int w in weights)
+        total += w;
+
+    int roll = UnityEngine.Random.Range(1, total + 1);
+
+    int cumulative = 0;
+    for (int i = 0; i < weights.Count; i++)
+    {
+        cumulative += weights[i];
+        if (roll <= cumulative)
+            return weightedBehaviors[i];
+    }
+
+    return weightedBehaviors[0];
+}
+
+private void OnDestroy()
+{
+    playerLogic.PlayerChangedPosition -= CheckRangeBasedBehaviors;    
 }
 
 }

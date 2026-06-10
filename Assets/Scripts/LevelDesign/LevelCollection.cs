@@ -9,6 +9,7 @@ public class LevelCollection : MonoBehaviour
     [Header("References")]
     private TileGrid tileGrid;
     private GameObject player;
+    private PlayerLogic playerLogic;
 
     [Header("Spawn Dummies")]
     [SerializeField] private GameObject dummy;
@@ -17,7 +18,13 @@ public class LevelCollection : MonoBehaviour
     void Awake()
     {
         tileGrid = FindObjectOfType<TileGrid>();
-        player = FindObjectOfType<PlayerLogic>().gameObject;
+        playerLogic = FindObjectOfType<PlayerLogic>();
+        
+        if(playerLogic != null)
+        {
+            player = playerLogic.gameObject;            
+        }
+
         LoadRandomLevel();
         MovePlayerToRandomTile();
         SpawnDummies(amountOfDummies);
@@ -86,6 +93,7 @@ public class LevelCollection : MonoBehaviour
         }
 
         GameObject randomTile = validTiles[Random.Range(0, validTiles.Count)];
+        playerLogic.RecordPlayerTilePosition();
         Vector3 spawnPosition = randomTile.transform.position;
         player.transform.position = spawnPosition;
     }

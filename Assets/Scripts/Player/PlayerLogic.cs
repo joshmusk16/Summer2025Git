@@ -13,17 +13,23 @@ public class PlayerLogic : MonoBehaviour
     public Sprite[] idleSprites;
     public float[] idleFrames;
 
+    [Header("Player Tile Info")]
+    private TileGrid tileGrid;
+    private GameObject currentTile = null;
+    private GameObject previousTile = null;
+
     public event Action<int> MouseLeftOrRightChanged;
-    public event Action<Vector2> PlayerChangedPosition;
+    public event Action PlayerChangedPosition;
     private int currentMouseLeftOrRight = 1;
 
     //start method for debugging, ideally the idle animation is started and stopped manually upon other animations ending
 
-    void Start()
+    void Awake()
     {
         playerHurtBox = gameObject.GetComponent<HurtBox>();
         playerAnimator = gameObject.GetComponent<CustomAnimator>();
         playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
+        tileGrid = FindObjectOfType<TileGrid>();
         
         if (playerHurtBox != null)
         {
@@ -31,6 +37,9 @@ public class PlayerLogic : MonoBehaviour
         }
 
         StartIdleAnimation(ProgramType.Other);
+
+        //To initialize previousTile and currentTile (might not work if TileGrid isnt )
+        RecordPlayerTilePosition();
     }
 
     #region Player HurtBox Methods
@@ -73,9 +82,23 @@ public class PlayerLogic : MonoBehaviour
         }
     }
 
-    public void OnPlayerPositionChange()
+    public void RecordPlayerTilePosition()
     {
-        PlayerChangedPosition?.Invoke((Vector2)gameObject.transform.position);
+        GameObject nearestTile = tileGrid.FindNearestTileToGameObject(gameObject);
+
+        if(previousTile == null)
+        {
+            previousTile = nearestTile;
+            currentTile = previousTile;
+            return;
+        }
+        
+        if(nearestTile != currentTile)
+        {
+            previousTile = currentTile;
+            currentTile = nearestTile;
+            PlayerChangedPosition?.Invoke();
+        }
     }
 
     public void ChangeTransform(int direction)
