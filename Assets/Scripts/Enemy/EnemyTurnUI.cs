@@ -25,22 +25,51 @@ private List<GameObject> turnUIObjects = new List<GameObject>();
 
 private const float UI_PPU = 16f;
 private const int SORTING_ORDER = 100;
+private const float LERP_SPEED = 25f;
+
+private Vector2 spriteOffsetVector;
+private float centerOnXOffset;
 
 void Awake()
 {
     if(turnUISprite != null) turnUIWidth = GetTightWidth(turnUISprite);
     Debug.Log("Sprite Width is" + turnUIWidth);
+
+    spriteOffsetVector = GetTightBottomLeftOffset(turnUISprite);
+
+    InitializeTurnUIOnStart(debugAmount);
 }
 
 void Update()
 {
     if (Input.GetKeyDown(KeyCode.Y))
     {
-        InstantiateTurnUIObjects(debugAmount);
-        GenerateTurnUIPositions(debugAmount);
-        AssignTurnUIPositions();
+        ProgressTurnUI(Random.Range(1, 6));
+    }
+
+    if (Input.GetKeyDown(KeyCode.U))
+    {
+        RemoveTurnUI(1);
     }
 }
+
+private void InitializeTurnUIOnStart(int amount)
+{
+    InstantiateTurnUIObjects(amount);
+    GenerateTurnUIPositions(amount);
+    AssignTurnUIPositions();
+}
+
+public void ProgressTurnUI(int amount)
+{
+    //if(turnUIObjects.Count == 0) return;
+
+    InstantiateTurnUIObjects(amount);
+    GenerateTurnUIPositions(amount);
+    LerpTurnUIToPositions();
+}
+
+
 
 public void InstantiateTurnUIObjects(int numberOfTurns)
 {
@@ -68,10 +97,43 @@ public void AssignTurnUIPositions()
 {
     if(turnUIObjects.Count != turnUIPositions.Count) return;
 
+    float scale = turnUISettings[turnUIObjects.Count - 1].uiScale;
+
     for(int i = 0; i < turnUIObjects.Count; i++)
     {
         turnUIObjects[i].transform.position = turnUIPositions[i];
+        turnUIObjects[i].transform.localScale = new Vector2(scale, scale);
     }
+}
+
+public void LerpTurnUIToPositions()
+{
+    if(turnUIObjects.Count != turnUIPositions.Count) return;
+
+    float scale = turnUISettings[turnUIObjects.Count - 1].uiScale;
+
+    for(int i = 0; i < turnUIObjects.Count; i++)
+    {
+        turnUIObjects[i].GetComponent<LerpUIHandler>().LocationLerp(turnUIPositions[i], LERP_SPEED);
+        turnUIObjects[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(scale, scale), LERP_SPEED);
+    }
+}
+
+public void RemoveTurnUI(int amount)
+{
+    int removeCount = Mathf.Min(amount, turnUIObjects.Count - 1);
+
+    for(int i = 0; i < removeCount; i++)
+    {
+        GameObject objToDestroy = turnUIObjects[0];
+        turnUIObjects.RemoveAt(0);
+        Destroy(objToDestroy);
+    }
+
+    int newAmount = turnUIObjects.Count;
+
+    GenerateTurnUIPositions(newAmount);
+    LerpTurnUIToPositions();
 }
 
 public void GenerateTurnUIPositions(int numberOfTurns)
@@ -81,11 +143,11 @@ public void GenerateTurnUIPositions(int numberOfTurns)
 
     turnUIPositions.Clear();
 
-    Vector3 offset = Vector2.zero;
     TurnUISettings settings = turnUISettings[numberOfTurns - 1];
     float scale = settings.uiScale;
-    float horiztonalOffset = settings.uiHorizontalOffset;
+    float horiztonalOffset = settings.uiHorizontalOffset / UI_PPU;
     int firstLineTurnUIAmount;
+    Vector3 offset = -(spriteOffsetVector * scale);
 
     if(turnUISettings[numberOfTurns - 1].isTwoLines)
     {
@@ -96,6 +158,8 @@ public void GenerateTurnUIPositions(int numberOfTurns)
         firstLineTurnUIAmount = numberOfTurns;
     }
 
+    centerOnXOffset = ((firstLineTurnUIAmount * turnUIWidth) + (horiztonalOffset * (firstLineTurnUIAmount - 1))) / 2f * scale;
+
     int index = 0;
 
     for (int i = 0; i < numberOfTurns; i++)
@@ -103,14 +167,20 @@ public void GenerateTurnUIPositions(int numberOfTurns)
 
         if(i == firstLineTurnUIAmount)
         {
-            offset = SecondLineStartLocation(numberOfTurns, settings);
+            offset = SecondLineStartLocation(numberOfTurns, settings) - (spriteOffsetVector * scale);
             index = 0;
         }
 
         turnUIPositions.Add(offset);
-        offset += new Vector3(turnUIWidth + (horiztonalOffset / UI_PPU), 0) * scale;
+        offset += new Vector3(turnUIWidth + horiztonalOffset, 0) * scale;
         index++;
     }
+
+    //Final offset to center everyPosition on the X axis
+    for(int i = 0; i < turnUIPositions.Count; i++)
+        {
+            turnUIPositions[i] -= new Vector3(centerOnXOffset, 0 ,0);
+        }
 }
 
 private Vector2 SecondLineStartLocation(int numberOfTurns, TurnUISettings turnUI)
@@ -122,10 +192,12 @@ private Vector2 SecondLineStartLocation(int numberOfTurns, TurnUISettings turnUI
     float scale = turnUI.uiScale;
 
     float verticalOffset = (turnUIWidth + (turnUI.uiVerticalOffset / UI_PPU)) * scale; 
-    float horiztonalOffset = turnUI.uiHorizontalOffset;
+    float horiztonalOffset = turnUI.uiHorizontalOffset / UI_PPU;
 
-    float xLocation = (firstLineTurnUIAmount * turnUIWidth + (horiztonalOffset * (firstLineTurnUIAmount - 1))) / 2f 
-    - (secondLineTurnUIAmount * turnUIWidth + (horiztonalOffset * (secondLineTurnUIAmount - 1))) / 2f;
+
+    float xLocation = centerOnXOffset
+    - ((secondLineTurnUIAmount * turnUIWidth + (horiztonalOffset * (secondLineTurnUIAmount - 1))) / 2f * scale);
+
 
     return new Vector2(xLocation, -verticalOffset);
 }

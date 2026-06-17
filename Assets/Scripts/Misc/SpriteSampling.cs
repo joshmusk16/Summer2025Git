@@ -137,6 +137,43 @@ public Vector2 GetTightBottomLeft(Sprite sprite, Transform spriteTransform)
     return new Vector2(worldPoint.x, worldPoint.y);
 }
 
+public Vector2 GetTightBottomLeftOffset(Sprite sprite)
+{
+    Texture2D tex = sprite.texture;
+    RectInt rect = new RectInt(
+        (int)sprite.textureRect.x,
+        (int)sprite.textureRect.y,
+        (int)sprite.textureRect.width,
+        (int)sprite.textureRect.height
+    );
+
+    int minX = rect.xMax;
+    int minY = rect.yMax;
+
+    for (int x = rect.xMin; x < rect.xMax; x++)
+        for (int y = rect.yMin; y < rect.yMax; y++)
+            if (tex.GetPixel(x, y).a > 0.01f)
+            {
+                minX = Mathf.Min(minX, x);
+                minY = Mathf.Min(minY, y);
+            }
+
+    // Fallback if fully transparent
+    if (minX > rect.xMax - 1 || minY > rect.yMax - 1)
+    {
+        Debug.LogWarning($"GetTightBottomLeftOffset fallback triggered for: {sprite.name}");
+        return Vector2.zero;
+    }
+
+    float tightLocalX = (minX - sprite.textureRect.x - sprite.pivot.x) / sprite.pixelsPerUnit;
+    float tightLocalY = (minY - sprite.textureRect.y - sprite.pivot.y) / sprite.pixelsPerUnit;
+
+    float boundsLocalX = sprite.bounds.min.x;
+    float boundsLocalY = sprite.bounds.min.y;
+
+    return new Vector2(tightLocalX - boundsLocalX, tightLocalY - boundsLocalY);
+}
+
 public Vector2 GetTightBottomRight(Sprite sprite, Transform spriteTransform)
 {
     Texture2D tex = sprite.texture;
