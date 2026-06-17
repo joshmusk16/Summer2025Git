@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public class CountElement : MonoBehaviour
+public class CountElement : SpriteSampling
 {
 
 [Header("Input Attributes")]
@@ -161,116 +161,5 @@ public void SetCountElementParent(Vector2 offset)
 
     countElementParent.transform.position = gameObject.transform.position + ((Vector3)offset * TEXT_SCALE / TEXT_PPU);
 }
-
-#region Sprite Sampling Helper Methods
-
-private float GetTightWidth(Sprite sprite)
-{
-    Texture2D tex = sprite.texture;
-    RectInt rect = new RectInt(
-        (int)sprite.textureRect.x, 
-        (int)sprite.textureRect.y,
-        (int)sprite.textureRect.width, 
-        (int)sprite.textureRect.height
-    );
-
-    int minX = rect.xMax;
-    int maxX = rect.xMin;
-
-    for (int x = rect.xMin; x < rect.xMax; x++)
-        for (int y = rect.yMin; y < rect.yMax; y++)
-            if (tex.GetPixel(x, y).a > 0.01f)
-            {
-                minX = Mathf.Min(minX, x);
-                maxX = Mathf.Max(maxX, x);
-            }
-
-    if (maxX < minX)    
-    {
-        Debug.LogWarning($"GetTightWidth fallback triggered for: {sprite.name}, bounds.size.x: {sprite.bounds.size.x}");
-        return sprite.bounds.size.x;
-    }
-
-    float tightWidthPixels = maxX - minX + 1;
-    return tightWidthPixels / sprite.pixelsPerUnit;
-}
-
-private Vector2 GetTightBottomLeft(Sprite sprite, Transform spriteTransform)
-{
-    Texture2D tex = sprite.texture;
-    RectInt rect = new RectInt(
-        (int)sprite.textureRect.x,
-        (int)sprite.textureRect.y,
-        (int)sprite.textureRect.width,
-        (int)sprite.textureRect.height
-    );
-
-    int minX = rect.xMax;
-    int minY = rect.yMax;
-
-    for (int x = rect.xMin; x < rect.xMax; x++)
-        for (int y = rect.yMin; y < rect.yMax; y++)
-            if (tex.GetPixel(x, y).a > 0.01f)
-            {
-                minX = Mathf.Min(minX, x);
-                minY = Mathf.Min(minY, y);
-            }
-
-    //Fallback if fully transparent
-    if (minX > rect.xMax - 1 || minY > rect.yMax - 1)
-    {
-        Debug.LogWarning($"GetTightBottomLeft fallback triggered for: {sprite.name}");
-        Bounds b = sprite.bounds;
-        Vector3 worldPos = spriteTransform.TransformPoint(new Vector3(b.min.x, b.min.y, 0));
-        return new Vector2(worldPos.x, worldPos.y);
-    }
-
-    float localX = (minX - sprite.textureRect.x - sprite.pivot.x) / sprite.pixelsPerUnit;
-    float localY = (minY - sprite.textureRect.y - sprite.pivot.y) / sprite.pixelsPerUnit;
-
-    //Transform local sprite space to world space
-    Vector3 worldPoint = spriteTransform.TransformPoint(new Vector3(localX, localY, 0));
-    return new Vector2(worldPoint.x, worldPoint.y);
-}
-
-private Vector2 GetTightBottomRight(Sprite sprite, Transform spriteTransform)
-{
-    Texture2D tex = sprite.texture;
-    RectInt rect = new RectInt(
-        (int)sprite.textureRect.x,
-        (int)sprite.textureRect.y,
-        (int)sprite.textureRect.width,
-        (int)sprite.textureRect.height
-    );
-
-    int maxX = rect.xMin;
-    int minY = rect.yMax;
-
-    for (int x = rect.xMin; x < rect.xMax; x++)
-        for (int y = rect.yMin; y < rect.yMax; y++)
-            if (tex.GetPixel(x, y).a > 0.01f)
-            {
-                maxX = Mathf.Max(maxX, x);
-                minY = Mathf.Min(minY, y);
-            }
-
-    //Fallback if fully transparent
-    if (maxX < rect.xMin - 1 || minY > rect.yMax - 1)
-    {
-        Debug.LogWarning($"GetTightBottomRight fallback triggered for: {sprite.name}");
-        Bounds b = sprite.bounds;
-        Vector3 worldPos = spriteTransform.TransformPoint(new Vector3(b.max.x, b.min.y, 0));
-        return new Vector2(worldPos.x, worldPos.y);
-    }
-
-    float localX = (maxX - sprite.textureRect.x - sprite.pivot.x + 1) / sprite.pixelsPerUnit;
-    float localY = (minY - sprite.textureRect.y - sprite.pivot.y) / sprite.pixelsPerUnit;
-
-    //Transform local sprite space to world space
-    Vector3 worldPoint = spriteTransform.TransformPoint(new Vector3(localX, localY, 0));
-    return new Vector2(worldPoint.x, worldPoint.y);
-}
-
-#endregion
 
 }
