@@ -5,14 +5,17 @@ public class EnemyHealthBar : MonoBehaviour
 
     public EnemyData data;
     public GameObject healthBar;
+    private SpriteRenderer healthBarSprite;
     private ProgramInputManager inputManager;
     public CountElement healthNumber;
 
+    private Color defaultColor = new Color(1,0,0,1);
+    private Color instantKillColor = new Color(1,1,1,1); //health bar changes to this color when enemy can be on shot
+
     private const float VERTICAL_OFFSET = 10f;
 
-    void Start()
+    void Awake()
     {
-        UpdateHealthBar();
         inputManager = FindObjectOfType<ProgramInputManager>();
 
         if(inputManager != null)
@@ -20,6 +23,15 @@ public class EnemyHealthBar : MonoBehaviour
             inputManager.OnSlowModeEnter += DisplayHealthNumber;
             inputManager.OnSlowModeExit += RemoveHealthNumber;
         }
+
+        if(healthBar != null)
+        {
+            healthBarSprite = healthBar.GetComponent<SpriteRenderer>();
+            healthBarSprite.color = defaultColor;
+        }
+
+        ComboBarUI.OnComboUpdate += UpdateHealthColor;
+        UpdateHealthBar();
     }
 
     public void DamageHealthBar(HitInfo hitInfo)
@@ -57,6 +69,18 @@ public class EnemyHealthBar : MonoBehaviour
         healthNumber.UpdateNumber(data.currentHealth, data.totalHealth, new Vector2(0, VERTICAL_OFFSET));
     }
 
+    public void UpdateHealthColor(int combo)
+    {
+        if(data.currentHealth <= combo)
+        {
+            healthBarSprite.color = instantKillColor;
+        }
+        else
+        {
+            healthBarSprite.color = defaultColor;
+        }
+    }
+
     public void DisplayHealthNumber()
     {
         
@@ -65,6 +89,11 @@ public class EnemyHealthBar : MonoBehaviour
     public void RemoveHealthNumber()
     {
         
+    }
+
+    void OnDestroy()
+    {
+        ComboBarUI.OnComboUpdate -= UpdateHealthColor;
     }
 
 }

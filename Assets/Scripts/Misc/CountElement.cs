@@ -35,15 +35,6 @@ void Awake()
     FindFontWidths();
 }
 
-//Debugging only
-void Update()
-{
-    if (Input.GetKeyDown(KeyCode.J))
-    {
-        UpdateNumber(1, 4, Vector2.zero);    
-    }
-}
-
 void FindFontWidths()
 {
     numberWidths.Clear();
@@ -61,6 +52,8 @@ void FindFontWidths()
 
 private void GenerateNumberText(int inputNumber, ref GameObject numberParent, List<GameObject> numbers, bool isLeftNumber)
 {
+    if (numberWidths.Count == 0) FindFontWidths();
+
     string input = inputNumber.ToString();
 
     numbers.Clear();
@@ -82,7 +75,7 @@ private void GenerateNumberText(int inputNumber, ref GameObject numberParent, Li
         number.GetComponent<SpriteRenderer>().sortingOrder = SORTING_ORDER;
         numbers.Add(number);
 
-        float letterWidth = numberWidths[spriteName] / 2;
+        float letterWidth = numberWidths[spriteName] / 2;       //LINE 76
         if(i != input.Length - 1 && numberWidths.ContainsKey(char.ToUpper(input[i + 1]).ToString()))
         {
             letterWidth += numberWidths[char.ToUpper(input[i + 1]).ToString()] / 2f;   

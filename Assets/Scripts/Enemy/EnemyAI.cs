@@ -17,20 +17,24 @@ public struct BehaviorInfo
 
 public class EnemyAI : MonoBehaviour
 {
-public GameObject player;
+private GameObject player;
 private GameObject currentTile; //The tile this enemy is standing on
 
 [Header("Dependencies")]
-public TileGrid tileGrid;
-private Animator animator;
+private TileGrid tileGrid;
 private PlayerLogic playerLogic;
+private Animator animator;
+
+public GameObject turnUIPrefab;
+private EnemyTurnUI turnUILogic;
+private int turnsUntilAttack = 0;
+private const float TURN_UI_VERTICAL_OFFSET = 2.75f;
 
 [Header("Range Targeting Parameters")]
-public int tileTargetingRange;
+public int tileTargetingRange; //Range to begin attacking behavior, i.e. once the play is within this range, AI begins
 
 [Header("Animation Data")]
 public BehaviorInfo idleAnimation;
-
 public List<BehaviorInfo> behaviors = new();
 
 void Awake()
@@ -39,14 +43,28 @@ void Awake()
     playerLogic = FindObjectOfType<PlayerLogic>();
     animator = gameObject.GetComponent<Animator>();
 
+    if(turnUIPrefab != null)
+    {
+        InstantiateTurnUI();    
+    }
+
     if(playerLogic != null)
     {
         playerLogic.PlayerChangedPosition += CheckRangeBasedBehaviors;
     }
 }
 
+private void InstantiateTurnUI()
+{
+    GameObject turnUIObject = Instantiate(turnUIPrefab, Vector2.zero, Quaternion.identity);
+    turnUIObject.transform.SetParent(gameObject.transform);
+    turnUIObject.transform.localPosition = new Vector3(0, TURN_UI_VERTICAL_OFFSET);
 
-    private void UpdateCurrentTile()
+    turnUILogic = turnUIObject.GetComponent<EnemyTurnUI>(); 
+    turnUILogic.InitializeTurnUIOnStart(3); //temporary line
+}
+
+private void UpdateCurrentTile()
 {
     currentTile = tileGrid.FindNearestTileToGameObject(gameObject);
 }

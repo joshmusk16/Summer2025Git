@@ -1,23 +1,12 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ComboBarLogic : MonoBehaviour
 {
 
-public int currentCombo;
+public static int currentCombo;
 private const int MAX_COMBO_ALLOWED = 500;
 public int startingComboAmount = 1;
 public ComboBarUI comboBarUI;
-
-void Update()
-{
-    if (Input.GetKeyDown(KeyCode.K))
-    {
-        currentCombo = Random.Range(0, 500);
-        Debug.Log("Trying to display" + currentCombo);
-        AddToCombo(0);
-    }
-}
 
 void Start()
 {

@@ -4,4 +4,6 @@ public class EnemyData : MonoBehaviour
 {
     public int totalHealth;
     public int currentHealth;
+
+    public HurtBox hurtBox;
 }

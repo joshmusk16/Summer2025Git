@@ -36,10 +36,9 @@ void Awake()
     Debug.Log("Sprite Width is" + turnUIWidth);
 
     spriteOffsetVector = GetTightBottomLeftOffset(turnUISprite);
-
-    InitializeTurnUIOnStart(debugAmount);
 }
 
+//Update for debugging only
 void Update()
 {
     if (Input.GetKeyDown(KeyCode.Y))
@@ -53,31 +52,34 @@ void Update()
     }
 }
 
-private void InitializeTurnUIOnStart(int amount)
+public void InitializeTurnUIOnStart(int amount)
 {
-    InstantiateTurnUIObjects(amount);
     GenerateTurnUIPositions(amount);
+    InstantiateTurnUIObjects(amount);
     AssignTurnUIPositions();
 }
 
 public void ProgressTurnUI(int amount)
 {
-    //if(turnUIObjects.Count == 0) return;
+    if(turnUIObjects.Count == 0) return;
 
-    InstantiateTurnUIObjects(amount);
     GenerateTurnUIPositions(amount);
+    InstantiateTurnUIObjects(amount);
     LerpTurnUIToPositions();
 }
-
 
 
 public void InstantiateTurnUIObjects(int numberOfTurns)
 {
     DestroyTurnUIObjects();
+
+    float scale = turnUISettings[numberOfTurns - 1].uiScale;
     
     for(int i = 0; i < numberOfTurns; i++)
     {
-        GameObject turnUI = Instantiate(emptyTurnUIPrefab, Vector2.zero, Quaternion.identity, gameObject.transform);
+        Vector3 worldPos = transform.TransformPoint(turnUIPositions[i]);
+        GameObject turnUI = Instantiate(emptyTurnUIPrefab, worldPos, Quaternion.identity, gameObject.transform);
+        turnUI.transform.localScale = new Vector2(scale, scale);
         turnUI.GetComponent<SpriteRenderer>().sortingOrder = SORTING_ORDER;
         turnUIObjects.Add(turnUI);
     }
@@ -101,7 +103,7 @@ public void AssignTurnUIPositions()
 
     for(int i = 0; i < turnUIObjects.Count; i++)
     {
-        turnUIObjects[i].transform.position = turnUIPositions[i];
+        turnUIObjects[i].transform.localPosition = turnUIPositions[i];
         turnUIObjects[i].transform.localScale = new Vector2(scale, scale);
     }
 }
@@ -114,7 +116,8 @@ public void LerpTurnUIToPositions()
 
     for(int i = 0; i < turnUIObjects.Count; i++)
     {
-        turnUIObjects[i].GetComponent<LerpUIHandler>().LocationLerp(turnUIPositions[i], LERP_SPEED);
+        Vector3 worldPos = transform.TransformPoint(turnUIPositions[i]);
+        turnUIObjects[i].GetComponent<LerpUIHandler>().LocationLerp(worldPos, LERP_SPEED);
         turnUIObjects[i].GetComponent<LerpUIHandler>().ScaleLerp(new Vector2(scale, scale), LERP_SPEED);
     }
 }
@@ -139,7 +142,6 @@ public void RemoveTurnUI(int amount)
 public void GenerateTurnUIPositions(int numberOfTurns)
 {
     if(turnUIWidth == 0 && turnUISprite != null) turnUIWidth = GetTightWidth(turnUISprite);
-    if(turnUIObjects.Count == 0) return;
 
     turnUIPositions.Clear();
 

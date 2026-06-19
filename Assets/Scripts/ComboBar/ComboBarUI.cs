@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public class ComboBarUI : MonoBehaviour
 {
@@ -10,6 +11,8 @@ private List<int> IntegerDigits = new();
 public Sprite[] numberSprites = new Sprite[10];
 private const int SPACE_LENGTH = 2;
 private const float Y_OFFSET = 0.25f;
+
+public static event Action<int> OnComboUpdate;
 
 public void UpdateComboNumber(int number)
 {
@@ -34,6 +37,8 @@ public void UpdateComboNumber(int number)
     {
         digit.transform.position -= (Vector3)offset / 2f;
     }
+
+    OnComboUpdate?.Invoke(number);
 }
 
 private int CountDigits(int number)
