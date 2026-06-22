@@ -148,8 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30e6e830094bb6c499a39ab2ee97483c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalHealth: 9
-  currentHealth: 9
+  totalHealth: 10
+  currentHealth: 10
+  hurtBox: {fileID: 7782968164359553862}
 --- !u!114 &6021351529316744886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +202,8 @@ MonoBehaviour:
     isRangeBasedBehavior: 0
     range: 0
     weights: 
+    minTurnsToDeploy: 0
+    maxTurnsToDeploy: 0
   behaviors: []
 --- !u!1001 &6556602630341994687
 PrefabInstance:

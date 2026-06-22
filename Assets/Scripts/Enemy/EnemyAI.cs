@@ -12,7 +12,10 @@ public struct BehaviorInfo
     public bool isRangeBasedBehavior;
     public int range; //0 if not range dependent
 
-    public int[] weights; //size should be equal to range, each member should be between 1-10, 10 most likely to occur, 1 least likely
+    public int[] weights; //size must be equal to range, each member should be between 1-10, 10 most likely to occur, 1 least likely
+
+    public int minTurnsToDeploy; //Once this behavior is selected based on its weights, a random turnUI amount will be selected from this min/max
+    public int maxTurnsToDeploy;
 }
 
 public class EnemyAI : MonoBehaviour
@@ -27,8 +30,8 @@ private Animator animator;
 
 public GameObject turnUIPrefab;
 private EnemyTurnUI turnUILogic;
-private int turnsUntilAttack = 0;
 private const float TURN_UI_VERTICAL_OFFSET = 2.75f;
+private BehaviorInfo pendingBehavior; //The behavior that is set to deploy next
 
 [Header("Range Targeting Parameters")]
 public int tileTargetingRange; //Range to begin attacking behavior, i.e. once the play is within this range, AI begins
@@ -47,22 +50,22 @@ void Awake()
     {
         InstantiateTurnUI();    
     }
-
-    if(playerLogic != null)
-    {
-        playerLogic.PlayerChangedPosition += CheckRangeBasedBehaviors;
-    }
 }
 
 private void InstantiateTurnUI()
 {
-    GameObject turnUIObject = Instantiate(turnUIPrefab, Vector2.zero, Quaternion.identity);
-    turnUIObject.transform.SetParent(gameObject.transform);
-    turnUIObject.transform.localPosition = new Vector3(0, TURN_UI_VERTICAL_OFFSET);
+    if(turnUILogic == null)
+    {
+        GameObject turnUIObject = Instantiate(turnUIPrefab, Vector2.zero, Quaternion.identity);
+        turnUIObject.transform.SetParent(gameObject.transform);
+        turnUIObject.transform.localPosition = new Vector3(0, TURN_UI_VERTICAL_OFFSET);
 
-    turnUILogic = turnUIObject.GetComponent<EnemyTurnUI>(); 
-    turnUILogic.InitializeTurnUIOnStart(3); //temporary line
+        turnUILogic = turnUIObject.GetComponent<EnemyTurnUI>();        
+    }
+
+    //turnUILogic.InitializeTurnUIOnStart(3); //temporary line
 }
+
 
 private void UpdateCurrentTile()
 {
@@ -83,11 +86,6 @@ private bool CheckForTargetInRange()
     {
         return false;
     }
-}
-
-private void CheckRangeBasedBehaviors()
-{
-    
 }
 
 private BehaviorInfo PickWeightedRangeBasedBehavior(int tileDistanceToPlayer)
@@ -123,9 +121,33 @@ private BehaviorInfo PickWeightedRangeBasedBehavior(int tileDistanceToPlayer)
     return weightedBehaviors[0];
 }
 
+private void PickTurnsUntilBehaviorDeploys(BehaviorInfo behavior)
+{
+    int turnsUntilAttack = UnityEngine.Random.Range(behavior.minTurnsToDeploy, behavior.maxTurnsToDeploy);
+    pendingBehavior = behavior;
+    
+    InstantiateTurnUI(); //Fallback incase it didnt run in awake
+
+    turnUILogic.InitializeTurnUI(turnsUntilAttack);
+
+    QueueListData.OnProgramCompletion += DecreaseTurnUI;    //Need to unsubscribe somewhere
+}
+
+private void DecreaseTurnUI()
+{
+    if(turnUILogic.turnUIObjects.Count > 0)
+    {
+        turnUILogic.RemoveTurnUI(1);   
+    }
+    else
+    {
+        PickWeightedRangeBasedBehavior(tileGrid.GetTileDistanceBetweenObjects(currentTile, player));
+    }
+}
+
 private void OnDestroy()
 {
-    playerLogic.PlayerChangedPosition -= CheckRangeBasedBehaviors;    
+    QueueListData.OnProgramCompletion -= DecreaseTurnUI;
 }
 
 }

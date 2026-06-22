@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public class QueueListData : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public PlayerTargeting playerTargeting;
 public CustomAnimator playerAnimator;
 
 public GameObject dashProgramManager;
+
+public static event Action OnProgramCompletion;
 
 void Start()
 {
@@ -132,6 +135,10 @@ public void StartQueue(ProgramType programType)
 
 public void ContinueQueue(ProgramType completedType)
 {
+    if(completedType == ProgramType.Other) return;
+
+    OnProgramCompletion?.Invoke();
+
     //First, remove and destroy the program that just completed
     if(queueList.Count > 0 && queueList[0].programType == completedType)
     {

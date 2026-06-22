@@ -17,11 +17,9 @@ public GameObject emptyTurnUIPrefab;
 public Sprite turnUISprite;
 private float turnUIWidth = 0;
 
-public int debugAmount = 5;
-
 public List<TurnUISettings> turnUISettings = new List<TurnUISettings>();
+public List<GameObject> turnUIObjects = new List<GameObject>();
 private List<Vector3> turnUIPositions = new List<Vector3>();
-private List<GameObject> turnUIObjects = new List<GameObject>();
 
 private const float UI_PPU = 16f;
 private const int SORTING_ORDER = 100;
@@ -36,6 +34,8 @@ void Awake()
     Debug.Log("Sprite Width is" + turnUIWidth);
 
     spriteOffsetVector = GetTightBottomLeftOffset(turnUISprite);
+
+    InitializeTurnUI(5); //for debugging only
 }
 
 //Update for debugging only
@@ -52,7 +52,7 @@ void Update()
     }
 }
 
-public void InitializeTurnUIOnStart(int amount)
+public void InitializeTurnUI(int amount)
 {
     GenerateTurnUIPositions(amount);
     InstantiateTurnUIObjects(amount);

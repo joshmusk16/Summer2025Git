@@ -31,6 +31,7 @@ public class EnemyHealthBar : MonoBehaviour
         }
 
         ComboBarUI.OnComboUpdate += UpdateHealthColor;
+        data.hurtBox.OnHit += UpdateHealthColor;
         UpdateHealthBar();
     }
 
@@ -69,9 +70,9 @@ public class EnemyHealthBar : MonoBehaviour
         healthNumber.UpdateNumber(data.currentHealth, data.totalHealth, new Vector2(0, VERTICAL_OFFSET));
     }
 
-    public void UpdateHealthColor(int combo)
+    public void UpdateHealthColor(HitInfo info)
     {
-        if(data.currentHealth <= combo)
+        if(data.currentHealth <= ComboBarLogic.currentCombo)
         {
             healthBarSprite.color = instantKillColor;
         }
@@ -94,6 +95,7 @@ public class EnemyHealthBar : MonoBehaviour
     void OnDestroy()
     {
         ComboBarUI.OnComboUpdate -= UpdateHealthColor;
+        data.hurtBox.OnHit -= UpdateHealthColor;
     }
 
 }
