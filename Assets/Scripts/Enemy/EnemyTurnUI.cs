@@ -124,7 +124,7 @@ public void LerpTurnUIToPositions()
 
 public void RemoveTurnUI(int amount)
 {
-    int removeCount = Mathf.Min(amount, turnUIObjects.Count - 1);
+    int removeCount = Mathf.Min(amount, turnUIObjects.Count);
 
     for(int i = 0; i < removeCount; i++)
     {
@@ -134,6 +134,8 @@ public void RemoveTurnUI(int amount)
     }
 
     int newAmount = turnUIObjects.Count;
+
+    if(newAmount == 0) return;
 
     GenerateTurnUIPositions(newAmount);
     LerpTurnUIToPositions();

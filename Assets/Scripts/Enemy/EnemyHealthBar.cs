@@ -31,35 +31,6 @@ public class EnemyHealthBar : MonoBehaviour
         }
 
         ComboBarUI.OnComboUpdate += UpdateHealthColor;
-        data.hurtBox.OnHit += UpdateHealthColor;
-        UpdateHealthBar();
-    }
-
-    public void DamageHealthBar(HitInfo hitInfo)
-    {
-        if (data.currentHealth - hitInfo.damage < 0)
-        {
-            data.currentHealth = 0;
-        }
-        else
-        {
-            data.currentHealth -= hitInfo.damage;
-        }
-
-        UpdateHealthBar();
-    }
-
-    public void HealHealthBar(int healing)
-    {
-        if (data.currentHealth + healing > data.totalHealth)
-        {
-            data.currentHealth = data.totalHealth;
-        }
-        else
-        {
-            data.currentHealth += healing;
-        }
-
         UpdateHealthBar();
     }
 
@@ -68,9 +39,10 @@ public class EnemyHealthBar : MonoBehaviour
         float temp = (float) data.currentHealth / data.totalHealth;
         healthBar.transform.localScale = new Vector2(temp, healthBar.transform.localScale.y);
         healthNumber.UpdateNumber(data.currentHealth, data.totalHealth, new Vector2(0, VERTICAL_OFFSET));
+        UpdateHealthColor();
     }
 
-    public void UpdateHealthColor(HitInfo info)
+    public void UpdateHealthColor()
     {
         if(data.currentHealth <= ComboBarLogic.currentCombo)
         {
@@ -95,7 +67,6 @@ public class EnemyHealthBar : MonoBehaviour
     void OnDestroy()
     {
         ComboBarUI.OnComboUpdate -= UpdateHealthColor;
-        data.hurtBox.OnHit -= UpdateHealthColor;
     }
 
 }

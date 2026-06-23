@@ -16,7 +16,7 @@ public class DummyLogic : MonoBehaviour
         if (hurtbox != null)
         {
             hurtbox.OnHit += StartHitAnimation;
-            hurtbox.OnHit += health.DamageHealthBar;
+            //hurtbox.OnHit += health.DamageHealthBar;
         }
     }
 
@@ -28,6 +28,6 @@ public class DummyLogic : MonoBehaviour
     void OnDestroy()
     {
         hurtbox.OnHit -= StartHitAnimation;
-        hurtbox.OnHit -= health.DamageHealthBar;
+        //hurtbox.OnHit -= health.DamageHealthBar;
     }
 }

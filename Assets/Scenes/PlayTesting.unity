@@ -1736,7 +1736,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0541f15927d55304680df454a6e60626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCombo: 0
   startingComboAmount: 1
   comboBarUI: {fileID: 754926360}
 --- !u!1 &852259958
@@ -4092,7 +4091,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dde2565b880526c4793f8316656e5bc5, type: 2}
   - {fileID: 11400000, guid: 4780e8a43a147e44492b3f7b5ed7aad3, type: 2}
   - {fileID: 11400000, guid: 40aa50851dcc26541aed0e19b96eb581, type: 2}
-  dummy: {fileID: 7848701041199443082, guid: 041d97472af22a947bc5d882d0d38b51, type: 3}
+  dummy: {fileID: 543311305836614970, guid: d73268d8cee262744978141cb0e437da, type: 3}
   amountOfDummies: 4
 --- !u!4 &1785922077
 Transform:

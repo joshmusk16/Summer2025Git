@@ -12,7 +12,7 @@ public Sprite[] numberSprites = new Sprite[10];
 private const int SPACE_LENGTH = 2;
 private const float Y_OFFSET = 0.25f;
 
-public static event Action<HitInfo> OnComboUpdate;
+public static event Action OnComboUpdate;
 
 public void UpdateComboNumber(int number)
 {
@@ -38,7 +38,7 @@ public void UpdateComboNumber(int number)
         digit.transform.position -= (Vector3)offset / 2f;
     }
 
-    OnComboUpdate?.Invoke(null);
+    OnComboUpdate?.Invoke();
 }
 
 private int CountDigits(int number)

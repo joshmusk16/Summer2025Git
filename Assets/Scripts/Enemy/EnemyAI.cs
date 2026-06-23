@@ -5,12 +5,14 @@ using System.Collections.Generic;
 [Serializable]
 public struct BehaviorInfo
 {
+    public string behaviorName;
+
     public Sprite[] animSprites;
     public float[] animFrames;
     public HitboxTiming[] hitboxTimings;
 
-    public bool isRangeBasedBehavior;
-    public int range; //0 if not range dependent
+    [Tooltip("Must be a positive integer, 0 if behavior is not range dependent")]
+    public int range;
 
     public int[] weights; //size must be equal to range, each member should be between 1-10, 10 most likely to occur, 1 least likely
 
@@ -26,7 +28,7 @@ private GameObject currentTile; //The tile this enemy is standing on
 [Header("Dependencies")]
 private TileGrid tileGrid;
 private PlayerLogic playerLogic;
-private Animator animator;
+private CustomAnimator animator;
 
 public GameObject turnUIPrefab;
 private EnemyTurnUI turnUILogic;
@@ -44,12 +46,14 @@ void Awake()
 {
     tileGrid = FindObjectOfType<TileGrid>();
     playerLogic = FindObjectOfType<PlayerLogic>();
-    animator = gameObject.GetComponent<Animator>();
+    animator = gameObject.GetComponent<CustomAnimator>();
 
     if(turnUIPrefab != null)
     {
         InstantiateTurnUI();    
     }
+
+    PickTurnsUntilBehaviorDeploys(PickWeightedRangeBasedBehavior(3));
 }
 
 private void InstantiateTurnUI()
@@ -62,10 +66,7 @@ private void InstantiateTurnUI()
 
         turnUILogic = turnUIObject.GetComponent<EnemyTurnUI>();        
     }
-
-    //turnUILogic.InitializeTurnUIOnStart(3); //temporary line
 }
-
 
 private void UpdateCurrentTile()
 {
@@ -88,6 +89,12 @@ private bool CheckForTargetInRange()
     }
 }
 
+private void RollNextBehavior(ProgramType programType)
+{
+    animator.OnAnimationComplete -= RollNextBehavior;
+    PickTurnsUntilBehaviorDeploys(PickWeightedRangeBasedBehavior(3));
+}
+
 private BehaviorInfo PickWeightedRangeBasedBehavior(int tileDistanceToPlayer)
 {
     //First, fill the array with the proper weight values
@@ -96,12 +103,14 @@ private BehaviorInfo PickWeightedRangeBasedBehavior(int tileDistanceToPlayer)
 
     foreach (BehaviorInfo behavior in behaviors)
     {
-        if (behavior.isRangeBasedBehavior && tileDistanceToPlayer <= behavior.range)
+        if (behavior.range != 0 && tileDistanceToPlayer <= behavior.range)
         {
-            weights.Add(behavior.weights[tileDistanceToPlayer]);
+            weights.Add(behavior.weights[tileDistanceToPlayer - 1]);
             weightedBehaviors.Add(behavior);
         }
     }
+
+    if(weightedBehaviors.Count == 1) return weightedBehaviors[0]; //early return if theres only one behavior in range
 
     //Second, run the weighted roll and see which behavior wins
     int total = 0;
@@ -126,7 +135,7 @@ private void PickTurnsUntilBehaviorDeploys(BehaviorInfo behavior)
     int turnsUntilAttack = UnityEngine.Random.Range(behavior.minTurnsToDeploy, behavior.maxTurnsToDeploy);
     pendingBehavior = behavior;
     
-    InstantiateTurnUI(); //Fallback incase it didnt run in awake
+    InstantiateTurnUI(); //Fallback incase turnUI didnt instantiate in awake
 
     turnUILogic.InitializeTurnUI(turnsUntilAttack);
 
@@ -135,19 +144,23 @@ private void PickTurnsUntilBehaviorDeploys(BehaviorInfo behavior)
 
 private void DecreaseTurnUI()
 {
-    if(turnUILogic.turnUIObjects.Count > 0)
+    if(turnUILogic.turnUIObjects.Count > 1)
     {
         turnUILogic.RemoveTurnUI(1);   
     }
     else
     {
-        PickWeightedRangeBasedBehavior(tileGrid.GetTileDistanceBetweenObjects(currentTile, player));
+        turnUILogic.RemoveTurnUI(1);
+        QueueListData.OnProgramCompletion -= DecreaseTurnUI;
+        animator.PlayAnimation(pendingBehavior.animSprites, pendingBehavior.animFrames, ProgramType.Attack, false, true, pendingBehavior.hitboxTimings);
+        animator.OnAnimationComplete += RollNextBehavior;
     }
 }
 
 private void OnDestroy()
 {
     QueueListData.OnProgramCompletion -= DecreaseTurnUI;
+    animator.OnAnimationComplete -= RollNextBehavior;
 }
 
 }

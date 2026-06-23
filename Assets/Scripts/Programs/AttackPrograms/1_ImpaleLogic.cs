@@ -7,7 +7,7 @@ public class ImpaleLogic : Program
     
     void Impale(QueueParameter queueParameter)
     {
-        AssignHitboxDamages(ComboBarLogic.currentCombo + 2);
+        AssignHitboxDamages(ComboBarLogic.currentCombo + 3);
         playerAnimator.PlayAnimation(animSprites, animFrames, ProgramType.Attack, false, true, hitboxTimings);
         ChangeTransform(queueParameter.facedDirection);
     }
