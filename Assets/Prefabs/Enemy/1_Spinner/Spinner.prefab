@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnUIPrefab: {fileID: 6453195787864071907, guid: 91558829b5037044a96600272e936c46, type: 3}
-  tileTargetingRange: 0
+  tileTargetingRange: 3
   idleAnimation:
     behaviorName: 
     animSprites: []
@@ -168,8 +168,8 @@ MonoBehaviour:
     hitboxTimings: []
     range: 3
     weights: 0a0000000500000002000000
-    minTurnsToDeploy: 2
-    maxTurnsToDeploy: 4
+    minTurnsToDeploy: 1
+    maxTurnsToDeploy: 3
 --- !u!114 &8979428263590468602
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -31,11 +31,10 @@ private float centerOnXOffset;
 void Awake()
 {
     if(turnUISprite != null) turnUIWidth = GetTightWidth(turnUISprite);
-    Debug.Log("Sprite Width is" + turnUIWidth);
 
     spriteOffsetVector = GetTightBottomLeftOffset(turnUISprite);
 
-    InitializeTurnUI(5); //for debugging only
+    //InitializeTurnUI(5); //for debugging only
 }
 
 //Update for debugging only

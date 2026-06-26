@@ -37,6 +37,7 @@ private BehaviorInfo pendingBehavior; //The behavior that is set to deploy next
 
 [Header("Range Targeting Parameters")]
 public int tileTargetingRange; //Range to begin attacking behavior, i.e. once the play is within this range, AI begins
+private int currentTileDistanceToPlayer;
 
 [Header("Animation Data")]
 public BehaviorInfo idleAnimation;
@@ -53,7 +54,13 @@ void Awake()
         InstantiateTurnUI();    
     }
 
-    PickTurnsUntilBehaviorDeploys(PickWeightedRangeBasedBehavior(3));
+    if(playerLogic != null)
+    {
+        playerLogic.PlayerChangedPosition += CheckToStartAttackBehaviors;  
+        player = playerLogic.gameObject;
+    }
+
+    CheckToStartAttackBehaviors();
 }
 
 private void InstantiateTurnUI()
@@ -71,15 +78,16 @@ private void InstantiateTurnUI()
 private void UpdateCurrentTile()
 {
     currentTile = tileGrid.FindNearestTileToGameObject(gameObject);
+    currentTileDistanceToPlayer = tileGrid.GetTileDistanceBetweenObjects(currentTile, player);
 }
 
 private bool CheckForTargetInRange()
 {
     if(player == null) return false;
 
-    if(currentTile == null) UpdateCurrentTile();
+    UpdateCurrentTile();
 
-    if(tileGrid.GetTileDistanceBetweenObjects(currentTile, player) <= tileTargetingRange)
+    if(currentTileDistanceToPlayer <= tileTargetingRange)
     {
         return true;
     }
@@ -89,10 +97,21 @@ private bool CheckForTargetInRange()
     }
 }
 
-private void RollNextBehavior(ProgramType programType)
+private void CheckToStartAttackBehaviors()
 {
-    animator.OnAnimationComplete -= RollNextBehavior;
-    PickTurnsUntilBehaviorDeploys(PickWeightedRangeBasedBehavior(3));
+    if (CheckForTargetInRange())
+    {
+        PickTurnsUntilBehaviorDeploys(PickWeightedRangeBasedBehavior(currentTileDistanceToPlayer));
+        playerLogic.PlayerChangedPosition -= CheckToStartAttackBehaviors; 
+    }
+}
+
+private void CheckOnAnimationComplete(ProgramType programType)
+{
+    playerLogic.PlayerChangedPosition += CheckToStartAttackBehaviors; 
+    CheckToStartAttackBehaviors();
+
+    animator.OnAnimationComplete -= CheckOnAnimationComplete;
 }
 
 private BehaviorInfo PickWeightedRangeBasedBehavior(int tileDistanceToPlayer)
@@ -139,7 +158,7 @@ private void PickTurnsUntilBehaviorDeploys(BehaviorInfo behavior)
 
     turnUILogic.InitializeTurnUI(turnsUntilAttack);
 
-    QueueListData.OnProgramCompletion += DecreaseTurnUI;    //Need to unsubscribe somewhere
+    QueueListData.OnProgramCompletion += DecreaseTurnUI;
 }
 
 private void DecreaseTurnUI()
@@ -153,14 +172,15 @@ private void DecreaseTurnUI()
         turnUILogic.RemoveTurnUI(1);
         QueueListData.OnProgramCompletion -= DecreaseTurnUI;
         animator.PlayAnimation(pendingBehavior.animSprites, pendingBehavior.animFrames, ProgramType.Attack, false, true, pendingBehavior.hitboxTimings);
-        animator.OnAnimationComplete += RollNextBehavior;
+        animator.OnAnimationComplete += CheckOnAnimationComplete;
     }
 }
 
 private void OnDestroy()
 {
     QueueListData.OnProgramCompletion -= DecreaseTurnUI;
-    animator.OnAnimationComplete -= RollNextBehavior;
+    playerLogic.PlayerChangedPosition -= CheckToStartAttackBehaviors;
+    animator.OnAnimationComplete -= CheckOnAnimationComplete;
 }
 
 }
