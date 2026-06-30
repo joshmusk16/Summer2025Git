@@ -67,6 +67,19 @@ public class ProgramListData : MonoBehaviour
         UpdateCountUI();
     }
 
+    public void DrawOneNewProgram()
+    {
+        if(drawPilePrograms == null || drawPilePrograms.Count == 0 ) ResetDrawPile();
+
+        int draw = Random.Range(0, drawPilePrograms.Count);
+
+        GameObject drawnProgram = drawPilePrograms[draw]; 
+        drawPilePrograms.RemoveAt(draw);
+        drawnPrograms.Add(drawnProgram);    //Add to back of drawnPrograms and remove from drawPilePrograms
+
+        UpdateCountUI();
+    }
+
     public void ResetDrawPile()
     {
         if(drawPilePrograms == null || drawPilePrograms.Count == 0)
