@@ -158,11 +158,6 @@ public class ProgramUI : MonoBehaviour
         SetQueueUISprites();
     }
 
-    public void UpdateQueueUIOnScroll()
-    {   
-        SetQueueUISprites();
-    }
-
     void UpdateSortingOrders()
     {
         //if(uiPrograms.Count == 0 || uiPrograms.Count != queueUIObjects.Count) return;
@@ -337,8 +332,7 @@ public class ProgramUI : MonoBehaviour
 
     void SetQueueUISprites()
     {
-        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count ||
-        queueUIStates == null) return;
+        if(queueUIObjects.Count == 0 || queueUIStates == null) return;
 
         foreach(GameObject queueUI in queueUIObjects)
         {
@@ -484,13 +478,18 @@ public class ProgramUI : MonoBehaviour
         uiPrograms.RemoveAt(0);
 
         ScrollQueueUIStates();
+        SetQueueUISprites();
 
-        if(queueUIObjects.Count > 1)
-        {
-            Destroy(queueUIObjects[^1]);
-            queueUIStates.Remove(queueUIObjects[^1]);
-            queueUIObjects.RemoveAt(queueUIObjects.Count - 1);  
-        }
+        programsListData.DrawOneNewProgram();
+
+        //Manually setup a single program...
+        GameObject newProgram = Instantiate(emptyProgramPrefab, gameObject.transform);
+        mouseHoverStates[newProgram] = false;
+        newProgram.transform.position = uiPositions[^1];
+        newProgram.GetComponent<LerpUIHandler>().ParabolicScaleLerp(new Vector3(1.1f, 1.1f), 0.25f, 2f);
+        uiPrograms.Add(newProgram);
+
+        SetUISprites(uiPrograms.Count);
 
         SetUIPositions(uiPrograms.Count);
         SetQueueUIPositions();
@@ -506,10 +505,21 @@ public class ProgramUI : MonoBehaviour
         }
 
         LerpQueueUIToPositions();
-        
-        UpdateQueueUIOnScroll();
-        programsListData.ScrollCurrentProgram();
     }
+
+    void ScrollQueueUIStates()
+    {
+        if(queueUIObjects.Count == 0 || queueUIObjects.Count <= 1 || 
+        queueUIStates == null) return;
+
+        for(int i = 0; i < queueUIObjects.Count - 1; i++)
+        {
+            queueUIStates[queueUIObjects[i]] = queueUIStates[queueUIObjects[i + 1]];
+        }
+
+        queueUIStates[queueUIObjects[queueUIObjects.Count - 1]] = false;
+    }
+
 
     //This method also needs to talk to the other ProgramUI script and deactivate all of its Inactive States
     //for the programs removed from the queue
@@ -529,21 +539,9 @@ public class ProgramUI : MonoBehaviour
 
     void UpdateNextQueueUIActiveState()
     {
-        if(queueUIObjects.Count == 0 || queueUIObjects.Count != uiPrograms.Count ||
-        queueUIStates == null) return;
+        if(queueUIObjects.Count == 0 || queueUIStates == null) return;
 
         queueUIStates[queueUIObjects[GetInitialIndexNew()]] = true;
-    }
-
-    void ScrollQueueUIStates()
-    {
-        if(queueUIObjects.Count == 0 || queueUIObjects.Count <= 1 || 
-        queueUIStates == null) return;
-
-        for(int i = 0; i < queueUIObjects.Count - 1; i++)
-        {
-            queueUIStates[queueUIObjects[i]] = queueUIStates[queueUIObjects[i + 1]];
-        }
     }
 
 #region Index Offseting Methods

@@ -17,7 +17,7 @@ public class ProgramListData : MonoBehaviour
 
     private int nextInQueueIndex = 0;
 
-    void Start()
+    void Awake()
     {
         totalProgramAmount = programs.Count;
         UpdateCountUI();
@@ -72,6 +72,9 @@ public class ProgramListData : MonoBehaviour
         if(drawPilePrograms == null || drawPilePrograms.Count == 0 ) ResetDrawPile();
 
         int draw = Random.Range(0, drawPilePrograms.Count);
+
+        drawnPrograms.RemoveAt(0);
+        nextInQueueIndex--;
 
         GameObject drawnProgram = drawPilePrograms[draw]; 
         drawPilePrograms.RemoveAt(draw);
@@ -132,7 +135,15 @@ public class ProgramListData : MonoBehaviour
 
     public void UpdateCountUI()
     {
-        currentDeckAmountDisplay.UpdateNumber(drawPilePrograms.Count);
+        if(drawPilePrograms.Count == 0)
+        {
+            currentDeckAmountDisplay.UpdateNumber(totalProgramAmount);
+        }
+        else
+        {
+            currentDeckAmountDisplay.UpdateNumber(drawPilePrograms.Count);            
+        }
+
         totalDeckAmountDisplay.UpdateNumber(totalProgramAmount);
     }
 

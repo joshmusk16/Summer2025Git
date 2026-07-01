@@ -9,7 +9,7 @@ public class PlayerTimerLogic : MonoBehaviour
     [SerializeField] private bool playerTimerIsRunning = false;
     private PlayerTimerUI playerHealthUI;
 
-    [SerializeField] private float timerUpdateInterval = 0.5f;
+    [SerializeField] private float timerUpdateInterval = 1f;
     private float nextUpdateTime;
 
     void Start()
