@@ -33,7 +33,7 @@ public class PlayerLogic : MonoBehaviour
         
         if (playerHurtBox != null)
         {
-            playerHurtBox.OnHit += playerTimerLogic.RemovePlayerHealth;
+            playerHurtBox.OnHit += playerTimerLogic.RemovePlayerTimeOnHit;
         }
 
         StartIdleAnimation(ProgramType.Other);
@@ -115,6 +115,6 @@ public class PlayerLogic : MonoBehaviour
 
     private void OnDestroy()
     {
-        playerHurtBox.OnHit -= playerTimerLogic.RemovePlayerHealth;
+        playerHurtBox.OnHit -= playerTimerLogic.RemovePlayerTimeOnHit;
     }
 }

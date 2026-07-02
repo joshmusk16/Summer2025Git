@@ -1530,6 +1530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   comboBar: {fileID: 754926361}
+  playerTimerBar: {fileID: 0}
 --- !u!4 &701312444
 Transform:
   m_ObjectHideFlags: 0
@@ -2345,8 +2346,10 @@ MonoBehaviour:
   - 0.97
   hitboxTimings: []
   rewardRequirementType: 0
-  rewardType: 0
+  comboRewardType: 0
   amountToChangeComboBar: 0
+  timerRewardType: 0
+  amountToChangeTimerBar: 0
   programName: 
   programDescription: 
   player: {fileID: 0}
@@ -4284,9 +4287,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTotalTime: 20
   playerCurrentTime: 20
-  timerSpeedMultiplier: 1
+  timerSpeedMultiplier: 2
   playerTimerIsRunning: 0
-  timerUpdateInterval: 0.5
+  timerUpdateInterval: 0.1
 --- !u!1 &1923254195
 GameObject:
   m_ObjectHideFlags: 0

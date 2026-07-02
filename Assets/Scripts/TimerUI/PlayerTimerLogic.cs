@@ -6,15 +6,28 @@ public class PlayerTimerLogic : MonoBehaviour
     public float playerTotalTime;
     public float playerCurrentTime;
     [SerializeField] private float timerSpeedMultiplier;
+    private const float TIMER_SPEED_SLOWMODE_DIFFERENCE = 1.5f;
+
     [SerializeField] private bool playerTimerIsRunning = false;
+    
     private PlayerTimerUI playerHealthUI;
+    private ProgramInputManager programInputManager;
 
     [SerializeField] private float timerUpdateInterval = 1f;
     private float nextUpdateTime;
 
-    void Start()
+    void Awake()
     {
         playerHealthUI = FindObjectOfType<PlayerTimerUI>();
+        programInputManager = FindObjectOfType<ProgramInputManager>();
+
+        if(programInputManager != null)
+        {
+            programInputManager.OnSlowModeEnter += DecreaseTimerSpeedMultiplier;
+            programInputManager.OnSlowModeExit += IncreaseTimerSpeedMultiplier;
+        }
+
+        StartRunningTimer();
     }
 
     void Update()
@@ -25,10 +38,10 @@ public class PlayerTimerLogic : MonoBehaviour
         }
 
         //Debugging Input
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            StartRunningTimer();
-        }
+        // if (Input.GetKeyDown(KeyCode.T))
+        // {
+        //     StartRunningTimer();
+        // }
     }
 
     public void RunPlayerTimer()
@@ -41,7 +54,6 @@ public class PlayerTimerLogic : MonoBehaviour
         if (playerCurrentTime < nextUpdateTime)
         {
             AnimateHealthBar();
-            //Debug.Log("Called animateHealthBar at" + playerCurrentTime);
         }
 
         if (playerCurrentTime < 0)
@@ -58,13 +70,13 @@ public class PlayerTimerLogic : MonoBehaviour
         playerTimerIsRunning = true;
     }
 
-    public void AddPlayerTime(HitInfo hitInfo)
+    public void AddPlayerTime(int amount)
     {
-        if (hitInfo.damage <= 0) return;
+        if (amount <= 0) return;
 
-        if (playerCurrentTime + hitInfo.damage <= playerTotalTime)
+        if (playerCurrentTime + amount <= playerTotalTime)
         {
-            playerCurrentTime += hitInfo.damage;
+            playerCurrentTime += amount;
         }
         else
         {
@@ -74,7 +86,7 @@ public class PlayerTimerLogic : MonoBehaviour
         AnimateHealthBar();
     }
 
-    public void RemovePlayerHealth(HitInfo hitInfo)
+    public void RemovePlayerTimeOnHit(HitInfo hitInfo)
     {
         if (hitInfo.damage <= 0) return;
 
@@ -90,7 +102,23 @@ public class PlayerTimerLogic : MonoBehaviour
         AnimateHealthBar();
     }
 
-    public void AddPlayerTotalHealth(int health)
+    public void RemovePlayerTime(int amount)
+    {
+        if (amount <= 0) return;
+
+        if (playerCurrentTime - amount > 0)
+        {
+            playerCurrentTime -= amount;
+        }
+        else
+        {
+            playerCurrentTime = 0;
+        }
+
+        AnimateHealthBar();
+    }
+
+    public void AddPlayerTotalTime(int health)
     {
         if (health <= 0) return;
 
@@ -99,7 +127,7 @@ public class PlayerTimerLogic : MonoBehaviour
         AnimateHealthBar();
     }
 
-    public void RemovePlayerTotalHealth(int health)
+    public void RemovePlayerTotalTime(int health)
     {
         if (health <= 0) return;
 
@@ -113,10 +141,41 @@ public class PlayerTimerLogic : MonoBehaviour
         AnimateHealthBar();
     }
 
+    public void ChangeTimerBar(int type, float amount)
+    {
+        if(type < 1 || type > 2) return;
+
+        switch (type)
+        {
+            case 1: 
+                AddPlayerTime((int)amount);
+                break;
+            case 2:
+                RemovePlayerTime((int)amount);
+                break;
+        }
+    }
+
+    public void IncreaseTimerSpeedMultiplier()
+    {
+        timerSpeedMultiplier += TIMER_SPEED_SLOWMODE_DIFFERENCE;
+    }
+
+    public void DecreaseTimerSpeedMultiplier()
+    {
+        timerSpeedMultiplier -= TIMER_SPEED_SLOWMODE_DIFFERENCE;
+    }
+
     private void AnimateHealthBar()
     {
         nextUpdateTime = playerCurrentTime - timerUpdateInterval;
         playerHealthUI.AnimateHealthChange(playerCurrentTime / playerTotalTime);
+    }
+
+    void OnDestroy()
+    {
+        programInputManager.OnSlowModeEnter -= DecreaseTimerSpeedMultiplier;
+        programInputManager.OnSlowModeExit -= IncreaseTimerSpeedMultiplier;
     }
 
 }

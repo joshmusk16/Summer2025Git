@@ -99,7 +99,7 @@ public class HitBox : CollisionBox
         // Trigger events
         hasHitOnce = true;
         HitboxTracker.Instance.CheckForReward(gameObject, programData.rewardRequirementType, 
-        programData.rewardType, programData.amountToChangeComboBar);
+        programData.comboRewardType, programData.amountToChangeComboBar, programData.timerRewardType, programData.amountToChangeTimerBar);
         
         OnHit?.Invoke(hurtbox, hitInfo);
         Debug.Log(gameObject.name + " is hitting " + hurtbox.name + " at " + Time.time);

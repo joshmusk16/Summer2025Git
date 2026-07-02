@@ -25,8 +25,13 @@ public class Program : MonoBehaviour
 
     [Header("Reward Data")]
     public int rewardRequirementType;
-    public int rewardType;
+
+    public int comboRewardType;
     public int amountToChangeComboBar;
+
+    public int timerRewardType;
+    public int amountToChangeTimerBar;
+    
     //Reward Requirement types : 1 = HasAnyHitboxHit, 2 = HasEveryHitboxHit
     //Types: Adding to combo = 1, Removing from combo = 2, multiply combo = 3, divide combo = 4.
 

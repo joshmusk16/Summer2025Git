@@ -72,8 +72,10 @@ MonoBehaviour:
   - hitbox: {fileID: 5118383221459371758}
     activationFrames: 03000000
   rewardRequirementType: 1
-  rewardType: 1
+  comboRewardType: 1
   amountToChangeComboBar: 1
+  timerRewardType: 1
+  amountToChangeTimerBar: 3
   programName: SLASH
   programDescription: ONHIT DEAL COMBO/NADD +1 TO COMBO
   player: {fileID: 0}

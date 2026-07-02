@@ -4,14 +4,16 @@ using UnityEngine;
 public class HitboxTracker : MonoBehaviour
 {
 
-private Dictionary<GameObject, List<HitBox>> hitboxGroups = new();
+public Dictionary<GameObject, List<HitBox>> hitboxGroups = new();
 public static HitboxTracker Instance { get; private set; }
 public ComboBarLogic comboBar;
+public PlayerTimerLogic playerTimerBar;
 
 private void Awake()
 {
     Instance = this;
     comboBar = FindObjectOfType<ComboBarLogic>();
+    playerTimerBar = FindObjectOfType<PlayerTimerLogic>();
 }
 
 public void RegisterHitboxGroup(GameObject program, HitboxTiming[] hitboxTimings, int hitboxAmount)
@@ -33,7 +35,11 @@ public void UnregisterHitboxGroup(GameObject program)
     Debug.Log("Unregistered Hitbox Group" + program);
 }
 
-public void CheckForReward(GameObject program, int rewardRequirementType, int rewardType, int amount)
+public void CheckForReward
+(GameObject program, 
+    int rewardRequirementType, 
+        int comboRewardType, int comboAmount, 
+        int timerRewardType, int timerAmount)
 {
     if(!hitboxGroups.ContainsKey(program)) return;
     
@@ -51,7 +57,8 @@ public void CheckForReward(GameObject program, int rewardRequirementType, int re
 
     if (shouldGiveReward)
     {
-        comboBar.ChangeComboBar(rewardType, amount);
+        comboBar.ChangeComboBar(comboRewardType, comboAmount);
+        playerTimerBar.ChangeTimerBar(timerRewardType, timerAmount);
         UnregisterHitboxGroup(program);
     }
 }

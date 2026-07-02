@@ -78,8 +78,10 @@ MonoBehaviour:
   - hitbox: {fileID: 5722256575395598471}
     activationFrames: 06000000
   rewardRequirementType: 2
-  rewardType: 1
+  comboRewardType: 1
   amountToChangeComboBar: 3
+  timerRewardType: 1
+  amountToChangeTimerBar: 5
   programName: IMPALE
   programDescription: ONHIT EACH SIDE/NADDS +3 COMBO
   player: {fileID: 0}
