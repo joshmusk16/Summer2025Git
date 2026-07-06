@@ -4273,6 +4273,8 @@ MonoBehaviour:
   ones: {fileID: 1155204021}
   tens: {fileID: 1240558262}
   hundreds: {fileID: 1380883261}
+  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  inactiveColor: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
 --- !u!114 &1850997522
 MonoBehaviour:
   m_ObjectHideFlags: 0
