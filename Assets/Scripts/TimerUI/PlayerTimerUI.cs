@@ -71,17 +71,6 @@ public class PlayerTimerUI : MonoBehaviour
                 isAnimatingColor = false;
             }
         }
-
-        //DEBUGGING INPUTS
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            AnimateColorChange(1);
-        }
-
-          if (Input.GetKeyDown(KeyCode.H))
-        {
-            AnimateColorChange(2);
-        }
     }
 
     public void AnimateHealthChange(float healthChange)

@@ -27,7 +27,7 @@ public class PlayerTimerLogic : MonoBehaviour
             programInputManager.OnSlowModeExit += IncreaseTimerSpeedMultiplier;
         }
 
-        StartRunningTimer();
+        //StartRunningTimer();
     }
 
     void Update()
@@ -37,11 +37,16 @@ public class PlayerTimerLogic : MonoBehaviour
             RunPlayerTimer();
         }
 
-        //Debugging Input
-        // if (Input.GetKeyDown(KeyCode.T))
-        // {
-        //     StartRunningTimer();
-        // }
+        //DEBUGGING INPUTS
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            StartRunningTimer();
+        }
+
+          if (Input.GetKeyDown(KeyCode.H))
+        {
+            StopRunningTimer();
+        }
     }
 
     public void RunPlayerTimer()
@@ -68,6 +73,13 @@ public class PlayerTimerLogic : MonoBehaviour
     {
         nextUpdateTime = playerCurrentTime - timerUpdateInterval;
         playerTimerIsRunning = true;
+        playerHealthUI.AnimateColorChange(1);
+    }
+
+    public void StopRunningTimer()
+    {
+        playerTimerIsRunning = false;
+        playerHealthUI.AnimateColorChange(2);
     }
 
     public void AddPlayerTime(int amount)
