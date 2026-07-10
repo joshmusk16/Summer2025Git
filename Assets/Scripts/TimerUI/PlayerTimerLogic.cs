@@ -18,6 +18,13 @@ public class PlayerTimerLogic : MonoBehaviour
 
     void Awake()
     {
+        FindDependencies();
+
+        //StartRunningTimer();
+    }
+
+    private void FindDependencies()
+    {
         playerHealthUI = FindObjectOfType<PlayerTimerUI>();
         programInputManager = FindObjectOfType<ProgramInputManager>();
 
@@ -26,8 +33,6 @@ public class PlayerTimerLogic : MonoBehaviour
             programInputManager.OnSlowModeEnter += DecreaseTimerSpeedMultiplier;
             programInputManager.OnSlowModeExit += IncreaseTimerSpeedMultiplier;
         }
-
-        //StartRunningTimer();
     }
 
     void Update()
@@ -71,6 +76,9 @@ public class PlayerTimerLogic : MonoBehaviour
 
     public void StartRunningTimer()
     {
+        if(playerHealthUI == null
+        || programInputManager == null) FindDependencies();
+
         nextUpdateTime = playerCurrentTime - timerUpdateInterval;
         playerTimerIsRunning = true;
         playerHealthUI.AnimateColorChange(1);
@@ -78,6 +86,9 @@ public class PlayerTimerLogic : MonoBehaviour
 
     public void StopRunningTimer()
     {
+        if(playerHealthUI == null
+        || programInputManager == null) FindDependencies();
+
         playerTimerIsRunning = false;
         playerHealthUI.AnimateColorChange(2);
     }

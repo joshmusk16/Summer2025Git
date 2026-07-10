@@ -116,6 +116,9 @@ private void CheckOnAnimationComplete(ProgramType programType)
 
 private BehaviorInfo PickWeightedRangeBasedBehavior(int tileDistanceToPlayer)
 {
+    //fallback if player is somehow on same tile as enemy
+    if(tileDistanceToPlayer == 0) tileDistanceToPlayer = 1;
+
     //First, fill the array with the proper weight values
     List<int> weights = new List<int>();
     List<BehaviorInfo> weightedBehaviors = new List<BehaviorInfo>();
@@ -178,6 +181,8 @@ private void DecreaseTurnUI()
 
 private void OnDestroy()
 {
+    RoundManager.UnregisterEnemy(gameObject);
+
     QueueListData.OnProgramCompletion -= DecreaseTurnUI;
     playerLogic.PlayerChangedPosition -= CheckToStartAttackBehaviors;
     animator.OnAnimationComplete -= CheckOnAnimationComplete;

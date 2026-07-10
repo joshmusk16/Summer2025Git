@@ -37,9 +37,6 @@ public class PlayerLogic : MonoBehaviour
         }
 
         StartIdleAnimation(ProgramType.Other);
-
-        //To initialize previousTile and currentTile (might not work if TileGrid isnt )
-        RecordPlayerTilePosition();
     }
 
     #region Player HurtBox Methods
@@ -60,6 +57,8 @@ public class PlayerLogic : MonoBehaviour
 
     public void StartIdleAnimation(ProgramType animType)
     {
+        if(playerAnimator == null) playerAnimator = gameObject.GetComponent<CustomAnimator>();
+
         playerAnimator.PlayAnimation(idleSprites, idleFrames, animType, true);
     }
 
@@ -84,6 +83,8 @@ public class PlayerLogic : MonoBehaviour
 
     public void RecordPlayerTilePosition()
     {
+        if(tileGrid == null) tileGrid = FindObjectOfType<TileGrid>();
+
         GameObject nearestTile = tileGrid.FindNearestTileToGameObject(gameObject);
 
         if(previousTile == null)

@@ -24,6 +24,7 @@ public CustomAnimator playerAnimator;
 
 public GameObject dashProgramManager;
 
+public static event Action OnProgramAddedToQueue;
 public static event Action OnProgramCompletion;
 
 void Start()
@@ -75,6 +76,8 @@ public void AddProgramToQueue(ProgramType programType)
     }
 
     if(nextProgramObject == null) return;
+
+    OnProgramAddedToQueue?.Invoke();
 
     if(programType == ProgramType.Attack)
     {

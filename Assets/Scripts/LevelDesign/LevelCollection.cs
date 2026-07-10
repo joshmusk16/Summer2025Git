@@ -15,7 +15,7 @@ public class LevelCollection : MonoBehaviour
     [SerializeField] private GameObject dummy;
     [SerializeField] private int amountOfDummies;
 
-    void Awake()
+    private void FindDependencies()
     {
         tileGrid = FindObjectOfType<TileGrid>();
         playerLogic = FindObjectOfType<PlayerLogic>();
@@ -24,20 +24,17 @@ public class LevelCollection : MonoBehaviour
         {
             player = playerLogic.gameObject;            
         }
+    }
+
+    public void ResetRandomLevel()
+    {
+        if(tileGrid == null
+        || playerLogic == null
+        || player == null) FindDependencies();
 
         LoadRandomLevel();
         MovePlayerToRandomTile();
         SpawnDummies(amountOfDummies);
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            LoadRandomLevel();
-            MovePlayerToRandomTile();
-            SpawnDummies(amountOfDummies);
-        }
     }
 
     public void LoadRandomLevel()
@@ -132,6 +129,7 @@ public class LevelCollection : MonoBehaviour
             GameObject selectedTile = validTiles[randomIndex];
 
             GameObject newDummy = Instantiate(dummy, selectedTile.transform.position, Quaternion.identity);
+            RoundManager.RegisterEnemy(newDummy);
             selectedTile.GetComponent<TilePrefab>().objectOnTile = newDummy;
             validTiles.RemoveAt(randomIndex);
         }
