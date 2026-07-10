@@ -77,7 +77,14 @@ private void InstantiateTurnUI()
 
 private void UpdateCurrentTile()
 {
+    if(currentTile != null)
+    {
+        tileGrid.ChangeObjectOnTileState(currentTile, false);       
+    }
+
     currentTile = tileGrid.FindNearestTileToGameObject(gameObject);
+    tileGrid.ChangeObjectOnTileState(currentTile, true);  
+
     currentTileDistanceToPlayer = tileGrid.GetTileDistanceBetweenObjects(currentTile, player);
 }
 
@@ -182,6 +189,8 @@ private void DecreaseTurnUI()
 private void OnDestroy()
 {
     RoundManager.UnregisterEnemy(gameObject);
+    
+    if(currentTile != null) tileGrid.ChangeObjectOnTileState(currentTile, false);
 
     QueueListData.OnProgramCompletion -= DecreaseTurnUI;
     playerLogic.PlayerChangedPosition -= CheckToStartAttackBehaviors;

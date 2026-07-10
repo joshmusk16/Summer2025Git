@@ -130,6 +130,8 @@ public class LevelCollection : MonoBehaviour
 
             GameObject newDummy = Instantiate(dummy, selectedTile.transform.position, Quaternion.identity);
             RoundManager.RegisterEnemy(newDummy);
+
+            tileGrid.ChangeObjectOnTileState(selectedTile, true);
             selectedTile.GetComponent<TilePrefab>().objectOnTile = newDummy;
             validTiles.RemoveAt(randomIndex);
         }

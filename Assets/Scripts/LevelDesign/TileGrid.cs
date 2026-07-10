@@ -12,6 +12,7 @@ public class TileGrid : MonoBehaviour
     public GameObject tilePrefab;
 
     public List<GameObject> tiles = new List<GameObject>();
+    public Dictionary<GameObject, bool> objectOnTileStates = new(); //true = object on tile, false = object not on tile
     public GameObject[,] tileGrid;
     [SerializeField] private bool isEditable = false;
 
@@ -86,6 +87,41 @@ public class TileGrid : MonoBehaviour
 
     //==========================================================================================
     //==========================================================================================
+
+    private void InitializeObjectOnTileStates()
+    {
+        objectOnTileStates.Clear();
+
+        if(tiles.Count == 0) return;
+ 
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            if (tiles[i] != null)
+            {
+                objectOnTileStates[tiles[i]] = false;
+            }
+        }
+    }
+
+    public void ChangeObjectOnTileState(GameObject tile, bool newState)
+    {
+        if (objectOnTileStates.ContainsKey(tile))
+        {
+            objectOnTileStates[tile] = newState;
+        }
+    }
+
+    public bool GetObjectOnTileState(GameObject tile)
+    {
+        if (!objectOnTileStates.ContainsKey(tile))
+        {
+            Debug.Log("Does not contain key");
+            return true;
+        }
+
+        Debug.Log("Returned key" + objectOnTileStates[tile]);
+        return objectOnTileStates[tile];
+    }
 
     public void LoadLevel(LevelData levelData)
     {
@@ -213,6 +249,8 @@ public class TileGrid : MonoBehaviour
                 }
             }
         }
+
+        InitializeObjectOnTileStates();
     }
 
     public void FindNearestTile()

@@ -72,66 +72,59 @@ public class PlayerTargeting : MonoBehaviour
         );
     }
 
-    public Vector2 SelectedTile(int range = 0, ProgramType programType = ProgramType.Attack)
+public Vector2 SelectedTile(int range = 0, ProgramType programType = ProgramType.Attack)
+{
+    Vector2 currentMousePosition = mouseTracker.GetWorldMousePosition();
+
+    ref Vector2 cachedTile = ref GetCacheForType(programType);
+
+    if (tileGrid.tiles.Count == 0)
     {
-        Vector2 currentMousePosition = mouseTracker.GetWorldMousePosition();
-
-        if (tileGrid.tiles.Count == 0)
-        {
-            ref Vector2 cachedTileEmpty = ref GetCacheForType(programType);
-            cachedTileEmpty = currentMousePosition;
-            return cachedTileEmpty;
-        }
-
-        Vector2 hoveredGridPos = WorldToGridPosition(currentMousePosition);
-
-        ref Vector2 cachedTile = ref GetCacheForType(programType);
-        ref Vector2 lastHovered = ref GetLastHoveredForType(programType);
-
-        // Return cached value if nothing changed
-        if (hoveredGridPos == lastHovered && range == GetRangeForType(programType))
-        {
-            return cachedTile;
-        }
-
-        lastHovered = hoveredGridPos;
-
-        // Check grid bounds
-        bool insideGrid =
-            hoveredGridPos.x >= 0 &&
-            hoveredGridPos.y >= 0 &&
-            hoveredGridPos.x < tileGrid.gridWidth &&
-            hoveredGridPos.y < tileGrid.gridHeight;
-
-        if (insideGrid)
-        {
-            TilePrefab tileScript =
-                tileGrid.tileGrid[(int)hoveredGridPos.x, (int)hoveredGridPos.y]
-                .GetComponent<TilePrefab>();
-
-            bool tileValid = tileScript.state == 1;
-            bool inRange = range <= 0 || IsWithinRange(hoveredGridPos, range);
-
-            if (tileValid && inRange)
-            {
-                cachedTile = tileGrid
-                    .tileGrid[(int)hoveredGridPos.x, (int)hoveredGridPos.y]
-                    .transform.position;
-
-                return cachedTile;
-            }
-        }
-
-        // Fallbacks
-        if (range > 0)
-        {
-            cachedTile = GetClosestInRangeTile(range);
-            return cachedTile;
-        }
-
         cachedTile = currentMousePosition;
         return cachedTile;
     }
+
+    Vector2 hoveredGridPos = WorldToGridPosition(currentMousePosition);
+
+    // Track last hovered position (no longer used to skip recompute,
+    // but kept in case other code reads it)
+    ref Vector2 lastHovered = ref GetLastHoveredForType(programType);
+    lastHovered = hoveredGridPos;
+
+    // Check grid bounds
+    bool insideGrid =
+        hoveredGridPos.x >= 0 &&
+        hoveredGridPos.y >= 0 &&
+        hoveredGridPos.x < tileGrid.gridWidth &&
+        hoveredGridPos.y < tileGrid.gridHeight;
+
+    if (insideGrid)
+    {
+        GameObject tile =
+            tileGrid.tileGrid[(int)hoveredGridPos.x, (int)hoveredGridPos.y];
+        TilePrefab tileScript = tile.GetComponent<TilePrefab>();
+
+        bool tileValid = tileScript.state == 1;
+        bool inRange = range <= 0 || IsWithinRange(hoveredGridPos, range);
+        bool noObjectsOnTile = !tileGrid.GetObjectOnTileState(tile);
+
+        if (tileValid && inRange && noObjectsOnTile)
+        {
+            cachedTile = tile.transform.position;
+            return cachedTile;
+        }
+    }
+
+    // Fallbacks
+    if (range > 0)
+    {
+        cachedTile = GetClosestInRangeTile(range);
+        return cachedTile;
+    }
+
+    cachedTile = currentMousePosition;
+    return cachedTile;
+}
 
     private ref Vector2 GetCacheForType(ProgramType programType)
     {
@@ -213,11 +206,15 @@ public class PlayerTargeting : MonoBehaviour
     {
         for (int y = minY; y <= maxY; y++)
         {
-            // Check if tile is valid (state == 1)
-            TilePrefab tileScript = tileGrid.tileGrid[x, y].GetComponent<TilePrefab>();
-            if (tileScript.state == 1)
+            GameObject tile = tileGrid.tileGrid[x, y];
+            TilePrefab tileScript = tile.GetComponent<TilePrefab>();
+
+            bool tileValid = tileScript.state == 1;
+            bool noObjectsOnTile = !tileGrid.GetObjectOnTileState(tile);
+
+            if (tileValid && noObjectsOnTile)
             {
-                validTilesInRange.Add(tileGrid.tileGrid[x, y]);
+                validTilesInRange.Add(tile);
             }
         }
     }
