@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    public static float timeMultiplier = 1;
+    public static float timeMultiplier = DEBUG_MULTIPLIER;
+
+    private const float DEBUG_MULTIPLIER = 1f;
     
     public float pauseDuration = 0.05f;
     public float pauseElapsed = 0f;
@@ -29,7 +31,7 @@ public class TimeManager : MonoBehaviour
 
     public void StartTime()
     {
-        timeMultiplier = 1;
+        timeMultiplier = DEBUG_MULTIPLIER;
     }
 
     public void GraduallyUnpauseTime()
@@ -48,7 +50,7 @@ public class TimeManager : MonoBehaviour
 
     private float EaseInExpo(float x)
     {
-        return x == 1f ? 1f : 1f - Mathf.Pow(2f, -10f * x);
+        return x == DEBUG_MULTIPLIER ? DEBUG_MULTIPLIER : DEBUG_MULTIPLIER - Mathf.Pow(2f, -10f * x);
     }
 
     private void UpdatePause()
@@ -61,11 +63,11 @@ public class TimeManager : MonoBehaviour
         if (unpausing)
         {
             timeMultiplier = EaseInExpo(t);
-            if (timeMultiplier >= 1f) unpausing = false;
+            if (timeMultiplier >= DEBUG_MULTIPLIER) unpausing = false;
         }
         else if (pausing)
         {
-            timeMultiplier = 1f - EaseInExpo(t);
+            timeMultiplier = DEBUG_MULTIPLIER - EaseInExpo(t);
             if (timeMultiplier <= 0f) pausing = false;
         }
     }
