@@ -2,12 +2,16 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    public static float timeMultiplier = DEBUG_MULTIPLIER;
+    public static float timeMultiplier;
+    public static float normalizedTimeMultiplier = 1f;
 
-    private const float DEBUG_MULTIPLIER = 1f;
+    private float currentTimeMultiplier;
+
+    private const float timeMultiplierMax = 2.0f;
+    private const float timeMultiplierMin = 1f;
     
-    public float pauseDuration = 0.05f;
-    public float pauseElapsed = 0f;
+    private float pauseDuration = 0.15f;
+    private float pauseElapsed = 0f;
     private bool unpausing = false;
     private bool pausing = false;
 
@@ -15,6 +19,9 @@ public class TimeManager : MonoBehaviour
 
     void Start()
     {
+        timeMultiplier = timeMultiplierMin;
+        currentTimeMultiplier = timeMultiplierMin;
+
         programInputManager.OnSlowModeEnter += GraduallyPauseTime;
         programInputManager.OnSlowModeExit += GraduallyUnpauseTime;
     }
@@ -24,14 +31,35 @@ public class TimeManager : MonoBehaviour
         UpdatePause();
     }
 
-    public void StopTime()
+    private void StopTime()
     {
         timeMultiplier = 0;
     }
 
-    public void StartTime()
+    private void StartTime()
     {
-        timeMultiplier = DEBUG_MULTIPLIER;
+        timeMultiplier = currentTimeMultiplier;
+    }
+
+    public void IncreaseGameSpeed(float amount)
+    {
+        amount = Mathf.Abs((float)System.Math.Round(amount, 2));
+        if (currentTimeMultiplier + amount <= timeMultiplierMax)
+        {
+            currentTimeMultiplier += amount;
+            timeMultiplier = currentTimeMultiplier;
+        }
+    }
+
+    public void DecreaseGameSpeed(float amount)
+    {
+        amount = Mathf.Abs((float)System.Math.Round(amount, 2));
+
+        if(currentTimeMultiplier - amount >= timeMultiplierMin)
+        {
+            currentTimeMultiplier -= amount;
+            timeMultiplier = currentTimeMultiplier;
+        }
     }
 
     public void GraduallyUnpauseTime()
@@ -43,6 +71,7 @@ public class TimeManager : MonoBehaviour
 
     public void GraduallyPauseTime()
     {
+        Debug.Log("GraduallyPauseTime called");
         unpausing = false;
         pausing = true;
         pauseElapsed = 0f;
@@ -50,7 +79,7 @@ public class TimeManager : MonoBehaviour
 
     private float EaseInExpo(float x)
     {
-        return x == DEBUG_MULTIPLIER ? DEBUG_MULTIPLIER : DEBUG_MULTIPLIER - Mathf.Pow(2f, -10f * x);
+        return 1f - Mathf.Pow(1f - x, 3f);
     }
 
     private void UpdatePause()
@@ -59,16 +88,21 @@ public class TimeManager : MonoBehaviour
 
         pauseElapsed += Time.deltaTime;
         float t = Mathf.Clamp01(pauseElapsed / pauseDuration);
+        float eased = EaseInExpo(t);
+        Debug.Log("Eased is" + eased);
 
         if (unpausing)
         {
-            timeMultiplier = EaseInExpo(t);
-            if (timeMultiplier >= DEBUG_MULTIPLIER) unpausing = false;
+            timeMultiplier = Mathf.Lerp(0f, currentTimeMultiplier, eased);
+            normalizedTimeMultiplier = Mathf.Lerp(0f, 1f, eased);
+            if (t >= 1f) unpausing = false;
         }
         else if (pausing)
         {
-            timeMultiplier = DEBUG_MULTIPLIER - EaseInExpo(t);
-            if (timeMultiplier <= 0f) pausing = false;
+            timeMultiplier = Mathf.Lerp(currentTimeMultiplier, 0f, eased);
+            normalizedTimeMultiplier = Mathf.Lerp(1f, 0f, eased);
+            normalizedTimeMultiplier = 1 - eased;
+            if (t >= 1f) pausing = false;
         }
     }
 

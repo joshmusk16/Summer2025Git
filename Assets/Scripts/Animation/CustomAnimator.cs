@@ -14,6 +14,8 @@ public class CustomAnimator : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
 
+    public bool isUsingTimeManagerTime = false;
+
     public Sprite[] currentSprites;
     public bool isPlaying = false;
     private bool shouldLoop = false;
@@ -43,7 +45,7 @@ public class CustomAnimator : MonoBehaviour
             spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (!isPlaying || currentSprites == null) return;
 
@@ -60,7 +62,14 @@ public class CustomAnimator : MonoBehaviour
     private void UpdateTimeDrivenAnimation()
     {
         // Update frame timer
-        frameTimer += Time.deltaTime * TimeManager.timeMultiplier;
+        if (isUsingTimeManagerTime)
+        {
+            frameTimer += Time.deltaTime * TimeManager.timeMultiplier;   
+        }
+        else
+        {
+            frameTimer += Time.deltaTime * TimeManager.normalizedTimeMultiplier;   
+        }
 
         // Check if we need to change frames based on time thresholds
         if (currentFrameIndex < frameTimeThresholds.Length - 1 && frameTimer >= frameTimeThresholds[currentFrameIndex + 1])

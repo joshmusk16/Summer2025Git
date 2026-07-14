@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private float totalDistance;
     public event Action OnLocationLerpFinish;
 
-    void Update()
+    void LateUpdate()
     {
         if (isMoving)
         {

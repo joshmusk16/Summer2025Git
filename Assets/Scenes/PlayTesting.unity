@@ -174,6 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423817dc4e7b38f458c652629bbb73eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isUsingTimeManagerTime: 0
   currentSprites: []
   isPlaying: 0
   animHitboxTimings: []
@@ -685,7 +686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78b29818bd2fe8145b6ed782122a0a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseDuration: 1
+  pauseDuration: 0.5
   pauseElapsed: 0
   programInputManager: {fileID: 962996297}
 --- !u!4 &245275695
@@ -1768,7 +1769,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5fb7c1190ab69442b5a86ebf9f59a77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemies: []
 --- !u!4 &835324205
 Transform:
   m_ObjectHideFlags: 0
@@ -3476,6 +3476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423817dc4e7b38f458c652629bbb73eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isUsingTimeManagerTime: 1
   currentSprites: []
   isPlaying: 0
   animHitboxTimings: []

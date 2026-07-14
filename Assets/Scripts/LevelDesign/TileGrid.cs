@@ -119,7 +119,6 @@ public class TileGrid : MonoBehaviour
             return true;
         }
 
-        Debug.Log("Returned key" + objectOnTileStates[tile]);
         return objectOnTileStates[tile];
     }
 
