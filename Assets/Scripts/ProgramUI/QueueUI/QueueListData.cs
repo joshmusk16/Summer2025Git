@@ -89,7 +89,7 @@ public void AddProgramToQueue(ProgramType programType)
     }
     else
     {
-        //dashProgramManager.GetComponent<DashChargeFiring>().OnDashQueued(programType);
+        //Anything that might need to happen immediately after a DASH is queued should go here
     }
 
     QueueParameter nextQueueProgram = queueDataCollector.CollectQueueData(nextProgramObject, programType);

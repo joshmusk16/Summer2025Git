@@ -1,14 +1,10 @@
 public class DashChargeFiring : Program
 {
     private const float DASH_SPEED = 15f;
-    private const int REMOVE_CHARGE_AMOUNT = 1;
-
-    private DashChargeManager dashChargeManager;
 
     void Start()
     {
         FindDependencies();
-        dashChargeManager = FindAnyObjectByType<DashChargeManager>();
 
         if (player != null)
         {
@@ -33,14 +29,6 @@ public class DashChargeFiring : Program
         if(type == ProgramType.Dash)
         {
         inputManager.isDashing = false;
-        }
-    }
-
-    public void OnDashQueued(ProgramType type)
-    {
-        if(type == ProgramType.Dash)
-        {
-            dashChargeManager.RemoveDashCharge(REMOVE_CHARGE_AMOUNT);
         }
     }
 }

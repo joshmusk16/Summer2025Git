@@ -19,8 +19,6 @@ public class ProgramInputManager : MonoBehaviour
     public event Action OnSlowModeEnter;
     public event Action OnSlowModeExit;
 
-    private TimeSlowTimerLogic timeSlowTimerLogic;
-    private DashChargeManager dashChargeManager;
     private ProgramListData attackProgramList;
     private ProgramListData defenseProgramList;
     private PanelsUI panelsUI;
@@ -35,8 +33,6 @@ public class ProgramInputManager : MonoBehaviour
         defenseProgramList = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
 
         queueProgramList = FindObjectOfType<QueueListData>();
-        dashChargeManager = FindObjectOfType<DashChargeManager>();
-        timeSlowTimerLogic = FindObjectOfType<TimeSlowTimerLogic>();
         panelsUI = FindObjectOfType<PanelsUI>();
     }
 
@@ -72,20 +68,20 @@ public class ProgramInputManager : MonoBehaviour
                 isDefending = true;
             }
 
-            if (Input.GetKeyDown(DASH_KEY) && dashChargeManager.IsDashChargeAvailable())
+            if (Input.GetKeyDown(DASH_KEY))
             {
                 queueProgramList.AddProgramToQueue(ProgramType.Dash);
                 isDashing = true;
             }       
         }
 
-        if (Input.GetKeyDown(TIMESLOW_KEY) && timeSlowTimerLogic.IsTimeSlowAboveZero())
+        if (Input.GetKeyDown(TIMESLOW_KEY))
         {
             Debug.Log("Entering program rearrangement mode");
             OnSlowModeEnter?.Invoke();
             inSlowTimeMode = true;
         }
-        else if (Input.GetKeyUp(TIMESLOW_KEY) && timeSlowTimerLogic.IsTimeSlowAboveZero())
+        else if (Input.GetKeyUp(TIMESLOW_KEY))
         {
             Debug.Log("Exiting program rearrangement mode");
             ForceExitSlowMode();

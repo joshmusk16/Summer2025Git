@@ -75,7 +75,7 @@ private void GenerateNumberText(int inputNumber, ref GameObject numberParent, Li
         number.GetComponent<SpriteRenderer>().sortingOrder = SORTING_ORDER;
         numbers.Add(number);
 
-        float letterWidth = numberWidths[spriteName] / 2;       //LINE 76
+        float letterWidth = numberWidths[spriteName] / 2;
         if(i != input.Length - 1 && numberWidths.ContainsKey(char.ToUpper(input[i + 1]).ToString()))
         {
             letterWidth += numberWidths[char.ToUpper(input[i + 1]).ToString()] / 2f;   
