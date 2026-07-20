@@ -18,7 +18,7 @@ public void InitializeComboBar()
     if(startingComboAmount > 0 && startingComboAmount < MAX_COMBO_ALLOWED)
     {
         currentCombo = startingComboAmount;
-        comboBarUI.GenerateComboNumber(currentCombo);   
+        comboBarUI.UpdateComboNumberUI(currentCombo);   
     }
 }
 
@@ -33,7 +33,7 @@ public void AddToCombo(int amount)
         currentCombo = MAX_COMBO_ALLOWED;
     }
 
-    comboBarUI.GenerateComboNumber(currentCombo); 
+    comboBarUI.UpdateComboNumberUI(currentCombo); 
 }
 
 public void RemoveFromCombo(int amount)
@@ -47,7 +47,7 @@ public void RemoveFromCombo(int amount)
         currentCombo = 0;
     }
 
-    comboBarUI.GenerateComboNumber(currentCombo); 
+    comboBarUI.UpdateComboNumberUI(currentCombo); 
 }
 
 public void MultiplyCombo(float amount)
@@ -63,7 +63,7 @@ public void MultiplyCombo(float amount)
         currentCombo = MAX_COMBO_ALLOWED;
     }
 
-    comboBarUI.GenerateComboNumber(currentCombo); 
+    comboBarUI.UpdateComboNumberUI(currentCombo); 
 }
 
 public void DivideCombo(int amount)
@@ -79,7 +79,7 @@ public void DivideCombo(int amount)
         currentCombo = MAX_COMBO_ALLOWED;
     }
     
-    comboBarUI.GenerateComboNumber(currentCombo); 
+    comboBarUI.UpdateComboNumberUI(currentCombo); 
 }
 
 //Types: Adding to combo = 1, Removing from combo = 2, multiply combo = 3, divide combo = 4.

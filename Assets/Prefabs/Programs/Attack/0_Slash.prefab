@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 32863711200539805}
   - component: {fileID: 3007708710948152179}
   - component: {fileID: 2564874997129578755}
-  - component: {fileID: 5118383221459371758}
   m_Layer: 0
   m_Name: 0_Slash
   m_TagString: Untagged
@@ -69,8 +68,6 @@ MonoBehaviour:
   hitboxTimings:
   - hitbox: {fileID: 2564874997129578755}
     activationFrames: 03000000
-  - hitbox: {fileID: 5118383221459371758}
-    activationFrames: 03000000
   rewardRequirementType: 1
   comboRewardType: 1
   amountToChangeComboBar: 1
@@ -97,32 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 2, y: 0.3}
-  size: {x: 1, y: 3.25}
-  isActive: 0
-  showDebugGizmo: 1
-  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
-  damage: 2
-  hitboxTags:
-  - default
-  hasHitOnce: 0
-  multiHit: 0
-  multiHitInterval: 0.5
-  maxHits: -1
---- !u!114 &5118383221459371758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7541618184239397820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78b246ddef1879a42b6c6212ebbc0170, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: {x: 0.75, y: -0.8}
-  size: {x: 1.5, y: 1}
+  offset: {x: 1.6, y: 0.3}
+  size: {x: 2, y: 3.25}
   isActive: 0
   showDebugGizmo: 1
   gizmoColor: {r: 1, g: 0, b: 0, a: 1}

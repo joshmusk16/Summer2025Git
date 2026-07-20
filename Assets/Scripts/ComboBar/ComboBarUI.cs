@@ -15,12 +15,14 @@ private GameObject damageSymbolObject;
 private GameObject damageSymbolParent;
 public Sprite damageSymbolSprite;
 
+private GameObject comboBarParent;
+
 private List<GameObject> Digits = new();
 private List<int> IntegerDigits = new();
-private const float Y_OFFSET = 1.3f;
+private const float Y_OFFSET = 1.15f;
 
 private const float NUMBER_OFFSET_LENGTH = 2f;
-private const float SYMBOL_TO_NUMBER_OFFSET = 4f;
+private const float SYMBOL_TO_NUMBER_OFFSET = 3f;
 private const float TEXT_SCALE = 1f;
 private const float TEXT_PPU = 16f;
 private const int SORTING_ORDER = 100;
@@ -37,7 +39,7 @@ void Update()
 {
     if (Input.GetKeyDown(KeyCode.N))
     {
-        GenerateComboNumber(UnityEngine.Random.Range(1, 200));        
+        UpdateComboNumberUI(UnityEngine.Random.Range(1, 200));       
     }
 }
 
@@ -93,10 +95,6 @@ public void GenerateComboNumber(int number)
     {
         digit.transform.SetParent(numberParent.transform);
     }
-
-    numberParent.transform.position -= (Vector3)offset / 2f;
-
-    OnComboUpdate?.Invoke();
 }
 
 private void GenerateDamageSymbol()
@@ -118,9 +116,31 @@ private void GenerateDamageSymbol()
     }
 }
 
-public void UpdateComboNumberUI()
+public void UpdateComboNumberUI(int number)
 {
-    //GenerateDamageSymbol and GenerateComboNumber, then reposition to center on the combar bar...
+    GenerateDamageSymbol();
+    GenerateComboNumber(number);
+
+    numberParent.transform.position = GetTightBottomRight(damageSymbolSprite, damageSymbolObject.transform) +
+    new Vector2(SYMBOL_TO_NUMBER_OFFSET / TEXT_PPU * TEXT_SCALE, 0);
+
+    if(comboBarParent == null)
+    {
+        comboBarParent = Instantiate(emptyObject, gameObject.transform);
+        comboBarParent.name = "Combo Bar Parent";
+    }
+
+    comboBarParent.transform.position = numberParent.transform.position;
+    damageSymbolParent.transform.SetParent(comboBarParent.transform);
+    numberParent.transform.SetParent(comboBarParent.transform);
+
+    float X_OFFSET = Mathf.Abs(numberParent.transform.position.x - 
+    GetTightBottomRight(numberAtlas.GetSprite(IntegerDigits[^1].ToString()), Digits[^1].transform).x) / 2f;
+
+    comboBarParent.transform.position = gameObject.transform.position + 
+    new Vector3(-X_OFFSET, -Y_OFFSET);
+
+    OnComboUpdate?.Invoke();
 }
 
 

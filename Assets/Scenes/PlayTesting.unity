@@ -1589,7 +1589,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 6b8a6cac2cb995545b22e9da6d1eee56, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1630,7 +1630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
   numberAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
-  damageSymbolSprite: {fileID: 0}
+  damageSymbolSprite: {fileID: 21300000, guid: e0f8b1e8651cb7140ab183349df06dc8, type: 3}
 --- !u!114 &754926361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2222,7 +2222,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1102729334}
-  - component: {fileID: 1102729333}
   - component: {fileID: 1102729335}
   m_Layer: 5
   m_Name: DashChargeManager
@@ -2231,24 +2230,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1102729333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1102729332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4294adcac031bda4a91dd70659d42aa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  totalDashCharges: 0
-  currentDashCharges: 0
-  dashCharges: []
-  dashCharge: {fileID: 6011220970149492049, guid: c34507a056ba11844bc16cefce4d47ed, type: 3}
-  STARTING_DASH_CHARGE_AMOUNT: 10
-  totalXLength: 4
 --- !u!4 &1102729334
 Transform:
   m_ObjectHideFlags: 0
