@@ -7,8 +7,8 @@ public class TimeManager : MonoBehaviour
 
     private float currentTimeMultiplier;
 
-    private const float timeMultiplierMax = 2.0f;
-    private const float timeMultiplierMin = 1f;
+    private const float timeMultiplierMax = 5.0f;
+    private const float timeMultiplierMin = 1.0f;
     
     private float pauseDuration = 0.15f;
     private float pauseElapsed = 0f;

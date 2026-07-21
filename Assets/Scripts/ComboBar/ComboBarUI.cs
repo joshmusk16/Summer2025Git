@@ -58,7 +58,7 @@ void FindNumberWidths()
     }
 }
 
-public void GenerateComboNumber(int number)
+private void GenerateComboNumber(int number)
 {
     DestroyDigits();
     AddDigitsToList(number);
