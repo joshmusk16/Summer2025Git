@@ -218,6 +218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423817dc4e7b38f458c652629bbb73eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isUsingTimeManagerTime: 0
   currentSprites: []
   isPlaying: 0
   animHitboxTimings: []

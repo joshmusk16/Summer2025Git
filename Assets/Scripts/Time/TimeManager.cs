@@ -15,20 +15,35 @@ public class TimeManager : MonoBehaviour
     private bool unpausing = false;
     private bool pausing = false;
 
-    public ProgramInputManager programInputManager;
+    private ProgramInputManager programInputManager;
+    private TimeSpeedUI timeSpeedUI;
 
     void Start()
     {
         timeMultiplier = timeMultiplierMin;
         currentTimeMultiplier = timeMultiplierMin;
 
+        UpdateTimeSpeedUI();
+
         programInputManager.OnSlowModeEnter += GraduallyPauseTime;
         programInputManager.OnSlowModeExit += GraduallyUnpauseTime;
+    }
+
+    private void FindDependencies()
+    {
+        if(timeSpeedUI == null) timeSpeedUI = gameObject.GetComponent<TimeSpeedUI>();
+        if(programInputManager == null) programInputManager = FindObjectOfType<ProgramInputManager>();
     }
 
     void Update()
     {
         UpdatePause();
+    }
+
+    private void UpdateTimeSpeedUI()
+    {
+        FindDependencies();
+        timeSpeedUI.UpdateGameSpeedUI(timeMultiplier);
     }
 
     private void StopTime()
@@ -48,6 +63,7 @@ public class TimeManager : MonoBehaviour
         {
             currentTimeMultiplier += amount;
             timeMultiplier = currentTimeMultiplier;
+            UpdateTimeSpeedUI();
         }
     }
 
@@ -59,6 +75,7 @@ public class TimeManager : MonoBehaviour
         {
             currentTimeMultiplier -= amount;
             timeMultiplier = currentTimeMultiplier;
+            UpdateTimeSpeedUI();
         }
     }
 
