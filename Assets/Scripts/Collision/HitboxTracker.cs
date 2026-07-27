@@ -6,14 +6,21 @@ public class HitboxTracker : MonoBehaviour
 
 public Dictionary<GameObject, List<HitBox>> hitboxGroups = new();
 public static HitboxTracker Instance { get; private set; }
-public ComboBarLogic comboBar;
-public PlayerTimerLogic playerTimerBar;
+private ComboBarLogic comboBar;
+private PlayerTimerLogic playerTimerBar;
+private TimeManager gameSpeedManager;
 
 private void Awake()
+{
+    FindDependencies();
+}
+
+private void FindDependencies()
 {
     Instance = this;
     comboBar = FindObjectOfType<ComboBarLogic>();
     playerTimerBar = FindObjectOfType<PlayerTimerLogic>();
+    gameSpeedManager = FindObjectOfType<TimeManager>();
 }
 
 public void RegisterHitboxGroup(GameObject program, HitboxTiming[] hitboxTimings, int hitboxAmount)
@@ -38,8 +45,9 @@ public void UnregisterHitboxGroup(GameObject program)
 public void CheckForReward
 (GameObject program, 
     int rewardRequirementType, 
-        int comboRewardType, int comboAmount, 
-        int timerRewardType, int timerAmount)
+    int comboRewardType, int comboAmount, 
+    int timerRewardType, int timerAmount,
+    int gameSpeedRewardType, float gameSpeedAmount)
 {
     if(!hitboxGroups.ContainsKey(program)) return;
     
@@ -59,6 +67,7 @@ public void CheckForReward
     {
         comboBar.ChangeComboBar(comboRewardType, comboAmount);
         playerTimerBar.ChangeTimerBar(timerRewardType, timerAmount);
+        gameSpeedManager.ChangeGameSpeed(gameSpeedRewardType, gameSpeedAmount);
         UnregisterHitboxGroup(program);
     }
 }

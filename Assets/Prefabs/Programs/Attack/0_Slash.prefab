@@ -72,7 +72,9 @@ MonoBehaviour:
   comboRewardType: 1
   amountToChangeComboBar: 1
   timerRewardType: 1
-  amountToChangeTimerBar: 3
+  amountToChangeTimerBar: 2
+  gameSpeedRewardType: 1
+  amountToChangeGameSpeed: 0.05
   programName: SLASH
   programDescription: ONHIT DEAL COMBO/NADD +1 TO COMBO.
   player: {fileID: 0}
@@ -81,7 +83,6 @@ MonoBehaviour:
   playerTargeting: {fileID: 0}
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
-  comboBar: {fileID: 0}
 --- !u!114 &2564874997129578755
 MonoBehaviour:
   m_ObjectHideFlags: 0

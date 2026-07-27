@@ -82,6 +82,8 @@ MonoBehaviour:
   amountToChangeComboBar: 3
   timerRewardType: 1
   amountToChangeTimerBar: 5
+  gameSpeedRewardType: 1
+  amountToChangeGameSpeed: 0.1
   programName: IMPALE
   programDescription: ONHIT EACH SIDE/NADDS +3 COMBO
   player: {fileID: 0}
@@ -90,7 +92,6 @@ MonoBehaviour:
   playerTargeting: {fileID: 0}
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
-  comboBar: {fileID: 0}
 --- !u!114 &300015249756292785
 MonoBehaviour:
   m_ObjectHideFlags: 0

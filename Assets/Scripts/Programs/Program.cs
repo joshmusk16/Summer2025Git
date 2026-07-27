@@ -31,9 +31,13 @@ public class Program : MonoBehaviour
 
     public int timerRewardType;
     public int amountToChangeTimerBar;
+
+    public int gameSpeedRewardType;
+    public float amountToChangeGameSpeed;
     
     //Reward Requirement types : 1 = HasAnyHitboxHit, 2 = HasEveryHitboxHit
-    //Types: Adding to combo = 1, Removing from combo = 2, multiply combo = 3, divide combo = 4.
+    //Types: Adding to combo = 1, Removing from combo = 2, multiply combo = 3, divide combo = 4
+    //Types : No gamespeed reward = 0, add to gameSpeed = 1, remove from gamespeed = 2
 
     [Header("Description Box Data")]
     public string programName;
@@ -45,7 +49,6 @@ public class Program : MonoBehaviour
     [HideInInspector] public PlayerTargeting playerTargeting;
     [HideInInspector] public ProgramUI programUI;
     [HideInInspector] public ProgramInputManager inputManager;
-    [HideInInspector] public ComboBarLogic comboBar;
     
     public virtual void FireProgram(QueueParameter queueParameter)
     {
@@ -76,7 +79,6 @@ public class Program : MonoBehaviour
         playerMovement = FindObjectOfType<PlayerMovement>();
         playerTargeting = FindObjectOfType<PlayerTargeting>();
         inputManager = FindObjectOfType<ProgramInputManager>();
-        comboBar = FindObjectOfType<ComboBarLogic>();
 
         if (player != null)
         {

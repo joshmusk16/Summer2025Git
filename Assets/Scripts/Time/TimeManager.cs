@@ -56,6 +56,21 @@ public class TimeManager : MonoBehaviour
         timeMultiplier = currentTimeMultiplier;
     }
 
+    public void ChangeGameSpeed(int gameSpeedRewardType, float amountToChangeGameSpeed)
+    {
+        if(gameSpeedRewardType < 1 || gameSpeedRewardType > 2) return;
+
+        switch (gameSpeedRewardType)
+        {   
+            case 1: 
+                IncreaseGameSpeed(amountToChangeGameSpeed);
+                break;
+            case 2:
+                DecreaseGameSpeed(amountToChangeGameSpeed);
+                break;
+        }
+    }
+
     public void IncreaseGameSpeed(float amount)
     {
         amount = Mathf.Abs((float)System.Math.Round(amount, 2));
