@@ -13,6 +13,7 @@ public static event Action OnAllEnemiesCleared;
 private QueueListData queueListData;
 private PlayerTimerLogic playerTimerLogic;
 private LevelCollection levelManager;
+private ProgramInputManager programInputManager;
 
     void Awake()
     {
@@ -24,15 +25,18 @@ private LevelCollection levelManager;
         queueListData = FindObjectOfType<QueueListData>();
         playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
         levelManager = FindObjectOfType<LevelCollection>();
+        programInputManager = FindObjectOfType<ProgramInputManager>();
     }
 
     public void SetupNewRound()
     {
         if(queueListData == null 
         || playerTimerLogic == null
-        || levelManager == null) FindDependencies();
+        || levelManager == null
+        || programInputManager == null) FindDependencies();
 
         levelManager.ResetRandomLevel();
+        programInputManager.EnableInput();
         QueueListData.OnProgramAddedToQueue += AfterFirstQueueEvents;
         OnAllEnemiesCleared += EndRound;
     }
@@ -41,7 +45,8 @@ private LevelCollection levelManager;
     {
         if(queueListData == null 
         || playerTimerLogic == null
-        || levelManager == null) FindDependencies();
+        || levelManager == null
+        || programInputManager == null) FindDependencies();
 
         playerTimerLogic.StartRunningTimer();
         QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
@@ -51,9 +56,12 @@ private LevelCollection levelManager;
     {
         if(queueListData == null 
         || playerTimerLogic == null
-        || levelManager == null) FindDependencies();
+        || levelManager == null
+        || programInputManager == null) FindDependencies();
 
+        programInputManager.DisableInput();
         playerTimerLogic.StopRunningTimer();
+        queueListData.ClearQueue();
         
         //SetupNewRound();
     }

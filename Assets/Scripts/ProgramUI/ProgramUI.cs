@@ -224,6 +224,28 @@ public class ProgramUI : MonoBehaviour
         }   
     }
 
+    public void UpdateQueueUIEndofRound(ProgramType programType)
+    {
+        if(queueUIObjects.Count < 1) return; 
+
+        if(programType == uiType)
+        {
+            for(int i = 1; i < queueUIObjects.Count; i++)
+            {
+                queueUIStates[queueUIObjects[i]] = false;
+            }
+        }
+        else
+        {
+            for(int i = 0; i < queueUIObjects.Count; i++)
+            {
+                queueUIStates[queueUIObjects[i]] = false;
+            }
+        }
+
+        SetQueueUISprites();
+    }
+
 #region Position Methods
 
     void SetUIPositions(int handSize)

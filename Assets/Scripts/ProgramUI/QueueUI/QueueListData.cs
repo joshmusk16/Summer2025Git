@@ -6,6 +6,7 @@ public class QueueListData : MonoBehaviour
 {
 
 private GameObject currentProgram;
+private ProgramType currentProgramType;
 
 public List<QueueParameter> queueList = new();
 
@@ -27,7 +28,7 @@ public GameObject dashProgramManager;
 public static event Action OnProgramAddedToQueue;
 public static event Action OnProgramCompletion;
 
-void Start()
+void Awake()
 {
     attackProgramList = GameObject.Find("AttackUIManager").GetComponent<ProgramListData>();
     defenseProgramList = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
@@ -44,6 +45,15 @@ void Start()
     {
         playerLogic = player.GetComponent<PlayerLogic>();
     }
+}
+
+public void ClearQueue()
+{
+    if(queueList.Count < 1) return;
+    
+    queueList.RemoveRange(1, queueList.Count - 1);
+    attackProgramUI.UpdateQueueUIEndofRound(currentProgramType);
+    defenseProgramUI.UpdateQueueUIEndofRound(currentProgramType);
 }
 
 public Vector2 EndOfQueueDestination()
@@ -122,6 +132,8 @@ private void UpdateTargetingParameters(GameObject programObject, ProgramType pro
 
 public void StartQueue(ProgramType programType)
 {
+    currentProgramType = programType;
+
     if(programType == ProgramType.Attack ||
     programType == ProgramType.Defense)
         {
@@ -173,6 +185,7 @@ public void ContinueQueue(ProgramType completedType)
     if(queueList.Count > 0)
     {
         //Debug.Log("Trying to start queue again...");
+
         StartQueue(queueList[0].programType);  
     }
     else

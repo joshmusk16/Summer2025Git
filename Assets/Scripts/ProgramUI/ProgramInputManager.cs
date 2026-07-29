@@ -8,7 +8,8 @@ public class ProgramInputManager : MonoBehaviour
     private const KeyCode DASH_KEY = KeyCode.Space;
     private const KeyCode TIMESLOW_KEY = KeyCode.Tab;
 
-    public bool canUseProgram;
+    public bool canUseProgram = true;
+    private bool inputIsAllowed = true;
     public bool isAttacking;
     public bool isDefending;
     public bool isDashing;
@@ -45,16 +46,16 @@ public class ProgramInputManager : MonoBehaviour
 
     void Update()
     {
-        if (panelsUI.isInLeftOrRightZone == false)
-        {
-            canUseProgram = true;
-        }
-        else
+        if (panelsUI.isInLeftOrRightZone == true && inSlowTimeMode == true)
         {
             canUseProgram = false;
         }
+        else
+        {
+            canUseProgram = true;
+        }
 
-        if (canUseProgram)
+        if (canUseProgram && inputIsAllowed)
         {
             if (Input.GetKeyDown(ATTACK_KEY) && attackProgramList.AreProgramsAvailable())
             {
@@ -86,6 +87,16 @@ public class ProgramInputManager : MonoBehaviour
             Debug.Log("Exiting program rearrangement mode");
             ForceExitSlowMode();
         }
+    }
+
+    public void DisableInput()
+    {
+        inputIsAllowed = false;
+    }
+
+    public void EnableInput()
+    {
+        inputIsAllowed = true;
     }
     
 }
