@@ -20,6 +20,14 @@ public class DualCameraManager : MonoBehaviour
     private float zoomLerpSpeed;
     public event Action OnZoomLerpFinish;
 
+    public struct ScreenCorners
+    {
+        public Vector3 bottomLeft;
+        public Vector3 bottomRight;
+        public Vector3 topLeft;
+        public Vector3 topRight;
+    }
+
     void Start()
     {
         SetupCameras();
@@ -88,6 +96,21 @@ public class DualCameraManager : MonoBehaviour
             zoomDestination = destination;
             zoomLerpSpeed = speed;
         }
+    }
+
+    public ScreenCorners GetScreenCorners(Camera cam)
+    {
+        float depth = -cam.transform.position.z; // distance to gameplay plane (z = 0)
+        
+        ScreenCorners corners = new ScreenCorners
+        {
+            bottomLeft  = cam.ScreenToWorldPoint(new Vector3(0f, 0f, depth)),
+            bottomRight = cam.ScreenToWorldPoint(new Vector3(Screen.width, 0f, depth)),
+            topLeft     = cam.ScreenToWorldPoint(new Vector3(0f, Screen.height, depth)),
+            topRight    = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth))
+        };
+
+        return corners;
     }
 
 }
