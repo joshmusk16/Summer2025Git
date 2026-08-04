@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RoundTransition : MonoBehaviour
 {
@@ -12,10 +13,11 @@ public GameObject topRightObject;
 public GameObject bottomLeftObject;
 public GameObject bottomRightObject;
 
-private List<SpriteRenderer> spriteRenderers = new();
+private List<Image> imageComponents = new();
 
 private Vector2 screenCenterPosition; //Destination for all objects translations
 private DualCameraManager.ScreenCorners uiScreenCorners;
+private Vector2 desiredRectScale;
 
 private const float TRANSITION_ANIMATION_SPEED = 5.0f;
 
@@ -26,7 +28,8 @@ private void FindDependencies()
 
 public void AnimateRoundTransitionIn()
 {
-    
+    EnableAllImages();
+
 }
 
 public void AnimateRoundTransitionOut()
@@ -34,34 +37,34 @@ public void AnimateRoundTransitionOut()
     
 }
 
-private void GetAllSpriteRenderers()
+private void GetAllImageComponents()
 {
-    if(spriteRenderers.Count != 0) return;
+    if(imageComponents.Count != 0) return;
 
-    spriteRenderers.Clear();
-    spriteRenderers.Add(topLeftObject.GetComponent<SpriteRenderer>());
-    spriteRenderers.Add(topRightObject.GetComponent<SpriteRenderer>());
-    spriteRenderers.Add(bottomLeftObject.GetComponent<SpriteRenderer>());
-    spriteRenderers.Add(bottomRightObject.GetComponent<SpriteRenderer>());
+    imageComponents.Clear();
+    imageComponents.Add(topLeftObject.GetComponent<Image>());
+    imageComponents.Add(topRightObject.GetComponent<Image>());
+    imageComponents.Add(bottomLeftObject.GetComponent<Image>());
+    imageComponents.Add(bottomRightObject.GetComponent<Image>());
 }
 
-private void EnableAllSpriteRenderers()
+private void EnableAllImages()
 {
-    if(spriteRenderers.Count == 0) GetAllSpriteRenderers();
+    if(imageComponents.Count == 0) GetAllImageComponents();
 
-    foreach(SpriteRenderer renderer in spriteRenderers)
+    foreach(Image imageComponent in imageComponents)
     {
-        renderer.enabled = true;
+        imageComponent.enabled = true;
     }
 }
 
-private void DisableAllSpriteRenderers()
+private void DisableAllImages()
 {
-    if(spriteRenderers.Count == 0) GetAllSpriteRenderers();
+    if(imageComponents.Count == 0) GetAllImageComponents();
 
-    foreach(SpriteRenderer renderer in spriteRenderers)
+    foreach(Image imageComponent in imageComponents)
     {
-        renderer.enabled = false;
+        imageComponent.enabled = false;
     }
 }
 
@@ -71,6 +74,11 @@ private void GetUIPositions()
 
     screenCenterPosition = uiCamera.transform.position;
     uiScreenCorners = cameraManager.GetScreenCorners(uiCamera);
+
+    float xValueToScale = Mathf.Abs(screenCenterPosition.x - uiScreenCorners.bottomLeft.x);
+    float yValueToScale = Mathf.Abs(screenCenterPosition.y - uiScreenCorners.bottomLeft.y);
+
+    desiredRectScale = new Vector2(xValueToScale, yValueToScale);
 }
 
 }

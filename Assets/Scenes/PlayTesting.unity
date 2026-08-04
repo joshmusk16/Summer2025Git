@@ -1261,8 +1261,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae160ab7da68b5e4080928cc30a11897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comboBar: {fileID: 754926361}
-  playerTimerBar: {fileID: 0}
 --- !u!4 &701312444
 Transform:
   m_ObjectHideFlags: 0
@@ -1501,6 +1499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 835324205}
   - component: {fileID: 835324204}
+  - component: {fileID: 835324206}
   m_Layer: 0
   m_Name: RoundManager
   m_TagString: Untagged
@@ -1535,6 +1534,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &835324206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835324203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04cc82d18177ae245b617fe93a399ffd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraManager: {fileID: 0}
+  uiCamera: {fileID: 852259960}
+  topLeftObject: {fileID: 746954336410844439, guid: ff76e27a680929741a2a6168709fbfaa, type: 3}
+  topRightObject: {fileID: 746954336410844439, guid: e087b217342b0d04381b24687ffcb83d, type: 3}
+  bottomLeftObject: {fileID: 746954336410844439, guid: b5e8097acc937cb49937dab6edcc0921, type: 3}
+  bottomRightObject: {fileID: 746954336410844439, guid: 10eb4a7323293984fbbe4d1daaa09cee, type: 3}
 --- !u!1 &852259958
 GameObject:
   m_ObjectHideFlags: 0
@@ -2129,6 +2146,8 @@ MonoBehaviour:
   amountToChangeComboBar: 0
   timerRewardType: 0
   amountToChangeTimerBar: 0
+  gameSpeedRewardType: 0
+  amountToChangeGameSpeed: 0
   programName: 
   programDescription: 
   player: {fileID: 0}
@@ -2137,7 +2156,6 @@ MonoBehaviour:
   playerTargeting: {fileID: 0}
   programUI: {fileID: 0}
   inputManager: {fileID: 0}
-  comboBar: {fileID: 0}
 --- !u!1001 &1155204018
 PrefabInstance:
   m_ObjectHideFlags: 0

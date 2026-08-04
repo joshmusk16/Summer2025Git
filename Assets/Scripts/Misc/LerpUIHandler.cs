@@ -7,12 +7,17 @@ public class LerpUIHandler : MonoBehaviour
     private bool isScaling = false;
     private bool isParabolicLerping = false;
     private bool isElasticLerping = false;
+    private bool isRectTransformScaling = false;
 
     private Vector2 locationDestination;
     private float locationLerpSpeed;
 
     private Vector2 scaleDestination;
     private float scaleLerpSpeed;
+
+    private Vector2 rectTransformDestination;
+    private float rectTransformScaleSpeed;
+    private RectTransform rect;
 
     private Vector2 parabolicStartScale;
     private Vector2 parabolicPeakScale;
@@ -26,6 +31,7 @@ public class LerpUIHandler : MonoBehaviour
     private float elasticElapsedTime;
 
     public event Action OnLocationLerpFinish;
+    public event Action OnRectTransformScaleFinish;
 
     void Update()
     {
@@ -49,6 +55,17 @@ public class LerpUIHandler : MonoBehaviour
             {
                 transform.localScale = scaleDestination;
                 isScaling = false;
+            }
+        }
+
+        if (isRectTransformScaling)
+        {
+            rect.sizeDelta = Vector2.Lerp(rect.sizeDelta, rectTransformDestination, Time.deltaTime * rectTransformScaleSpeed);
+
+            if(Vector2.Distance(rect.sizeDelta, rectTransformDestination) < 0.01f)
+            {
+                rect.sizeDelta = rectTransformDestination;
+                isRectTransformScaling = false;
             }
         }
 
@@ -111,6 +128,24 @@ public class LerpUIHandler : MonoBehaviour
         }
 
         // Stop other scale lerping if active
+        isElasticLerping = false;
+        isParabolicLerping = false;
+    }
+
+    public void RectTransformScaleLerp(Vector2 desiredScale, float speed)
+    {
+        rect = gameObject.GetComponent<RectTransform>();
+        if(rect == null) return;
+
+        if(rect.sizeDelta != desiredScale)
+        {
+            isRectTransformScaling = true;
+            rectTransformDestination = desiredScale;
+            rectTransformScaleSpeed = speed;
+        }
+
+        // Stop other scale lerping if active
+        isScaling = false;
         isElasticLerping = false;
         isParabolicLerping = false;
     }
