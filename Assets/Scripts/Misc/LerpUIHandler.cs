@@ -62,7 +62,7 @@ public class LerpUIHandler : MonoBehaviour
         {
             rect.sizeDelta = Vector2.Lerp(rect.sizeDelta, rectTransformDestination, Time.deltaTime * rectTransformScaleSpeed);
 
-            if(Vector2.Distance(rect.sizeDelta, rectTransformDestination) < 0.01f)
+            if(Vector2.Distance(rect.sizeDelta, rectTransformDestination) < 0.05f)
             {
                 rect.sizeDelta = rectTransformDestination;
                 isRectTransformScaling = false;

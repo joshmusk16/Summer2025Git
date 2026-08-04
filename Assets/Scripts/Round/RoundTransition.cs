@@ -13,15 +13,33 @@ public GameObject topRightObject;
 public GameObject bottomLeftObject;
 public GameObject bottomRightObject;
 
+private List<GameObject> transitionGameObjects = new();
 private List<Image> imageComponents = new();
+private List<LerpUIHandler> lerpUIHandlers = new();
 
 private Vector2 screenCenterPosition; //Destination for all objects translations
 private DualCameraManager.ScreenCorners uiScreenCorners;
 private Vector2 desiredRectScale;
 
-private const float TRANSITION_ANIMATION_SPEED = 5.0f;
+private const float TRANSITION_IN_ANIMATION_SPEED = 12.0f;
+private const float TRANSITION_OUT_ANIMATION_SPEED = 5.0f;
+private Vector2 transitionOutScale = new(1,1);
 
-private void FindDependencies()
+//update for debugging
+private void Update()
+{
+    if (Input.GetKeyDown(KeyCode.O))
+    {
+        AnimateRoundTransitionIn();
+    }   
+
+    if (Input.GetKeyDown(KeyCode.I))
+    {
+        AnimateRoundTransitionOut(); 
+    }   
+}
+
+    private void FindDependencies()
 {
     cameraManager = FindObjectOfType<DualCameraManager>();
 }
@@ -29,23 +47,65 @@ private void FindDependencies()
 public void AnimateRoundTransitionIn()
 {
     EnableAllImages();
+    GetUIPositions();
 
+    if(transitionGameObjects.Count == 0) InitializeTransitionObjects();
+    
+    foreach(LerpUIHandler lerpHandler in lerpUIHandlers)
+    {
+        lerpHandler.RectTransformScaleLerp(desiredRectScale, TRANSITION_IN_ANIMATION_SPEED);
+    }
 }
 
 public void AnimateRoundTransitionOut()
 {
+    foreach(LerpUIHandler lerpHandler in lerpUIHandlers)
+    {
+        lerpHandler.RectTransformScaleLerp(transitionOutScale, TRANSITION_OUT_ANIMATION_SPEED);
+    }
+}
+
+private void InitializeTransitionObjects()
+{
+    DestroyTransitionObjects();
+    GetUIPositions();
+
+    GameObject topLeft = Instantiate(topLeftObject, uiScreenCorners.topLeft, Quaternion.identity, gameObject.transform);
+    GameObject topRight = Instantiate(topRightObject, uiScreenCorners.topRight, Quaternion.identity, gameObject.transform);  
+    GameObject bottomLeft = Instantiate(bottomLeftObject, uiScreenCorners.bottomLeft, Quaternion.identity, gameObject.transform);  
+    GameObject bottomRight = Instantiate(bottomRightObject, uiScreenCorners.bottomRight, Quaternion.identity, gameObject.transform);
     
+    transitionGameObjects.Add(topLeft);
+    transitionGameObjects.Add(topRight);  
+    transitionGameObjects.Add(bottomLeft);  
+    transitionGameObjects.Add(bottomRight);  
+
+    GetAllImageComponents();
+    GetAllLerpHandlers();
 }
 
 private void GetAllImageComponents()
 {
-    if(imageComponents.Count != 0) return;
+    if(imageComponents.Count != 0 || 
+    transitionGameObjects.Count == 0) return;
 
     imageComponents.Clear();
-    imageComponents.Add(topLeftObject.GetComponent<Image>());
-    imageComponents.Add(topRightObject.GetComponent<Image>());
-    imageComponents.Add(bottomLeftObject.GetComponent<Image>());
-    imageComponents.Add(bottomRightObject.GetComponent<Image>());
+    foreach(GameObject obj in transitionGameObjects)
+    {
+        imageComponents.Add(obj.GetComponent<Image>());    
+    }
+}
+
+private void GetAllLerpHandlers()
+{
+    if(lerpUIHandlers.Count != 0 || 
+    transitionGameObjects.Count == 0) return;
+
+    lerpUIHandlers.Clear();
+    foreach(GameObject obj in transitionGameObjects)
+    {
+        lerpUIHandlers.Add(obj.GetComponent<LerpUIHandler>());    
+    }
 }
 
 private void EnableAllImages()
@@ -79,6 +139,18 @@ private void GetUIPositions()
     float yValueToScale = Mathf.Abs(screenCenterPosition.y - uiScreenCorners.bottomLeft.y);
 
     desiredRectScale = new Vector2(xValueToScale, yValueToScale);
+}
+
+private void DestroyTransitionObjects()
+{
+    if(transitionGameObjects.Count == 0) return;
+
+    foreach(GameObject obj in transitionGameObjects)
+    {
+        Destroy(obj);
+    }
+
+    transitionGameObjects.Clear();
 }
 
 }
