@@ -21,7 +21,7 @@ private Vector2 screenCenterPosition; //Destination for all objects translations
 private DualCameraManager.ScreenCorners uiScreenCorners;
 private Vector2 desiredRectScale;
 
-private const float TRANSITION_IN_ANIMATION_SPEED = 12.0f;
+private const float TRANSITION_IN_ANIMATION_SPEED = 5.0f;
 private const float TRANSITION_OUT_ANIMATION_SPEED = 5.0f;
 private Vector2 transitionOutScale = new(1,1);
 

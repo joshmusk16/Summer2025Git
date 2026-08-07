@@ -14,6 +14,8 @@ private QueueListData queueListData;
 private PlayerTimerLogic playerTimerLogic;
 private LevelCollection levelManager;
 private ProgramInputManager programInputManager;
+private RoundCountUI roundCountUI;
+private RoundTransition roundTransitionAnimation;
 
     void Awake()
     {
@@ -22,31 +24,35 @@ private ProgramInputManager programInputManager;
 
     private void FindDependencies()
     {
+        if(queueListData != null 
+        && playerTimerLogic != null
+        && levelManager != null
+        && programInputManager != null
+        && roundCountUI != null
+        && roundTransitionAnimation != null) return;
+
         queueListData = FindObjectOfType<QueueListData>();
         playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
         levelManager = FindObjectOfType<LevelCollection>();
         programInputManager = FindObjectOfType<ProgramInputManager>();
+        roundCountUI = FindObjectOfType<RoundCountUI>();
+        roundTransitionAnimation = FindObjectOfType<RoundTransition>();
     }
 
     public void SetupNewRound()
     {
-        if(queueListData == null 
-        || playerTimerLogic == null
-        || levelManager == null
-        || programInputManager == null) FindDependencies();
+        FindDependencies();
 
         levelManager.ResetRandomLevel();
         programInputManager.EnableInput();
+        roundCountUI.IncrementRoundUI();
         QueueListData.OnProgramAddedToQueue += AfterFirstQueueEvents;
         OnAllEnemiesCleared += EndRound;
     }
 
     public void AfterFirstQueueEvents()
     {
-        if(queueListData == null 
-        || playerTimerLogic == null
-        || levelManager == null
-        || programInputManager == null) FindDependencies();
+        FindDependencies();
 
         playerTimerLogic.StartRunningTimer();
         QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
@@ -54,14 +60,14 @@ private ProgramInputManager programInputManager;
 
     public void EndRound()
     {
-        if(queueListData == null 
-        || playerTimerLogic == null
-        || levelManager == null
-        || programInputManager == null) FindDependencies();
+        FindDependencies();
 
         programInputManager.DisableInput();
         playerTimerLogic.StopRunningTimer();
         queueListData.ClearQueue();
+
+        //Really we want AnimateRoundTransition to happen after the final animation is done playing...
+        roundTransitionAnimation.AnimateRoundTransitionIn();
         
         //SetupNewRound();
     }
