@@ -138,6 +138,8 @@ GameObject:
   - component: {fileID: 125615887}
   - component: {fileID: 125615886}
   - component: {fileID: 125615888}
+  - component: {fileID: 125615890}
+  - component: {fileID: 125615889}
   m_Layer: 5
   m_Name: LeftPanel
   m_TagString: Untagged
@@ -228,6 +230,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1808a762517ec4469655d8097838065, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &125615889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125615885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a8b9c4ee95d034fa16b899401354e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiElementName: MoneyUI
+  emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
+  numberAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
+  symbolSprite: {fileID: 21300000, guid: b2b6de3dfcb7f53449b78439a30ca7db, type: 3}
+  isUsingSymbol: 1
+  isUsingText: 1
+  Y_OFFSET: -16.25
+  X_OFFSET: -2.25
+  TEXT_OFFSET_LENGTH: 3
+  SYMBOL_TO_TEXT_OFFSET: 4
+  TEXT_SCALE: 1
+  SYMBOL_SCALE: 2
+  SORTING_ORDER: 100
+--- !u!114 &125615890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125615885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9b11e49b56dae94db6dd65bcb1a04c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiElement: {fileID: 125615889}
 --- !u!114 &139990331 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4836442385984647665, guid: 4168dc3ff1860a54f9df289104dc6bed, type: 3}
@@ -1508,6 +1548,15 @@ MonoBehaviour:
   emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
   numberAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
   symbolSprite: {fileID: 21300000, guid: 23c3fc77726b69542a7d08cc98ee30f3, type: 3}
+  isUsingSymbol: 1
+  isUsingText: 1
+  Y_OFFSET: 0.45
+  X_OFFSET: -2
+  TEXT_OFFSET_LENGTH: 3
+  SYMBOL_TO_TEXT_OFFSET: 6
+  TEXT_SCALE: 0.65
+  SYMBOL_SCALE: 1
+  SORTING_ORDER: 100
 --- !u!1 &835324203
 GameObject:
   m_ObjectHideFlags: 0
@@ -4001,6 +4050,147 @@ MonoBehaviour:
   timerSpeedMultiplier: 2
   playerTimerIsRunning: 0
   timerUpdateInterval: 0.1
+--- !u!1001 &1913771153
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1344878194856212363, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4056067077930956188, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_Name
+      value: ButtonCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -19.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 13.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017722024675598375, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: textInput
+      value: TEST
+      objectReference: {fileID: 0}
+    - target: {fileID: 8017722024675598375, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: buttonOffsetBuffer
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: TEXT_SCALE
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: isUsingText
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: SYMBOL_SCALE
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: symbolSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 23c3fc77726b69542a7d08cc98ee30f3, type: 3}
+    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: isUsingSymbol
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: uiElementName
+      value: ButtonTest
+      objectReference: {fileID: 0}
+    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: TEXT_OFFSET_LENGTH
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
+      propertyPath: SYMBOL_TO_TEXT_OFFSET
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
 --- !u!1 &1923254195
 GameObject:
   m_ObjectHideFlags: 0
@@ -4523,3 +4713,4 @@ SceneRoots:
   - {fileID: 701312444}
   - {fileID: 1831982931}
   - {fileID: 835324205}
+  - {fileID: 1913771153}

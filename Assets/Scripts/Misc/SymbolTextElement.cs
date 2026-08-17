@@ -22,24 +22,31 @@ private GameObject uiElementParent;
 private List<GameObject> TextObjects = new();
 private List<string> StringCharacters = new();
 
+public bool isUsingSymbol = true;
+public bool isUsingText = true;
+
+private float uiWidth = 0;
+private float uiHeight = 0;
+private float rightmostX = 0;
+
 [Header("UI Parameters")]
-public const float Y_OFFSET = 0.45f;
-public const float X_OFFSET = -1.3f;
-public const float TEXT_OFFSET_LENGTH = 3f;
-public const float SYMBOL_TO_TEXT_OFFSET = 6f;
-public const float TEXT_SCALE = 0.65f;
-public const float SYMBOL_SCALE = 1f;
+public float Y_OFFSET;
+public float X_OFFSET;
+public float TEXT_OFFSET_LENGTH;
+public float SYMBOL_TO_TEXT_OFFSET;
+public float TEXT_SCALE;
+public float SYMBOL_SCALE;
+public int SORTING_ORDER;
+
 public const float TEXT_PPU = 16f;
-public const int SORTING_ORDER = 100;
 
 public static event Action OnUIUpdate;
 
 public void UpdateUIElement(string input)
 {
-    if(numberWidths.Count == 0) FindNumberWidths();
+    if(isUsingSymbol == false && isUsingText == false) return;  
 
-    GenerateSymbol();
-    GenerateText(input);
+    if(numberWidths.Count == 0) FindNumberWidths();
 
     if(uiElementParent == null)
     {
@@ -47,13 +54,39 @@ public void UpdateUIElement(string input)
         uiElementParent.name = uiElementName;
     }
 
-    textParent.transform.position = symbolParent.transform.position 
-    + new Vector3(SYMBOL_TO_TEXT_OFFSET / TEXT_PPU * TEXT_SCALE, 0);
+    if(isUsingSymbol) GenerateSymbol();
+    if(isUsingText) GenerateText(input);
 
-    uiElementParent.transform.position = symbolParent.transform.position;
+    if(isUsingSymbol && isUsingText)
+    {
+        textParent.transform.position = (Vector3)GetTightBottomRight(symbolSprite, symbolObject.transform) 
+        + new Vector3(SYMBOL_TO_TEXT_OFFSET / TEXT_PPU * TEXT_SCALE, 0);
 
-    symbolParent.transform.SetParent(uiElementParent.transform);
-    textParent.transform.SetParent(uiElementParent.transform);
+        uiElementParent.transform.position = symbolParent.transform.position;
+
+        symbolParent.transform.SetParent(uiElementParent.transform);
+        textParent.transform.SetParent(uiElementParent.transform);
+
+        rightmostX = GetTightBottomRight(numberAtlas.GetSprite(StringCharacters[^1]), TextObjects[^1].transform).x;
+        uiHeight = Mathf.Max(GetTightHeight(symbolSprite) * SYMBOL_SCALE, GetTightHeight(numberAtlas.GetSprite(StringCharacters[0])) * TEXT_SCALE);
+
+    }
+    else if(isUsingText && isUsingSymbol == false)
+    {
+        uiElementParent.transform.position = textParent.transform.position;
+        textParent.transform.SetParent(uiElementParent.transform);
+        uiHeight = GetTightHeight(numberAtlas.GetSprite(StringCharacters[0])) * TEXT_SCALE;
+    }
+    else if(isUsingSymbol && isUsingText == false)
+    {
+        uiElementParent.transform.position = symbolParent.transform.position;
+        symbolParent.transform.SetParent(uiElementParent.transform);
+        uiHeight = GetTightHeight(symbolSprite) * SYMBOL_SCALE;
+    }
+
+    Debug.Log(rightmostX);
+
+    uiWidth = Mathf.Abs(rightmostX - uiElementParent.transform.position.x);
 
     uiElementParent.transform.localPosition = Vector3.zero
     + new Vector3(X_OFFSET, Y_OFFSET, 0);
@@ -93,6 +126,7 @@ private void GenerateText(string input)
     }
 
     textParent.transform.position = GetTightBottomLeft(numberAtlas.GetSprite(StringCharacters[0]), TextObjects[0].transform);
+    rightmostX = GetTightBottomRight(numberAtlas.GetSprite(StringCharacters[^1]), TextObjects[^1].transform).x;
     textParent.name = "Number Parent";
 
     foreach(GameObject character in TextObjects)
@@ -115,8 +149,10 @@ private void GenerateSymbol()
         gameSpeedSR.sprite = symbolSprite;
         gameSpeedSR.sortingOrder = SORTING_ORDER;
 
-        symbolParent.transform.position = GetTightBottomRight(symbolSprite, symbolObject.transform);
+        symbolParent.transform.position = GetTightBottomLeft(symbolSprite, symbolObject.transform);
         symbolObject.transform.SetParent(symbolParent.transform);
+
+        if(isUsingText == false) rightmostX = GetTightBottomRight(symbolSprite, symbolObject.transform).x;
     }
 }
 
@@ -156,6 +192,22 @@ private void DestroyTextObjects()
     TextObjects.Clear();
 
     if(textParent != null) Destroy(textParent);
+}
+
+public float GetWidth()
+{
+    return uiWidth;
+}
+
+public float GetHeight()
+{
+    return uiHeight;
+}
+
+public void MoveUIElement(Vector2 displacement)
+{
+    if(uiElementParent == null) return;
+    uiElementParent.transform.position += (Vector3)displacement; 
 }
 
 }
