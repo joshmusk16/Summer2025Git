@@ -1357,9 +1357,9 @@ GameObject:
   - component: {fileID: 754926358}
   - component: {fileID: 754926361}
   - component: {fileID: 754926360}
-  - component: {fileID: 754926362}
   - component: {fileID: 754926363}
   - component: {fileID: 754926364}
+  - component: {fileID: 754926365}
   m_Layer: 5
   m_Name: ComboBar
   m_TagString: Untagged
@@ -1463,21 +1463,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingComboAmount: 1
   comboBarUI: {fileID: 754926360}
---- !u!114 &754926362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 754926357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dda594ebd51b40d4c856b741a2b4f0dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
-  numberAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
-  gameSpeedSymbolSprite: {fileID: 21300000, guid: 23c3fc77726b69542a7d08cc98ee30f3, type: 3}
 --- !u!114 &754926363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1490,6 +1475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78b29818bd2fe8145b6ed782122a0a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiElement: {fileID: 754926365}
 --- !u!114 &754926364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1506,6 +1492,22 @@ MonoBehaviour:
   emptyParent: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
   activeSprite: {fileID: 1004806329, guid: 57522b5dbe5b65c48b3f9a2ce76722f5, type: 3}
   inactiveSprite: {fileID: 725034639, guid: 57522b5dbe5b65c48b3f9a2ce76722f5, type: 3}
+--- !u!114 &754926365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754926357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a8b9c4ee95d034fa16b899401354e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiElementName: GameSpeedUI
+  emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
+  numberAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
+  symbolSprite: {fileID: 21300000, guid: 23c3fc77726b69542a7d08cc98ee30f3, type: 3}
 --- !u!1 &835324203
 GameObject:
   m_ObjectHideFlags: 0

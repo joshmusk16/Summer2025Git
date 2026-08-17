@@ -16,9 +16,9 @@ public class TimeManager : MonoBehaviour
     private bool pausing = false;
 
     private ProgramInputManager programInputManager;
-    private TimeSpeedUI timeSpeedUI;
+    public SymbolTextElement uiElement;
 
-    void Start()
+    void Awake()
     {
         timeMultiplier = timeMultiplierMin;
         currentTimeMultiplier = timeMultiplierMin;
@@ -31,19 +31,23 @@ public class TimeManager : MonoBehaviour
 
     private void FindDependencies()
     {
-        if(timeSpeedUI == null) timeSpeedUI = gameObject.GetComponent<TimeSpeedUI>();
         if(programInputManager == null) programInputManager = FindObjectOfType<ProgramInputManager>();
     }
 
     void Update()
     {
         UpdatePause();
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            uiElement.UpdateUIElement(GetGameSpeedDigits(Random.Range(0f, 5f)));     
+        }
     }
 
     private void UpdateTimeSpeedUI()
     {
         FindDependencies();
-        timeSpeedUI.UpdateGameSpeedUI(timeMultiplier);
+        uiElement.UpdateUIElement(GetGameSpeedDigits(timeMultiplier));
     }
 
     private void StopTime()
@@ -142,5 +146,31 @@ public class TimeManager : MonoBehaviour
     {
         programInputManager.OnSlowModeEnter -= GraduallyPauseTime;
         programInputManager.OnSlowModeExit -= GraduallyUnpauseTime;
+    }
+
+    private string GetGameSpeedDigits(float number)
+    {
+        int totalHundredths = Mathf.RoundToInt(number * 100f);
+
+        int tens = totalHundredths / 1000 % 10;
+        int ones = totalHundredths / 100 % 10;
+
+        int tenths = totalHundredths / 10 % 10;
+        int hundredths = totalHundredths % 10;
+
+        string result = "";
+
+        if (tens != 0)
+        {
+            result += tens.ToString();
+        }
+
+        result += ones.ToString();
+        result += ".";
+        result += tenths.ToString();
+        result += hundredths.ToString();
+        result += "x";
+
+        return result;
     }
 }
