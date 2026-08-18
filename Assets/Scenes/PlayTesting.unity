@@ -4058,10 +4058,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1344878194856212363, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: m_SortingOrder
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 4056067077930956188, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
       propertyPath: m_Name
       value: ButtonCanvas
@@ -4128,7 +4124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -19.38
+      value: -35.77
       objectReference: {fileID: 0}
     - target: {fileID: 5723049404359230818, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4146,45 +4142,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8017722024675598375, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: textInput
-      value: TEST
-      objectReference: {fileID: 0}
-    - target: {fileID: 8017722024675598375, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: buttonOffsetBuffer
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: TEXT_SCALE
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: isUsingText
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: SYMBOL_SCALE
-      value: 0.75
-      objectReference: {fileID: 0}
     - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
       propertyPath: symbolSprite
       value: 
       objectReference: {fileID: 21300000, guid: 23c3fc77726b69542a7d08cc98ee30f3, type: 3}
     - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: isUsingSymbol
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
       propertyPath: uiElementName
       value: ButtonTest
-      objectReference: {fileID: 0}
-    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: TEXT_OFFSET_LENGTH
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8075758796701230725, guid: 74bd4b4263930a94891718fc149aaa35, type: 3}
-      propertyPath: SYMBOL_TO_TEXT_OFFSET
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

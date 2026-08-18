@@ -125,7 +125,6 @@ public class TimeManager : MonoBehaviour
         pauseElapsed += Time.deltaTime;
         float t = Mathf.Clamp01(pauseElapsed / pauseDuration);
         float eased = EaseInExpo(t);
-        Debug.Log("Eased is" + eased);
 
         if (unpausing)
         {

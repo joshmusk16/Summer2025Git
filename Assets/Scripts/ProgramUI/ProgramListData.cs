@@ -83,6 +83,13 @@ public class ProgramListData : MonoBehaviour
         UpdateCountUI();
     }
 
+    public void AddProgramToDeck(GameObject program)
+    {
+        programs.Add(program);
+        totalProgramAmount++;
+        UpdateCountUI();
+    }
+
     public void ResetDrawPile()
     {
         if(drawPilePrograms == null || drawPilePrograms.Count == 0)

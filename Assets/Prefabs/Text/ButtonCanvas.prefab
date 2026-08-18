@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 791441761019761709}
   - component: {fileID: 8017722024675598375}
   - component: {fileID: 8075758796701230725}
+  - component: {fileID: 5146089491975523524}
   m_Layer: 5
   m_Name: ButtonCanvas
   m_TagString: Untagged
@@ -61,7 +62,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 10
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!222 &1408412817558832184
 CanvasRenderer:
@@ -113,9 +114,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a9761d4e0d42b49a212bb0b35e38da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textInput: 
+  textInput: TEST
   symbolTextElement: {fileID: 8075758796701230725}
-  buttonOffsetBuffer: 0
+  buttonOffsetBuffer: 0.2
+  buttonIsActive: 1
 --- !u!114 &8075758796701230725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,8 +138,20 @@ MonoBehaviour:
   isUsingText: 1
   Y_OFFSET: 0
   X_OFFSET: 0
-  TEXT_OFFSET_LENGTH: 0
-  SYMBOL_TO_TEXT_OFFSET: 0
-  TEXT_SCALE: 1
-  SYMBOL_SCALE: 1
+  TEXT_OFFSET_LENGTH: 1
+  SYMBOL_TO_TEXT_OFFSET: 3
+  TEXT_SCALE: 0.5
+  SYMBOL_SCALE: 0.75
   SORTING_ORDER: 5
+--- !u!114 &5146089491975523524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4056067077930956188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1808a762517ec4469655d8097838065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
