@@ -4,17 +4,21 @@ using UnityEngine;
 public class RoundRewardUI : MonoBehaviour
 {
 
+public GameObject roundRewardUIPrefab;
+private GameObject roundRewardUI;
+
 public ButtonUIElement takeButton;
 public ButtonUIElement skipButton;
-public GameObject emptyObject; //prefab emptyObject to set spriterenderer
+public TextElement rewardCountUI;
 
-public GameObject rewardProgramUI; 
-public GameObject rewardProgramUIBackground;
+public GameObject emptyObject;
 
+private GameObject rewardProgramUIElement; 
 private GameObject rewardProgram;
 private Program programInfo;
+private Vector3 REWARD_PROGRAM_SCALE = new(2f, 2f, 1f);
 
-private int amountOfRewards = 0;
+private int amountOfRewards = 3;
 
 private ProgramListData attackProgramData;
 private ProgramListData defenseProgramData;
@@ -33,31 +37,55 @@ private void FindDependencies()
 
     attackProgramData = GameObject.Find("AttackUIManager").GetComponent<ProgramListData>();
     defenseProgramData = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
+}
 
-    if(takeButton != null)
+private void Update() //Update for debugging
+{
+    if (Input.GetKeyDown(KeyCode.F))
     {
-        takeButton.OnButtonPressed += GiveReward;
+        GenerateReward();
     }
+}
 
-    if(skipButton != null)
+    private void GenerateCanvasAndButtons()
+{
+    if(roundRewardUI == null)
     {
+        roundRewardUI = Instantiate(roundRewardUIPrefab);
+
+        Transform takeButtonTransform = roundRewardUI.transform.Find("TakeButton");
+        Transform skipButtonTransform = roundRewardUI.transform.Find("SkipButton");
+        Transform rewardCountTransform = roundRewardUI.transform.Find("RewardCountUI");
+
+        takeButton = takeButtonTransform.gameObject.GetComponent<ButtonUIElement>();
+        skipButton = skipButtonTransform.gameObject.GetComponent<ButtonUIElement>();
+        rewardCountUI = rewardCountTransform.gameObject.GetComponent<TextElement>();
+
+        takeButton.GenerateButton();
+        skipButton.GenerateButton();
+        UpdateRewardCountUI(amountOfRewards);
+
+        takeButton.OnButtonPressed += GiveReward;
         skipButton.OnButtonPressed += SkipReward;
     }
 }
 
 private void GenerateReward()
 {
-    int randomRewardIndex = Random.Range(0 , uiProgramRewardPool.Count - 1);   //This should be based on a seed in the future
+    GenerateCanvasAndButtons(); //temporary location to call this method
+
+    int randomRewardIndex = Random.Range(0 , uiProgramRewardPool.Count); //This should be based on a seed in the future
     rewardProgram = uiProgramRewardPool[randomRewardIndex];
     programInfo = rewardProgram.GetComponent<Program>();
     Sprite programSprite = programInfo.uiSprite;
 
-    if(rewardProgramUI == null)
+    if(rewardProgramUIElement == null && roundRewardUI != null)
     {
-        rewardProgramUI = Instantiate(emptyObject); //add appropriate parent and position later    
+        rewardProgramUIElement = Instantiate(emptyObject, Vector2.zero, Quaternion.identity, roundRewardUI.transform);
+        rewardProgramUIElement.transform.localScale = REWARD_PROGRAM_SCALE;
     }
     
-    rewardProgramUI.GetComponent<SpriteRenderer>().sprite = programSprite;
+    rewardProgramUIElement.GetComponent<SpriteRenderer>().sprite = programSprite;
 }
 
 private void GiveReward()
@@ -78,8 +106,6 @@ private void GiveReward()
 
 private void SkipReward()
 {
-
-
     DecreaseRewardCounter();
 }
 
@@ -89,17 +115,25 @@ private void DecreaseRewardCounter()
     {
         GenerateReward();
         amountOfRewards--;
-        //Update reward count ui here once its implemented
+        UpdateRewardCountUI(amountOfRewards);
     }
     else if(amountOfRewards <= 1)
     {
         amountOfRewards--;
-        //Update reward count ui here once its implemented
+        UpdateRewardCountUI(amountOfRewards);
 
-        rewardProgramUI.GetComponent<SpriteRenderer>().sprite = null;
+        rewardProgramUIElement.GetComponent<SpriteRenderer>().sprite = null;
         ToggleRewardButtons(false);
         //Reset scene for next round...
     }
+}
+
+public void UpdateRewardCountUI(int count)
+{
+    if(rewardCountUI == null) return;
+
+    rewardCountUI.textInput = count.ToString();
+    rewardCountUI.GenerateTextElement();
 }
 
 public void ToggleRewardButtons(bool enabled)
@@ -110,5 +144,10 @@ public void ToggleRewardButtons(bool enabled)
     skipButton.buttonIsActive = enabled;
 }
 
+void OnDestroy()
+{
+    takeButton.OnButtonPressed -= GiveReward;
+    skipButton.OnButtonPressed -= SkipReward;   
+}
 
 }

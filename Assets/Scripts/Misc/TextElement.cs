@@ -80,7 +80,6 @@ void FindLineHeight()
 
 public void GenerateTextElement()
 {
-
     GenerateText(textInput);
 
     if (isUsingHeader)

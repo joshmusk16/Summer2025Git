@@ -17,11 +17,6 @@ private float buttonHeight = 0;
 
 public event Action OnButtonPressed;
 
-void Awake()
-{
-    GenerateButton();
-}
-
 void Update() 
 {
     if (buttonIsActive)
@@ -37,7 +32,7 @@ void Update()
             mousePos.y < buttonPos.y + halfHeight && mousePos.y > buttonPos.y - halfHeight)
             {
                 OnButtonPressed?.Invoke();
-                lerpUIHandler.ParabolicScaleLerp(new Vector2(1.1f, 1.1f), 0.15f, 1.3f);
+                lerpUIHandler.ParabolicScaleLerp(new Vector2(1.1f, 1.1f), 0.15f, 1.3f); //temporary animation
             }
         }
     }
@@ -53,7 +48,7 @@ private void FindDependencies()
     lerpUIHandler = gameObject.GetComponent<LerpUIHandler>();
 }
 
-private void GenerateButton()
+public void GenerateButton()
 {
     FindDependencies();
 
