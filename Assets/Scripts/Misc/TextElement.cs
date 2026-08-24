@@ -38,6 +38,10 @@ public const float BACKGROUND_BUFFER = 1.25f;
 public float maxTextHeight;
 public float maxTextWidth;
 
+public bool generateBackgroundSetSize = false;
+public float setBackgroundWidth;
+public float setBackgroundHeight;
+
 private Dictionary<string, float> fontWidths = new Dictionary<string, float>();
 private float lineHeight = 0;
 
@@ -82,20 +86,30 @@ public void GenerateTextElement()
 {
     GenerateText(textInput);
 
-    if (isUsingHeader)
+    if(generateBackgroundSetSize == false)
     {
-        GenerateHeader(headerInput);
-        headerParent.transform.position = gameObject.transform.position;
-        maxTextHeight += headerHeight;
-        
-        if(maxTextWidth < headerWidth)
+        if (isUsingHeader)
         {
-            maxTextWidth = headerWidth;
+            GenerateHeader(headerInput);
+            headerParent.transform.position = gameObject.transform.position;
+            maxTextHeight += headerHeight;
+            
+            if(maxTextWidth < headerWidth)
+            {
+                maxTextWidth = headerWidth;
+            }
         }
+
+        textParent.transform.position = gameObject.transform.position + new Vector3(0, -headerHeight);
+        GenerateTextBackground(maxTextWidth, maxTextHeight);
+    }
+    else if(generateBackgroundSetSize == true && isUsingHeader == false)
+    {
+        GenerateTextBackground(maxTextWidth, maxTextHeight);
+
+        textParent.transform.position = textBackground.transform.position + new Vector3(-maxTextWidth, maxTextHeight) / 2f;
     }
 
-    textParent.transform.position = gameObject.transform.position + new Vector3(0, -headerHeight);
-    GenerateTextBackground(maxTextWidth, maxTextHeight);
 }
 
 public void DestroyTextElement()
@@ -284,16 +298,33 @@ private void GenerateTextBackground(float backgroundWidth, float backgroundHeigh
     || isUsingBackground == false) return;
 
     DestroyImmediate(textBackground);
-    
+
     textBackground = Instantiate(backgroundPrefab, gameObject.transform);
     Canvas backgroundCanvas = textBackground.GetComponent<Canvas>();
     RectTransform backgroundTransform = textBackground.GetComponent<RectTransform>();
 
     backgroundCanvas.sortingOrder = SORTING_ORDER - 1;
+
+    if (generateBackgroundSetSize)
+    {
+        backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, setBackgroundWidth + BACKGROUND_BUFFER);
+        backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, setBackgroundHeight + BACKGROUND_BUFFER);
+        backgroundTransform.localPosition = 
+        new Vector3(setBackgroundWidth, -setBackgroundHeight) / 2f;
+        
+        return;
+    }
+
     backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, backgroundWidth + BACKGROUND_BUFFER);
     backgroundTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, backgroundHeight + BACKGROUND_BUFFER);
     backgroundTransform.localPosition = 
     new Vector3(backgroundWidth, -backgroundHeight) / 2f;
 }
 
+public void MoveTextParent(Vector3 position)
+{
+    if(textParent == null) return;
+
+    textParent.transform.position = position;
+}
 }

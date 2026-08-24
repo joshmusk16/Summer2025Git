@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 745338552325104198}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.46, y: 1.96, z: 0}
+  m_LocalPosition: {x: 3.5, y: 2.365, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -49,10 +49,13 @@ MonoBehaviour:
   prefabCharacter: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
   isUsingHeader: 0
   headerInput: 
-  backgroundPrefab: {fileID: 746954336410844439, guid: 2b153120ea970b345bb67d0d8fa7e33f, type: 3}
+  backgroundPrefab: {fileID: 3720776601024686755, guid: 3ff1d8c05ca3f3c43a209754c91aebf3, type: 3}
   isUsingBackground: 1
   maxTextHeight: 0
   maxTextWidth: 0
+  generateBackgroundSetSize: 1
+  setBackgroundWidth: 0.4
+  setBackgroundHeight: 0.4
 --- !u!1 &5352201055781291232
 GameObject:
   m_ObjectHideFlags: 0

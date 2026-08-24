@@ -2714,6 +2714,9 @@ MonoBehaviour:
   isUsingBackground: 1
   maxTextHeight: 0
   maxTextWidth: 0
+  generateBackgroundSetSize: 0
+  setBackgroundWidth: 0
+  setBackgroundHeight: 0
 --- !u!4 &1277176184
 Transform:
   m_ObjectHideFlags: 0
@@ -4036,6 +4039,9 @@ MonoBehaviour:
   isUsingBackground: 1
   maxTextHeight: 0
   maxTextWidth: 0
+  generateBackgroundSetSize: 0
+  setBackgroundWidth: 0
+  setBackgroundHeight: 0
 --- !u!4 &1831982931
 Transform:
   m_ObjectHideFlags: 0
