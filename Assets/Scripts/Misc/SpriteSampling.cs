@@ -61,6 +61,50 @@ public float GetTightHeight(Sprite sprite)
     return tightHeightPixels / sprite.pixelsPerUnit;
 }
 
+public float GetTightTop(Sprite sprite, Transform spriteTransform)
+{
+    Texture2D tex = sprite.texture;
+    RectInt rect = new RectInt(
+        (int)sprite.textureRect.x,
+        (int)sprite.textureRect.y,
+        (int)sprite.textureRect.width,
+        (int)sprite.textureRect.height
+    );
+
+    int maxY = rect.yMin;
+    bool foundPixel = false;
+
+    for (int y = rect.yMax - 1; y >= rect.yMin; y--)
+    {
+        for (int x = rect.xMin; x < rect.xMax; x++)
+        {
+            if (tex.GetPixel(x, y).a > 0.01f)
+            {
+                maxY = y;
+                foundPixel = true;
+                break;
+            }
+        }
+        if (foundPixel)
+            break;
+    }
+
+    //Fallback if fully transparent
+    if (!foundPixel)
+    {
+        Debug.LogWarning($"GetTightTop fallback triggered for: {sprite.name}");
+        Bounds b = sprite.bounds;
+        Vector3 worldPos = spriteTransform.TransformPoint(new Vector3(0, b.max.y, 0));
+        return worldPos.y;
+    }
+
+    float localY = (maxY - sprite.textureRect.y - sprite.pivot.y + 1) / sprite.pixelsPerUnit;
+
+    //Transform local sprite space to world space
+    Vector3 worldPoint = spriteTransform.TransformPoint(new Vector3(0, localY, 0));
+    return worldPoint.y;
+}
+
 public Vector2 GetTightTopLeft(Sprite sprite, Transform spriteTransform)
 {
     Texture2D tex = sprite.texture;

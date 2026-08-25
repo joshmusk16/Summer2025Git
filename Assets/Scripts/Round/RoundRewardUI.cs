@@ -144,10 +144,10 @@ public void ToggleRewardButtons(bool enabled)
     skipButton.buttonIsActive = enabled;
 }
 
-void OnDestroy()
+private void OnDestroy()
 {
-    takeButton.OnButtonPressed -= GiveReward;
-    skipButton.OnButtonPressed -= SkipReward;   
+    if(takeButton != null) takeButton.OnButtonPressed -= GiveReward;
+    if(skipButton != null) skipButton.OnButtonPressed -= SkipReward;   
 }
 
 }

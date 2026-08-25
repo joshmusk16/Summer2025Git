@@ -198,6 +198,7 @@ public void GenerateText(string input)
     int numberOfNewLines = 0;
 
     float xLocation = 0;
+    float yLocation = float.NegativeInfinity;
 
     bool lastLetterWasNewLine = false;
     bool lastLetterWasSpace = false;
@@ -266,6 +267,15 @@ public void GenerateText(string input)
             letter.transform.position += new Vector3(correction, 0, 0);
             offset.x += correction;
         }
+
+        if(numberOfNewLines == 0)
+        {
+            float topY = GetTightTop(sprite, letter.transform); // add this helper if it doesn't exist yet
+            if (topY > yLocation)
+            {
+                yLocation = topY;
+            } 
+        }
         
         float letterWidth = fontWidths[spriteName] / 2;
         if(i != input.Length - 1 && fontWidths.ContainsKey(char.ToUpper(input[i + 1]).ToString()))
@@ -278,7 +288,8 @@ public void GenerateText(string input)
         lastLetterWasSpace = false;
     }
 
-    textParent.transform.position = GetTightTopLeft(fontAtlas.GetSprite(letters[0].name), letters[0].transform);
+    textParent.transform.position = new Vector2(xLocation, yLocation);
+    
     foreach(GameObject character in letters)
     {
         character.transform.SetParent(textParent.transform);

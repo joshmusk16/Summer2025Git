@@ -7,14 +7,6 @@ private int maxMoney = 9999;
 private int minMoney = 0;
 public SymbolTextElement uiElement;
 
-// void Update()
-// {
-//     if (Input.GetKeyDown(KeyCode.E))
-//     {
-//         UpdateMoneyUI(Random.Range(0, 150));
-//     }
-// }
-
 void Awake()
 {
     UpdateMoneyUI(currentMoney);

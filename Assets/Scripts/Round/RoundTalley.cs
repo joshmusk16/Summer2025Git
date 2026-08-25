@@ -4,15 +4,12 @@ using UnityEngine;
 public class RoundTalley : MonoBehaviour
 {
 
-public GameObject backgroundCanvas; //background prefab assigned in inspector
-private const float CANVAS_WIDTH = 5f;
-private float FINAL_CANVAS_HEIGHT = 0;
-
-private int moneyRewardAmount;
-private int moneyRewardMaximum;
-private int moneyRewardMinimum;
-private int combosDropped = 0;
-private int secondsLost = 0;
+public GameObject backgroundCanvasPrefab; //background prefab assigned in inspector
+private GameObject backgroundCanvas;
+private RectTransform backgroundCanvasRect;
+private const float CANVAS_BUFFER = 0.6f;
+private const float CANVAS_WIDTH = 12f;
+private float CANVAS_LINE_HEIGHT = 0;
 
 public GameObject emptyTextElement; //create and assign TextElement prefab
 private List<string> lines = new();
@@ -20,17 +17,36 @@ private List<TextElement> lineTextElements = new();
 
 private const float FIRST_LINE_SCALE = 1f;
 private const float LOWER_LINES_SCALE = 0.75f;
-private const float SPACE_BETWEEN_LINES = 0.5f;
+private const float SPACE_BETWEEN_LINES = 1f;
 
 private Vector3 offsetVector = Vector3.zero;
 
 private bool isAnimating = false;
 private float currentTime = 0;
-private const float TIME_BETWEEN_LINE_GENERATION = 0.15f; //in seconds
+private const float TIME_BETWEEN_LINE_GENERATION = 0.3f; //in seconds
 private int lineIndex = 0;
+
+private int moneyRewardPot = 10;
+private int moneyRewardPotMaximum = 20;
+private int moneyRewardPotMinimum = -10;
+private int moneyReward = 0;
+private int combosDropped = 0;
+private int secondsLost = 0;
+
+private MoneyLogic moneyLogic;
+
+private void FindDependencies()
+{
+    if(moneyLogic == null) moneyLogic = FindObjectOfType<MoneyLogic>();
+}
 
 private void Update()
 {
+    if (Input.GetKeyDown(KeyCode.D)) //Keycode for debugging only
+    {
+        StartTalleyEvent();
+    }
+
     if (isAnimating)
     {
         currentTime += Time.deltaTime;
@@ -39,14 +55,23 @@ private void Update()
             if(lineIndex < lines.Count)
             {
                 GenerateSingleLine(lines[lineIndex], offsetVector);
+
+                if(lineIndex == 0)
+                {
+                    GenerateCanvas();
+                }
+        
+                backgroundCanvasRect.sizeDelta = new Vector2(CANVAS_WIDTH, (SPACE_BETWEEN_LINES * (lineIndex + 1)) + CANVAS_BUFFER);
+
                 currentTime = 0;
                 lineIndex++;
                 offsetVector -= new Vector3(0, SPACE_BETWEEN_LINES, 0);
 
                 if(lineIndex >= lines.Count)
                 {
-                    offsetVector = Vector3.zero;
+                    offsetVector = gameObject.transform.position;
                     lineIndex = 0;
+                    GiveMoneyReward();
                     isAnimating = false;
                 }
             }
@@ -54,22 +79,30 @@ private void Update()
     }
 }
 
+private void StartTalleyEvent()
+{
+    DestroyLineObjects();
+    AssignTalleyTextElements();
+    StartTalleyAnimation();
+}
+
 private void AssignTalleyTextElements()
 {
     if(isAnimating) return;
 
     ClearTalleyQueue();
-    int reward = CalculateRewardTotal();
 
-    lines.Add(moneyRewardAmount.ToString());
+    lines.Add(moneyRewardPot.ToString());
     lines.Add("-" + combosDropped.ToString() + " COMBOS DROPPED");
     lines.Add("-" + secondsLost.ToString() + " SECONDS LOST");
+    lines.Add("---------------------------");
     
-    lines.Add(reward.ToString());
+    lines.Add(GetMoneyRewardString());
 }
 
 private void StartTalleyAnimation()
 {
+    offsetVector = gameObject.transform.position;
     lineIndex = 0;
     currentTime = 0;
     isAnimating = true;  
@@ -78,6 +111,7 @@ private void StartTalleyAnimation()
 private void GenerateSingleLine(string text, Vector3 position)
 {
     GameObject line = Instantiate(emptyTextElement, gameObject.transform);
+    line.name = "Line " + lineIndex;
     TextElement textElement = line.GetComponent<TextElement>();
     lineTextElements.Add(textElement);
     
@@ -86,20 +120,55 @@ private void GenerateSingleLine(string text, Vector3 position)
     textElement.MoveTextParent(position);
 }
 
+private void GenerateCanvas()
+{
+    if(backgroundCanvas != null)
+    {
+        backgroundCanvasRect = null;
+        Destroy(backgroundCanvas);       
+    }
 
-private int CalculateRewardTotal()
+    backgroundCanvas = Instantiate(backgroundCanvasPrefab, gameObject.transform);
+    backgroundCanvas.name = "Background Canvas";
+    backgroundCanvasRect = backgroundCanvas.GetComponent<RectTransform>();
+    backgroundCanvasRect.pivot = new Vector2(0f, 1f);
+    backgroundCanvasRect.sizeDelta = new Vector2(CANVAS_WIDTH, SPACE_BETWEEN_LINES);
+    backgroundCanvasRect.transform.position += new Vector3(-CANVAS_BUFFER, CANVAS_BUFFER);
+}
+
+private int CalculateMoneyReward()
 {
     //set combosDropped and secondsLost here from respective dependency scripts once implemented
 
-    int reward = moneyRewardAmount - combosDropped - secondsLost;
+    moneyReward = moneyRewardPot - combosDropped - secondsLost;
+    return moneyReward;
+}
 
-    if(reward >= 0)
+private string GetMoneyRewardString()
+{
+    CalculateMoneyReward();
+
+    if(moneyReward > 0)
     {
-        return reward;
+        return "+" + moneyReward.ToString();
     }
     else
     {
-        return 0;   
+        return "0";   
+    }
+}
+
+private void GiveMoneyReward()
+{
+    FindDependencies();
+
+    if(moneyReward >= 0)
+    {
+        moneyLogic.IncreaseMoney(moneyReward);   
+    }
+    else
+    {
+        moneyLogic.DecreaseMoney(moneyReward);       
     }
 }
 
@@ -111,6 +180,8 @@ private void ClearTalleyQueue()
 
 private void DestroyLineObjects()
 {
+    ClearTalleyQueue();
+
     if(lineTextElements.Count == 0) return;
 
     foreach(TextElement textElement in lineTextElements)
@@ -129,41 +200,41 @@ public void ModifyRewardAmount(int amount)
 
     if(amount > 0)
     {
-        if((moneyRewardAmount + amount) <= moneyRewardMaximum)
+        if((moneyRewardPot + amount) <= moneyRewardPotMaximum)
         {
-            moneyRewardAmount += amount;                
+            moneyRewardPot += amount;                
         }
         else
         {
-            moneyRewardAmount = moneyRewardMaximum;      
+            moneyRewardPot = moneyRewardPotMaximum;      
         }
 
     }
     else if(amount < 0)
     {
-        if ((moneyRewardAmount + amount) >= moneyRewardMinimum)
+        if ((moneyRewardPot + amount) >= moneyRewardPotMinimum)
         {
-            moneyRewardAmount += amount;   
+            moneyRewardPot += amount;   
         }
         else
         {
-            moneyRewardAmount = moneyRewardMinimum;   
+            moneyRewardPot = moneyRewardPotMinimum;   
         }
     }
 }
 
 public void SetRewardMaximum(int amount)
 {
-    if(amount <= moneyRewardMinimum) return;
+    if(amount <= moneyRewardPotMinimum) return;
 
-    moneyRewardMaximum = amount;
+    moneyRewardPotMaximum = amount;
 }
 
 public void SetRewardMinimum(int amount)
 {
-    if(amount >= moneyRewardMaximum) return;
+    if(amount >= moneyRewardPotMaximum) return;
 
-    moneyRewardMinimum = amount;
+    moneyRewardPotMinimum = amount;
 }
 
 #endregion
