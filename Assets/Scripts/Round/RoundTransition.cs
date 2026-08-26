@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class RoundTransition : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public GameObject bottomRightObject;
 private List<GameObject> transitionGameObjects = new();
 private List<Image> imageComponents = new();
 private List<LerpUIHandler> lerpUIHandlers = new();
+private LerpUIHandler animationTrackingReference;
 
 private Vector2 screenCenterPosition; //Destination for all objects translations
 private DualCameraManager.ScreenCorners uiScreenCorners;
@@ -24,6 +26,9 @@ private Vector2 desiredRectScale;
 private const float TRANSITION_IN_ANIMATION_SPEED = 10.0f;
 private const float TRANSITION_OUT_ANIMATION_SPEED = 5.0f;
 private Vector2 transitionOutScale = new(1,1);
+
+public event Action OnAnimationInFinish;
+public event Action OnAnimationOutFinish;
 
 //update for debugging
 private void Update()
@@ -38,8 +43,9 @@ private void Update()
         AnimateRoundTransitionOut(); 
     }   
 }
+//update for debugging
 
-    private void FindDependencies()
+private void FindDependencies()
 {
     cameraManager = FindObjectOfType<DualCameraManager>();
 }
@@ -55,6 +61,8 @@ public void AnimateRoundTransitionIn()
     {
         lerpHandler.RectTransformScaleLerp(desiredRectScale, TRANSITION_IN_ANIMATION_SPEED);
     }
+
+    animationTrackingReference.OnRectTransformScaleFinish += AnimationInFinished;
 }
 
 public void AnimateRoundTransitionOut()
@@ -63,6 +71,8 @@ public void AnimateRoundTransitionOut()
     {
         lerpHandler.RectTransformScaleLerp(transitionOutScale, TRANSITION_OUT_ANIMATION_SPEED);
     }
+
+    animationTrackingReference.OnRectTransformScaleFinish += AnimationOutFinished;
 }
 
 private void InitializeTransitionObjects()
@@ -106,6 +116,8 @@ private void GetAllLerpHandlers()
     {
         lerpUIHandlers.Add(obj.GetComponent<LerpUIHandler>());    
     }
+
+    animationTrackingReference = lerpUIHandlers[0];
 }
 
 private void EnableAllImages()
@@ -151,6 +163,26 @@ private void DestroyTransitionObjects()
     }
 
     transitionGameObjects.Clear();
+}
+
+public void AnimationInFinished()
+{
+    OnAnimationInFinish?.Invoke();
+    animationTrackingReference.OnRectTransformScaleFinish -= AnimationInFinished;
+}
+
+private void AnimationOutFinished()
+{
+    OnAnimationOutFinish?.Invoke();
+    animationTrackingReference.OnRectTransformScaleFinish -= AnimationOutFinished;
+}
+
+private void OnDestroy()
+{
+    if(animationTrackingReference == null) return;
+
+    animationTrackingReference.OnRectTransformScaleFinish -= AnimationInFinished;
+    animationTrackingReference.OnRectTransformScaleFinish -= AnimationOutFinished;   
 }
 
 }

@@ -7,9 +7,10 @@ public class RoundRewardUI : MonoBehaviour
 public GameObject roundRewardUIPrefab;
 private GameObject roundRewardUI;
 
-public ButtonUIElement takeButton;
-public ButtonUIElement skipButton;
-public TextElement rewardCountUI;
+private ButtonUIElement takeButton;
+private ButtonUIElement skipButton;
+private TextElement rewardCountUI;
+private GameObject rewardCanvas;
 
 public GameObject emptyObject;
 
@@ -51,15 +52,18 @@ private void Update() //Update for debugging
 {
     if(roundRewardUI == null)
     {
-        roundRewardUI = Instantiate(roundRewardUIPrefab);
+        roundRewardUI = Instantiate(roundRewardUIPrefab, gameObject.transform);
+        roundRewardUI.name = "RoundRewardUI";
 
         Transform takeButtonTransform = roundRewardUI.transform.Find("TakeButton");
         Transform skipButtonTransform = roundRewardUI.transform.Find("SkipButton");
         Transform rewardCountTransform = roundRewardUI.transform.Find("RewardCountUI");
+        Transform rewardCanvasTransform = roundRewardUI.transform.Find("RewardCanvas");
 
         takeButton = takeButtonTransform.gameObject.GetComponent<ButtonUIElement>();
         skipButton = skipButtonTransform.gameObject.GetComponent<ButtonUIElement>();
         rewardCountUI = rewardCountTransform.gameObject.GetComponent<TextElement>();
+        rewardCanvas = rewardCanvasTransform.gameObject;
 
         takeButton.GenerateButton();
         skipButton.GenerateButton();
@@ -81,7 +85,8 @@ private void GenerateReward()
 
     if(rewardProgramUIElement == null && roundRewardUI != null)
     {
-        rewardProgramUIElement = Instantiate(emptyObject, Vector2.zero, Quaternion.identity, roundRewardUI.transform);
+        rewardProgramUIElement = Instantiate(emptyObject, rewardCanvas.transform);
+        rewardProgramUIElement.name = "Reward Program";
         rewardProgramUIElement.transform.localScale = REWARD_PROGRAM_SCALE;
     }
     
@@ -142,6 +147,13 @@ public void ToggleRewardButtons(bool enabled)
 
     takeButton.buttonIsActive = enabled;
     skipButton.buttonIsActive = enabled;
+}
+
+public void MoveRoundRewardUI(Vector2 position)
+{
+    if(roundRewardUI == null) return;
+
+    roundRewardUI.transform.position = position;
 }
 
 private void OnDestroy()

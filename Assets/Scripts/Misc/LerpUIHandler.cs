@@ -65,6 +65,7 @@ public class LerpUIHandler : MonoBehaviour
             if(Vector2.Distance(rect.sizeDelta, rectTransformDestination) < 0.05f)
             {
                 rect.sizeDelta = rectTransformDestination;
+                OnRectTransformScaleFinish?.Invoke();
                 isRectTransformScaling = false;
             }
         }

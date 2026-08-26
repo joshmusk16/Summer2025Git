@@ -127,52 +127,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 244087055979113184, guid: dbaf622051810f145a4122292a8fb35f, type: 3}
   m_PrefabInstance: {fileID: 1380883258}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &27638674
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 27638676}
-  - component: {fileID: 27638675}
-  m_Layer: 5
-  m_Name: RoundTalleyDebug
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &27638675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27638674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d7d1052ed1763e4390f745ab72f3d75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backgroundCanvasPrefab: {fileID: 3720776601024686755, guid: 3ff1d8c05ca3f3c43a209754c91aebf3, type: 3}
-  emptyTextElement: {fileID: 5215953537925482346, guid: 15115f75a774a2343bae2803b059e59a, type: 3}
---- !u!4 &27638676
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27638674}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &125615885
 GameObject:
   m_ObjectHideFlags: 0
@@ -1615,6 +1569,7 @@ GameObject:
   - component: {fileID: 835324204}
   - component: {fileID: 835324206}
   - component: {fileID: 835324207}
+  - component: {fileID: 835324208}
   m_Layer: 0
   m_Name: RoundManager
   m_TagString: Untagged
@@ -1634,6 +1589,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5fb7c1190ab69442b5a86ebf9f59a77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roundRewardObject: {fileID: 0}
+  roundTalleyObject: {fileID: 0}
 --- !u!4 &835324205
 Transform:
   m_ObjectHideFlags: 0
@@ -1683,11 +1640,27 @@ MonoBehaviour:
   takeButton: {fileID: 0}
   skipButton: {fileID: 0}
   rewardCountUI: {fileID: 0}
+  rewardCanvas: {fileID: 0}
   emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
   uiProgramRewardPool:
   - {fileID: 5029349081135307006, guid: 18c486d47a6674342a5672e39c64b4ca, type: 3}
   - {fileID: 7541618184239397820, guid: c854d48dbcb97b148a4f0a1080d32ddd, type: 3}
   - {fileID: 761216769171562013, guid: 47b6172745ac1fd40a1f60e52af925d8, type: 3}
+--- !u!114 &835324208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835324203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d7d1052ed1763e4390f745ab72f3d75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgroundCanvasPrefab: {fileID: 3720776601024686755, guid: 3ff1d8c05ca3f3c43a209754c91aebf3, type: 3}
+  emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
+  emptyTextElement: {fileID: 5215953537925482346, guid: 15115f75a774a2343bae2803b059e59a, type: 3}
 --- !u!1 &852259958
 GameObject:
   m_ObjectHideFlags: 0
@@ -2722,62 +2695,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6883668505633988103, guid: 4168dc3ff1860a54f9df289104dc6bed, type: 3}
   m_PrefabInstance: {fileID: 8166042640457068432}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1277176182
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1277176184}
-  - component: {fileID: 1277176183}
-  m_Layer: 0
-  m_Name: RewardNumber
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1277176183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277176182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30ad610e7cbb7ff4a811cd588ccc89ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textInput: 1
-  fontAtlas: {fileID: 100100200, guid: c397b8b03f28ace42916eda7a5a11bed, type: 3}
-  prefabCharacter: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
-  isUsingHeader: 0
-  headerInput: 
-  backgroundPrefab: {fileID: 0}
-  isUsingBackground: 1
-  maxTextHeight: 0
-  maxTextWidth: 0
-  generateBackgroundSetSize: 0
-  setBackgroundWidth: 0
-  setBackgroundHeight: 0
---- !u!4 &1277176184
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1277176182}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1304852684
 GameObject:
   m_ObjectHideFlags: 0
@@ -4699,5 +4616,3 @@ SceneRoots:
   - {fileID: 701312444}
   - {fileID: 1831982931}
   - {fileID: 835324205}
-  - {fileID: 1277176184}
-  - {fileID: 27638676}

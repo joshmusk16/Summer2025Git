@@ -17,90 +17,94 @@ private ProgramInputManager programInputManager;
 private RoundCountUI roundCountUI;
 private RoundTransition roundTransitionAnimation;
 
-    void Awake()
+[Header("Between Round Prefabs")]
+public GameObject roundRewardObject;
+public GameObject roundTalleyObject;
+
+void Awake()
+{
+    SetupNewRound();
+}
+
+private void FindDependencies()
+{
+    if(queueListData != null 
+    && playerTimerLogic != null
+    && levelManager != null
+    && programInputManager != null
+    && roundCountUI != null
+    && roundTransitionAnimation != null) return;
+
+    queueListData = FindObjectOfType<QueueListData>();
+    playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
+    levelManager = FindObjectOfType<LevelCollection>();
+    programInputManager = FindObjectOfType<ProgramInputManager>();
+    roundCountUI = FindObjectOfType<RoundCountUI>();
+    roundTransitionAnimation = FindObjectOfType<RoundTransition>();
+}
+
+public void SetupNewRound()
+{
+    FindDependencies();
+
+    levelManager.ResetRandomLevel();
+    programInputManager.EnableInput();
+    roundCountUI.IncrementRoundUI();
+    QueueListData.OnProgramAddedToQueue += AfterFirstQueueEvents;
+    OnAllEnemiesCleared += EndRound;
+}
+
+public void AfterFirstQueueEvents()
+{
+    FindDependencies();
+
+    playerTimerLogic.StartRunningTimer();
+    QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
+}
+
+public void EndRound()
+{
+    FindDependencies();
+
+    programInputManager.DisableInput();
+    playerTimerLogic.StopRunningTimer();
+    queueListData.ClearQueue();
+
+    //Really we want AnimateRoundTransition to happen after the final animation is done playing...
+    roundTransitionAnimation.AnimateRoundTransitionIn();
+    
+    //SetupNewRound();
+}
+
+#region Enemy Tracker Methods
+
+public static void RegisterEnemy(GameObject enemy)
+{
+    if(enemies.Contains(enemy)) return;
+    enemies.Add(enemy);
+}
+
+public static void UnregisterEnemy(GameObject enemy)
+{
+    if(enemies.Contains(enemy) == false) return;
+    enemies.Remove(enemy);
+
+    if(enemies.Count == 0)
     {
-        SetupNewRound();
+        OnAllEnemiesCleared?.Invoke();
     }
+}
 
-    private void FindDependencies()
-    {
-        if(queueListData != null 
-        && playerTimerLogic != null
-        && levelManager != null
-        && programInputManager != null
-        && roundCountUI != null
-        && roundTransitionAnimation != null) return;
+public int CheckEnemiesRemaining()
+{
+    return enemies.Count;
+}
 
-        queueListData = FindObjectOfType<QueueListData>();
-        playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
-        levelManager = FindObjectOfType<LevelCollection>();
-        programInputManager = FindObjectOfType<ProgramInputManager>();
-        roundCountUI = FindObjectOfType<RoundCountUI>();
-        roundTransitionAnimation = FindObjectOfType<RoundTransition>();
-    }
+#endregion
 
-    public void SetupNewRound()
-    {
-        FindDependencies();
-
-        levelManager.ResetRandomLevel();
-        programInputManager.EnableInput();
-        roundCountUI.IncrementRoundUI();
-        QueueListData.OnProgramAddedToQueue += AfterFirstQueueEvents;
-        OnAllEnemiesCleared += EndRound;
-    }
-
-    public void AfterFirstQueueEvents()
-    {
-        FindDependencies();
-
-        playerTimerLogic.StartRunningTimer();
-        QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
-    }
-
-    public void EndRound()
-    {
-        FindDependencies();
-
-        programInputManager.DisableInput();
-        playerTimerLogic.StopRunningTimer();
-        queueListData.ClearQueue();
-
-        //Really we want AnimateRoundTransition to happen after the final animation is done playing...
-        roundTransitionAnimation.AnimateRoundTransitionIn();
-        
-        //SetupNewRound();
-    }
-
-    #region Enemy Tracker Methods
-
-    public static void RegisterEnemy(GameObject enemy)
-    {
-        if(enemies.Contains(enemy)) return;
-        enemies.Add(enemy);
-    }
-
-    public static void UnregisterEnemy(GameObject enemy)
-    {
-        if(enemies.Contains(enemy) == false) return;
-        enemies.Remove(enemy);
-
-        if(enemies.Count == 0)
-        {
-            OnAllEnemiesCleared?.Invoke();
-        }
-    }
-
-    public int CheckEnemiesRemaining()
-    {
-        return enemies.Count;
-    }
-
-    #endregion
-
-    void OnDestroy()
-    {
-        QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
-        OnAllEnemiesCleared -= EndRound;
-    }
+void OnDestroy()
+{
+    QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
+    OnAllEnemiesCleared -= EndRound;
+}
 }

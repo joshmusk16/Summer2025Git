@@ -4,14 +4,16 @@ using UnityEngine;
 public class RoundTalley : MonoBehaviour
 {
 
-public GameObject backgroundCanvasPrefab; //background prefab assigned in inspector
+public GameObject backgroundCanvasPrefab;
 private GameObject backgroundCanvas;
 private RectTransform backgroundCanvasRect;
 private const float CANVAS_BUFFER = 0.6f;
 private const float CANVAS_WIDTH = 12f;
-private float CANVAS_LINE_HEIGHT = 0;
 
-public GameObject emptyTextElement; //create and assign TextElement prefab
+public GameObject emptyObject;
+public GameObject emptyTextElement;
+
+private GameObject roundTalleyParent;
 private List<string> lines = new();
 private List<TextElement> lineTextElements = new();
 
@@ -54,12 +56,12 @@ private void Update()
         {
             if(lineIndex < lines.Count)
             {
-                GenerateSingleLine(lines[lineIndex], offsetVector);
-
                 if(lineIndex == 0)
                 {
                     GenerateCanvas();
                 }
+                
+                GenerateSingleLine(lines[lineIndex], offsetVector);
         
                 backgroundCanvasRect.sizeDelta = new Vector2(CANVAS_WIDTH, (SPACE_BETWEEN_LINES * (lineIndex + 1)) + CANVAS_BUFFER);
 
@@ -110,14 +112,17 @@ private void StartTalleyAnimation()
 
 private void GenerateSingleLine(string text, Vector3 position)
 {
-    GameObject line = Instantiate(emptyTextElement, gameObject.transform);
+    if(backgroundCanvas == null || roundTalleyParent == null) return;
+
+    GameObject line = Instantiate(emptyTextElement, roundTalleyParent.transform);
     line.name = "Line " + lineIndex;
     TextElement textElement = line.GetComponent<TextElement>();
     lineTextElements.Add(textElement);
     
     textElement.textInput = text;
     textElement.GenerateTextElement();    
-    textElement.MoveTextParent(position);
+    textElement.MoveTextParent(position -= new Vector3(-CANVAS_BUFFER, CANVAS_BUFFER));
+    line.transform.SetParent(roundTalleyParent.transform);
 }
 
 private void GenerateCanvas()
@@ -128,12 +133,20 @@ private void GenerateCanvas()
         Destroy(backgroundCanvas);       
     }
 
+    if(roundTalleyParent != null) Destroy(roundTalleyParent);
+
     backgroundCanvas = Instantiate(backgroundCanvasPrefab, gameObject.transform);
     backgroundCanvas.name = "Background Canvas";
     backgroundCanvasRect = backgroundCanvas.GetComponent<RectTransform>();
     backgroundCanvasRect.pivot = new Vector2(0f, 1f);
     backgroundCanvasRect.sizeDelta = new Vector2(CANVAS_WIDTH, SPACE_BETWEEN_LINES);
     backgroundCanvasRect.transform.position += new Vector3(-CANVAS_BUFFER, CANVAS_BUFFER);
+
+    roundTalleyParent = Instantiate(emptyObject, gameObject.transform);
+    roundTalleyParent.name = "Round Talley Parent";
+    roundTalleyParent.transform.position = backgroundCanvas.transform.position 
+    -= new Vector3(-CANVAS_BUFFER, CANVAS_BUFFER);
+    backgroundCanvas.transform.SetParent(roundTalleyParent.transform);
 }
 
 private int CalculateMoneyReward()
@@ -176,6 +189,13 @@ private void ClearTalleyQueue()
 {
     if(lines.Count == 0) return;
     lines.Clear();
+}
+
+public void MoveRoundTalleyUI(Vector2 position)
+{
+    if(roundTalleyParent == null) return;
+
+    roundTalleyParent.transform.position = position;
 }
 
 private void DestroyLineObjects()
