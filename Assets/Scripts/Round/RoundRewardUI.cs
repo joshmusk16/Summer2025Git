@@ -44,15 +44,15 @@ private void Update() //Update for debugging
 {
     if (Input.GetKeyDown(KeyCode.F))
     {
-        GenerateReward();
+        //GenerateReward();
     }
 }
 
-    private void GenerateCanvasAndButtons()
+    private void GenerateCanvasAndButtons(Vector2 parentPosition)
 {
     if(roundRewardUI == null)
     {
-        roundRewardUI = Instantiate(roundRewardUIPrefab, gameObject.transform);
+        roundRewardUI = Instantiate(roundRewardUIPrefab, parentPosition, Quaternion.identity, gameObject.transform);
         roundRewardUI.name = "RoundRewardUI";
 
         Transform takeButtonTransform = roundRewardUI.transform.Find("TakeButton");
@@ -67,17 +67,21 @@ private void Update() //Update for debugging
 
         takeButton.GenerateButton();
         skipButton.GenerateButton();
-        UpdateRewardCountUI(amountOfRewards);
+        UpdateRewardCountUI(amountOfRewards); //might need to move
 
         takeButton.OnButtonPressed += GiveReward;
         skipButton.OnButtonPressed += SkipReward;
     }
 }
 
+public void StartRewardEvent(Vector2 parentPosition)
+{
+    GenerateCanvasAndButtons(parentPosition);
+    GenerateReward();
+}
+
 private void GenerateReward()
 {
-    GenerateCanvasAndButtons(); //temporary location to call this method
-
     int randomRewardIndex = Random.Range(0 , uiProgramRewardPool.Count); //This should be based on a seed in the future
     rewardProgram = uiProgramRewardPool[randomRewardIndex];
     programInfo = rewardProgram.GetComponent<Program>();

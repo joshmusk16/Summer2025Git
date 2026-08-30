@@ -46,7 +46,7 @@ private void Update()
 {
     if (Input.GetKeyDown(KeyCode.D)) //Keycode for debugging only
     {
-        StartTalleyEvent();
+        //StartTalleyEvent();
     }
 
     if (isAnimating)
@@ -55,12 +55,7 @@ private void Update()
         if(currentTime >= TIME_BETWEEN_LINE_GENERATION)
         {
             if(lineIndex < lines.Count)
-            {
-                if(lineIndex == 0)
-                {
-                    GenerateCanvas();
-                }
-                
+            {   
                 GenerateSingleLine(lines[lineIndex], offsetVector);
         
                 backgroundCanvasRect.sizeDelta = new Vector2(CANVAS_WIDTH, (SPACE_BETWEEN_LINES * (lineIndex + 1)) + CANVAS_BUFFER);
@@ -81,11 +76,11 @@ private void Update()
     }
 }
 
-private void StartTalleyEvent()
+public void StartTalleyEvent(Vector2 parentPosition)
 {
     DestroyLineObjects();
     AssignTalleyTextElements();
-    StartTalleyAnimation();
+    StartTalleyAnimation(parentPosition);
 }
 
 private void AssignTalleyTextElements()
@@ -102,11 +97,12 @@ private void AssignTalleyTextElements()
     lines.Add(GetMoneyRewardString());
 }
 
-private void StartTalleyAnimation()
+private void StartTalleyAnimation(Vector2 parentPosition)
 {
     offsetVector = gameObject.transform.position;
     lineIndex = 0;
     currentTime = 0;
+    GenerateCanvas(parentPosition);
     isAnimating = true;  
 }
 
@@ -121,11 +117,11 @@ private void GenerateSingleLine(string text, Vector3 position)
     
     textElement.textInput = text;
     textElement.GenerateTextElement();    
-    textElement.MoveTextParent(position -= new Vector3(-CANVAS_BUFFER, CANVAS_BUFFER));
+    textElement.MoveTextParent(roundTalleyParent.transform.position + position - new Vector3(-CANVAS_BUFFER, CANVAS_BUFFER));
     line.transform.SetParent(roundTalleyParent.transform);
 }
 
-private void GenerateCanvas()
+private void GenerateCanvas(Vector2 parentPosition)
 {
     if(backgroundCanvas != null)
     {
@@ -147,6 +143,8 @@ private void GenerateCanvas()
     roundTalleyParent.transform.position = backgroundCanvas.transform.position 
     -= new Vector3(-CANVAS_BUFFER, CANVAS_BUFFER);
     backgroundCanvas.transform.SetParent(roundTalleyParent.transform);
+
+    roundTalleyParent.transform.position = parentPosition;
 }
 
 private int CalculateMoneyReward()

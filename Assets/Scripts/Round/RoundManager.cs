@@ -16,10 +16,21 @@ private LevelCollection levelManager;
 private ProgramInputManager programInputManager;
 private RoundCountUI roundCountUI;
 private RoundTransition roundTransitionAnimation;
+private RoundRewardUI roundRewardUI;
+private RoundTalley roundTalleyUI;
 
-[Header("Between Round Prefabs")]
-public GameObject roundRewardObject;
-public GameObject roundTalleyObject;
+[Header("RoundUI Spawn Positions")]
+private const float ROUND_REWARD_YPOSITION = 3;
+private Vector2 roundRewardSpawnPosition = new(2.5f, ROUND_REWARD_YPOSITION);
+private Vector2 roundTalleySpawnPosition = new(-10, ROUND_REWARD_YPOSITION);
+
+private void Update() //Update for debugging
+{
+    if (Input.GetKeyDown(KeyCode.F))
+    {
+        AfterRoundTransitionIn();
+    }
+}
 
 void Awake()
 {
@@ -33,7 +44,9 @@ private void FindDependencies()
     && levelManager != null
     && programInputManager != null
     && roundCountUI != null
-    && roundTransitionAnimation != null) return;
+    && roundTransitionAnimation != null
+    && roundRewardUI != null
+    && roundTalleyUI != null) return;
 
     queueListData = FindObjectOfType<QueueListData>();
     playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
@@ -41,6 +54,8 @@ private void FindDependencies()
     programInputManager = FindObjectOfType<ProgramInputManager>();
     roundCountUI = FindObjectOfType<RoundCountUI>();
     roundTransitionAnimation = FindObjectOfType<RoundTransition>();
+    roundRewardUI = gameObject.GetComponent<RoundRewardUI>();
+    roundTalleyUI = gameObject.GetComponent<RoundTalley>();
 }
 
 public void SetupNewRound()
@@ -62,6 +77,17 @@ public void AfterFirstQueueEvents()
     QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
 }
 
+//method to set up RoundTalley and RoundReward
+public void AfterRoundTransitionIn()
+{
+    FindDependencies();
+
+    roundTalleyUI.StartTalleyEvent(roundTalleySpawnPosition);
+    roundRewardUI.StartRewardEvent(roundRewardSpawnPosition);
+
+    roundTransitionAnimation.OnAnimationInFinish -= AfterRoundTransitionIn;
+}
+
 public void EndRound()
 {
     FindDependencies();
@@ -72,6 +98,7 @@ public void EndRound()
 
     //Really we want AnimateRoundTransition to happen after the final animation is done playing...
     roundTransitionAnimation.AnimateRoundTransitionIn();
+    roundTransitionAnimation.OnAnimationInFinish += AfterRoundTransitionIn;
     
     //SetupNewRound();
 }
@@ -106,5 +133,6 @@ void OnDestroy()
 {
     QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
     OnAllEnemiesCleared -= EndRound;
+    roundTransitionAnimation.OnAnimationInFinish -= AfterRoundTransitionIn;
 }
 }
