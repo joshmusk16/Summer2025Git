@@ -20,6 +20,8 @@ public class TimeManager : MonoBehaviour
 
     void Awake()
     {
+        FindDependencies();
+
         timeMultiplier = timeMultiplierMin;
         currentTimeMultiplier = timeMultiplierMin;
 
@@ -98,6 +100,17 @@ public class TimeManager : MonoBehaviour
         }
     }
 
+    public void ResetGameSpeed()
+    {
+        pausing = false;
+        unpausing = false;
+        pauseElapsed = 1f;
+        timeMultiplier = 1f;
+        normalizedTimeMultiplier = 1f;
+        currentTimeMultiplier = timeMultiplier;
+        UpdateTimeSpeedUI();
+    }
+
     public void GraduallyUnpauseTime()
     {
         pausing = false;
@@ -120,7 +133,7 @@ public class TimeManager : MonoBehaviour
 
     private void UpdatePause()
     {
-        if (!unpausing && !pausing) return;
+        if (unpausing == false && pausing == false) return;
 
         pauseElapsed += Time.deltaTime;
         float t = Mathf.Clamp01(pauseElapsed / pauseDuration);

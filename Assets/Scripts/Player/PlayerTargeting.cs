@@ -265,6 +265,12 @@ public Vector2 SelectedTile(int range = 0, ProgramType programType = ProgramType
         return targetingOrigin;
     }
 
+    public void ResetTargetingOrigin(Vector2 position)
+    {
+        targetingOrigin = position;
+        currentTargetingOrigin.transform.position = targetingOrigin;
+    }
+
     public void ChangeTargetingRange(int newRange, ProgramType programType)
     {
         if(newRange < 0) return;

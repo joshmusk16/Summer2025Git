@@ -5,19 +5,19 @@ public class ComboBarLogic : MonoBehaviour
 
 public static int currentCombo;
 private const int MAX_COMBO_ALLOWED = 500;
-public int startingComboAmount = 1;
+public const int STARTING_COMBO_AMOUNT = 1;
 public ComboBarUI comboBarUI;
 
 void Start()
 {
-    InitializeComboBar();
+    ResetComboBar();
 }
 
-public void InitializeComboBar()
+public void ResetComboBar()
 {
-    if(startingComboAmount > 0 && startingComboAmount < MAX_COMBO_ALLOWED)
+    if(STARTING_COMBO_AMOUNT > 0 && STARTING_COMBO_AMOUNT < MAX_COMBO_ALLOWED)
     {
-        currentCombo = startingComboAmount;
+        currentCombo = STARTING_COMBO_AMOUNT;
         comboBarUI.UpdateComboNumberUI(currentCombo);   
     }
 }

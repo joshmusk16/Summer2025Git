@@ -10,6 +10,7 @@ public class LevelCollection : MonoBehaviour
     private TileGrid tileGrid;
     private GameObject player;
     private PlayerLogic playerLogic;
+    private PlayerTargeting playerTargeting;
 
     [Header("Spawn Dummies")]
     [SerializeField] private GameObject dummy;
@@ -17,10 +18,11 @@ public class LevelCollection : MonoBehaviour
 
     private void FindDependencies()
     {
-        tileGrid = FindObjectOfType<TileGrid>();
-        playerLogic = FindObjectOfType<PlayerLogic>();
+        if(tileGrid == null) tileGrid = FindObjectOfType<TileGrid>();
+        if(playerLogic == null) playerLogic = FindObjectOfType<PlayerLogic>();
+        if(playerTargeting == null) playerTargeting = FindObjectOfType<PlayerTargeting>();
         
-        if(playerLogic != null)
+        if(playerLogic != null && player == null)
         {
             player = playerLogic.gameObject;            
         }
@@ -28,9 +30,7 @@ public class LevelCollection : MonoBehaviour
 
     public void ResetRandomLevel()
     {
-        if(tileGrid == null
-        || playerLogic == null
-        || player == null) FindDependencies();
+        FindDependencies();
 
         LoadRandomLevel();
         MovePlayerToRandomTile();
@@ -90,8 +90,10 @@ public class LevelCollection : MonoBehaviour
         }
 
         GameObject randomTile = validTiles[Random.Range(0, validTiles.Count)];
+        Vector2 randomTilePos = randomTile.transform.position;
         playerLogic.RecordPlayerTilePosition();
-        Vector3 spawnPosition = randomTile.transform.position;
+        playerTargeting.ResetTargetingOrigin(randomTilePos);
+        Vector3 spawnPosition = randomTilePos;
         player.transform.position = spawnPosition;
     }
 

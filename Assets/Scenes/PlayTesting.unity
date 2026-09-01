@@ -1655,6 +1655,11 @@ MonoBehaviour:
   backgroundCanvasPrefab: {fileID: 3720776601024686755, guid: 3ff1d8c05ca3f3c43a209754c91aebf3, type: 3}
   emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
   emptyTextElement: {fileID: 5215953537925482346, guid: 15115f75a774a2343bae2803b059e59a, type: 3}
+  lines: []
+  lineTextElements: []
+  isAnimating: 0
+  currentTime: 0
+  lineIndex: 0
 --- !u!1 &852259958
 GameObject:
   m_ObjectHideFlags: 0
@@ -3834,9 +3839,7 @@ MonoBehaviour:
   levels:
   - {fileID: 11400000, guid: fd2ab8701ced5004da5fd1e6a2716fff, type: 2}
   - {fileID: 11400000, guid: 9e33640125c720b49bf18a1339fac728, type: 2}
-  - {fileID: 11400000, guid: a5c92d5db60b18d4bbcc465faec98315, type: 2}
   - {fileID: 11400000, guid: cf84d25679dcdd542b96899cd06fc88a, type: 2}
-  - {fileID: 11400000, guid: c03d547a99ffdc343b8c43fe9c907d0f, type: 2}
   - {fileID: 11400000, guid: 6cca1d9a0eedc0041972e72060e76b3c, type: 2}
   - {fileID: 11400000, guid: dde2565b880526c4793f8316656e5bc5, type: 2}
   - {fileID: 11400000, guid: 4780e8a43a147e44492b3f7b5ed7aad3, type: 2}

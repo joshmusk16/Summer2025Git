@@ -14,6 +14,10 @@ private QueueListData queueListData;
 private PlayerTimerLogic playerTimerLogic;
 private LevelCollection levelManager;
 private ProgramInputManager programInputManager;
+
+private TimeManager timeManager;
+private ComboBarLogic comboBarLogic;
+
 private RoundCountUI roundCountUI;
 private RoundTransition roundTransitionAnimation;
 private RoundRewardUI roundRewardUI;
@@ -45,6 +49,8 @@ private void FindDependencies()
     && playerTimerLogic != null
     && levelManager != null
     && programInputManager != null
+    && timeManager != null
+    && comboBarLogic != null
     && roundCountUI != null
     && roundTransitionAnimation != null
     && roundRewardUI != null
@@ -54,6 +60,8 @@ private void FindDependencies()
     playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
     levelManager = FindObjectOfType<LevelCollection>();
     programInputManager = FindObjectOfType<ProgramInputManager>();
+    timeManager = FindObjectOfType<TimeManager>();
+    comboBarLogic = FindObjectOfType<ComboBarLogic>();
     roundCountUI = FindObjectOfType<RoundCountUI>();
     roundTransitionAnimation = FindObjectOfType<RoundTransition>();
     roundRewardUI = gameObject.GetComponent<RoundRewardUI>();
@@ -66,6 +74,9 @@ public void SetupNewRound()
 
     roundTalleyUI.ResetRoundTalleyUI();
     roundRewardUI.ResetRewardUI();
+
+    //timeManager.ResetGameSpeed();
+    comboBarLogic.ResetComboBar();
 
     levelManager.ResetRandomLevel();
     programInputManager.EnableInput();
