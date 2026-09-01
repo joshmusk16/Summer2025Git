@@ -23,14 +23,16 @@ private RoundTalley roundTalleyUI;
 private const float ROUND_REWARD_YPOSITION = 3;
 private Vector2 roundRewardSpawnPosition = new(2.5f, ROUND_REWARD_YPOSITION);
 private Vector2 roundTalleySpawnPosition = new(-10, ROUND_REWARD_YPOSITION);
+private bool allRewardsAreTaken = false;
+private bool talleyIsFinished = false;
 
-private void Update() //Update for debugging
-{
-    if (Input.GetKeyDown(KeyCode.F))
-    {
-        AfterRoundTransitionIn();
-    }
-}
+// private void Update() //Update for debugging
+// {
+//     if (Input.GetKeyDown(KeyCode.F))
+//     {
+//         AfterRoundTransitionIn();
+//     }
+// }
 
 void Awake()
 {
@@ -62,9 +64,14 @@ public void SetupNewRound()
 {
     FindDependencies();
 
+    roundTalleyUI.ResetRoundTalleyUI();
+    roundRewardUI.ResetRewardUI();
+
     levelManager.ResetRandomLevel();
     programInputManager.EnableInput();
     roundCountUI.IncrementRoundUI();
+    playerTimerLogic.RecordTimeAtRoundStart();
+
     QueueListData.OnProgramAddedToQueue += AfterFirstQueueEvents;
     OnAllEnemiesCleared += EndRound;
 }
@@ -77,7 +84,6 @@ public void AfterFirstQueueEvents()
     QueueListData.OnProgramAddedToQueue -= AfterFirstQueueEvents;
 }
 
-//method to set up RoundTalley and RoundReward
 public void AfterRoundTransitionIn()
 {
     FindDependencies();
@@ -88,6 +94,26 @@ public void AfterRoundTransitionIn()
     roundTransitionAnimation.OnAnimationInFinish -= AfterRoundTransitionIn;
 }
 
+public void CheckForRoundEventFinished(bool state, int stateToUpdate)
+{
+    if(stateToUpdate == 0)
+    {
+        allRewardsAreTaken = state; 
+    }
+    else if (stateToUpdate == 1)
+    {
+        talleyIsFinished = state;  
+    }
+
+    if(allRewardsAreTaken && talleyIsFinished)
+    {
+        SetupNewRound();
+        roundTransitionAnimation.AnimateRoundTransitionOut();
+        allRewardsAreTaken = false;
+        talleyIsFinished = false;
+    }
+}
+
 public void EndRound()
 {
     FindDependencies();
@@ -96,7 +122,7 @@ public void EndRound()
     playerTimerLogic.StopRunningTimer();
     queueListData.ClearQueue();
 
-    //Really we want AnimateRoundTransition to happen after the final animation is done playing...
+    //Really we want AnimateRoundTransition to happen after the final player/program animation is done playing...
     roundTransitionAnimation.AnimateRoundTransitionIn();
     roundTransitionAnimation.OnAnimationInFinish += AfterRoundTransitionIn;
     

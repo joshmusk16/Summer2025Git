@@ -14,19 +14,19 @@ public GameObject emptyObject;
 public GameObject emptyTextElement;
 
 private GameObject roundTalleyParent;
-private List<string> lines = new();
-private List<TextElement> lineTextElements = new();
+public List<string> lines = new();
+public List<TextElement> lineTextElements = new();
 
-private const float FIRST_LINE_SCALE = 1f;
-private const float LOWER_LINES_SCALE = 0.75f;
+//private const float FIRST_LINE_SCALE = 1f;
+//private const float LOWER_LINES_SCALE = 0.75f;
 private const float SPACE_BETWEEN_LINES = 1f;
 
 private Vector3 offsetVector = Vector3.zero;
 
-private bool isAnimating = false;
-private float currentTime = 0;
+public bool isAnimating = false;
+public float currentTime = 0;
 private const float TIME_BETWEEN_LINE_GENERATION = 0.3f; //in seconds
-private int lineIndex = 0;
+public int lineIndex = 0;
 
 private int moneyRewardPot = 10;
 private int moneyRewardPotMaximum = 20;
@@ -36,18 +36,22 @@ private int combosDropped = 0;
 private int secondsLost = 0;
 
 private MoneyLogic moneyLogic;
+private PlayerTimerLogic playerTimerLogic;
+private RoundManager roundManager;
 
 private void FindDependencies()
 {
     if(moneyLogic == null) moneyLogic = FindObjectOfType<MoneyLogic>();
+    if(playerTimerLogic == null) playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
+    if(roundManager == null) roundManager = FindObjectOfType<RoundManager>();
 }
 
 private void Update()
 {
-    if (Input.GetKeyDown(KeyCode.D)) //Keycode for debugging only
-    {
-        //StartTalleyEvent();
-    }
+    // if (Input.GetKeyDown(KeyCode.D)) //Keycode for debugging only
+    // {
+    //     StartTalleyEvent();
+    // }
 
     if (isAnimating)
     {
@@ -69,6 +73,7 @@ private void Update()
                     offsetVector = gameObject.transform.position;
                     lineIndex = 0;
                     GiveMoneyReward();
+                    roundManager.CheckForRoundEventFinished(true, 1);
                     isAnimating = false;
                 }
             }
@@ -78,7 +83,8 @@ private void Update()
 
 public void StartTalleyEvent(Vector2 parentPosition)
 {
-    DestroyLineObjects();
+    FindDependencies();
+
     AssignTalleyTextElements();
     StartTalleyAnimation(parentPosition);
 }
@@ -88,13 +94,23 @@ private void AssignTalleyTextElements()
     if(isAnimating) return;
 
     ClearTalleyQueue();
+    string moneyReward = GetMoneyRewardString();
 
     lines.Add(moneyRewardPot.ToString());
     lines.Add("-" + combosDropped.ToString() + " COMBOS DROPPED");
-    lines.Add("-" + secondsLost.ToString() + " SECONDS LOST");
+
+    if(secondsLost < 0)
+    {
+    lines.Add(secondsLost.ToString() + " SECONDS LOST");            
+    }
+    else
+    {
+    lines.Add("+" + secondsLost.ToString() + " SECONDS GAINED");     
+    }
+
     lines.Add("---------------------------");
     
-    lines.Add(GetMoneyRewardString());
+    lines.Add(moneyReward);
 }
 
 private void StartTalleyAnimation(Vector2 parentPosition)
@@ -150,8 +166,9 @@ private void GenerateCanvas(Vector2 parentPosition)
 private int CalculateMoneyReward()
 {
     //set combosDropped and secondsLost here from respective dependency scripts once implemented
+    secondsLost = playerTimerLogic.GetTimeDifferenceInRound();
 
-    moneyReward = moneyRewardPot - combosDropped - secondsLost;
+    moneyReward = moneyRewardPot - combosDropped + secondsLost;
     return moneyReward;
 }
 
@@ -208,6 +225,17 @@ private void DestroyLineObjects()
     }
 
     lineTextElements.Clear(); 
+}
+
+public void ResetRoundTalleyUI()
+{
+    DestroyLineObjects();
+    if(roundTalleyParent != null) Destroy(roundTalleyParent);
+
+    offsetVector = gameObject.transform.position;
+    lineIndex = 0;
+    currentTime = 0;
+    isAnimating = false;
 }
 
 #region Money Reward Helper Methods

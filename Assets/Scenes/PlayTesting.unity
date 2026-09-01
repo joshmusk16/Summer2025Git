@@ -1589,8 +1589,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5fb7c1190ab69442b5a86ebf9f59a77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roundRewardObject: {fileID: 0}
-  roundTalleyObject: {fileID: 0}
 --- !u!4 &835324205
 Transform:
   m_ObjectHideFlags: 0
@@ -1637,10 +1635,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roundRewardUIPrefab: {fileID: 5352201055781291232, guid: b284946f772e2f444b1182d4207a18ad, type: 3}
-  takeButton: {fileID: 0}
-  skipButton: {fileID: 0}
-  rewardCountUI: {fileID: 0}
-  rewardCanvas: {fileID: 0}
   emptyObject: {fileID: 2023801167326021065, guid: e6f79861f6d004e449d8575b528881d6, type: 3}
   uiProgramRewardPool:
   - {fileID: 5029349081135307006, guid: 18c486d47a6674342a5672e39c64b4ca, type: 3}

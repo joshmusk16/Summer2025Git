@@ -16,6 +16,8 @@ public class PlayerTimerLogic : MonoBehaviour
     [SerializeField] private float timerUpdateInterval = 1f;
     private float nextUpdateTime;
 
+    private int currentTimeAtStartOfRound;
+
     void Awake()
     {
         FindDependencies();
@@ -194,6 +196,22 @@ public class PlayerTimerLogic : MonoBehaviour
         nextUpdateTime = playerCurrentTime - timerUpdateInterval;
         playerHealthUI.AnimateHealthChange(playerCurrentTime / playerTotalTime);
     }
+
+    #region Round Talley Helper Functions
+
+    public void RecordTimeAtRoundStart()
+    {
+        currentTimeAtStartOfRound = Mathf.FloorToInt(playerCurrentTime);
+    }
+
+    public int GetTimeDifferenceInRound()
+    {
+        int timeDifference = Mathf.FloorToInt(playerCurrentTime) - currentTimeAtStartOfRound;
+        currentTimeAtStartOfRound = 0;
+        return timeDifference;
+    }
+    
+    #endregion
 
     void OnDestroy()
     {

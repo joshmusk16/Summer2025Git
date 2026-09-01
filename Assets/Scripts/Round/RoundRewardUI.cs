@@ -19,10 +19,12 @@ private GameObject rewardProgram;
 private Program programInfo;
 private Vector3 REWARD_PROGRAM_SCALE = new(2f, 2f, 1f);
 
-private int amountOfRewards = 3;
+private const int REWARDS_DEBUG_AMOUNT = 3;
+private int amountOfRewards = REWARDS_DEBUG_AMOUNT;
 
 private ProgramListData attackProgramData;
 private ProgramListData defenseProgramData;
+private RoundManager roundManager;
 
 public List<GameObject> uiProgramRewardPool = new(); //all the prefab Program gameObjects
 
@@ -34,10 +36,12 @@ void Awake()
 private void FindDependencies()
 {
     if(attackProgramData != null &&
-    defenseProgramData != null) return;
+    defenseProgramData != null
+    && roundManager != null) return;
 
     attackProgramData = GameObject.Find("AttackUIManager").GetComponent<ProgramListData>();
     defenseProgramData = GameObject.Find("DefenseUIManager").GetComponent<ProgramListData>();
+    roundManager = FindObjectOfType<RoundManager>();
 }
 
 private void Update() //Update for debugging
@@ -130,8 +134,9 @@ private void DecreaseRewardCounter()
     {
         amountOfRewards--;
         UpdateRewardCountUI(amountOfRewards);
-
         rewardProgramUIElement.GetComponent<SpriteRenderer>().sprite = null;
+
+        roundManager.CheckForRoundEventFinished(true, 0);
         ToggleRewardButtons(false);
         //Reset scene for next round...
     }
@@ -158,6 +163,12 @@ public void MoveRoundRewardUI(Vector2 position)
     if(roundRewardUI == null) return;
 
     roundRewardUI.transform.position = position;
+}
+
+public void ResetRewardUI()
+{
+    if(roundRewardUI != null) Destroy(roundRewardUI);
+    amountOfRewards = REWARDS_DEBUG_AMOUNT;
 }
 
 private void OnDestroy()
