@@ -22,7 +22,7 @@ public void ResetComboBar()
     }
 }
 
-public void AddToCombo(int amount)
+private void AddToCombo(int amount)
 {
     if(amount > 0 && currentCombo + amount < MAX_COMBO_ALLOWED)
     {
@@ -36,7 +36,7 @@ public void AddToCombo(int amount)
     comboBarUI.UpdateComboNumberUI(currentCombo); 
 }
 
-public void RemoveFromCombo(int amount)
+private void RemoveFromCombo(int amount)
 {
     if(amount >= 0 && currentCombo - amount > 0)
     {
@@ -50,7 +50,7 @@ public void RemoveFromCombo(int amount)
     comboBarUI.UpdateComboNumberUI(currentCombo); 
 }
 
-public void MultiplyCombo(float amount)
+private void MultiplyCombo(float amount)
 {
     int newComboAmount = Mathf.FloorToInt(currentCombo * amount);
 
@@ -66,7 +66,7 @@ public void MultiplyCombo(float amount)
     comboBarUI.UpdateComboNumberUI(currentCombo); 
 }
 
-public void DivideCombo(int amount)
+private void DivideCombo(int amount)
 {
     int newComboAmount = Mathf.FloorToInt(currentCombo / amount);
 
@@ -86,10 +86,12 @@ public void DivideCombo(int amount)
 
 public void ChangeComboBar(int type, float amount)
 {
-    if(type < 1 || type > 4) return;
+    if(type < 0 || type > 4) return;
 
     switch (type)
     {
+        case 0: 
+            break;
         case 1: 
             AddToCombo((int)amount);
             break;

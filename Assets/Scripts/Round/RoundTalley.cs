@@ -28,20 +28,23 @@ public float currentTime = 0;
 private const float TIME_BETWEEN_LINE_GENERATION = 0.3f; //in seconds
 public int lineIndex = 0;
 
-private int moneyRewardPot = 10;
+private int moneyRewardPot = 5;
 private int moneyRewardPotMaximum = 20;
 private int moneyRewardPotMinimum = -10;
 private int moneyReward = 0;
 private int combosDropped = 0;
+private int highestCombo = 0;
 private int secondsLost = 0;
 
 private MoneyLogic moneyLogic;
+private ConditionLogic conditionLogic;
 private PlayerTimerLogic playerTimerLogic;
 private RoundManager roundManager;
 
 private void FindDependencies()
 {
     if(moneyLogic == null) moneyLogic = FindObjectOfType<MoneyLogic>();
+    if(conditionLogic == null) conditionLogic = FindObjectOfType<ConditionLogic>();
     if(playerTimerLogic == null) playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
     if(roundManager == null) roundManager = FindObjectOfType<RoundManager>();
 }
@@ -98,6 +101,7 @@ private void AssignTalleyTextElements()
 
     lines.Add(moneyRewardPot.ToString());
     lines.Add("-" + combosDropped.ToString() + " COMBOS DROPPED");
+    lines.Add("+" + highestCombo.ToString() + " HIGHEST COMBO");
 
     if(secondsLost < 0)
     {
@@ -167,8 +171,10 @@ private int CalculateMoneyReward()
 {
     //set combosDropped and secondsLost here from respective dependency scripts once implemented
     secondsLost = playerTimerLogic.GetTimeDifferenceInRound();
+    combosDropped = conditionLogic.GetConditionsDropped();
+    highestCombo = conditionLogic.GetHighestCondition();
 
-    moneyReward = moneyRewardPot - combosDropped + secondsLost;
+    moneyReward = moneyRewardPot - combosDropped + highestCombo + secondsLost;
     return moneyReward;
 }
 

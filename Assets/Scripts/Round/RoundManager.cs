@@ -22,6 +22,7 @@ private RoundCountUI roundCountUI;
 private RoundTransition roundTransitionAnimation;
 private RoundRewardUI roundRewardUI;
 private RoundTalley roundTalleyUI;
+private ConditionLogic conditionLogic;
 
 [Header("RoundUI Spawn Positions")]
 private const float ROUND_REWARD_YPOSITION = 3;
@@ -54,7 +55,8 @@ private void FindDependencies()
     && roundCountUI != null
     && roundTransitionAnimation != null
     && roundRewardUI != null
-    && roundTalleyUI != null) return;
+    && roundTalleyUI != null
+    && conditionLogic != null) return;
 
     queueListData = FindObjectOfType<QueueListData>();
     playerTimerLogic = FindObjectOfType<PlayerTimerLogic>();
@@ -66,6 +68,7 @@ private void FindDependencies()
     roundTransitionAnimation = FindObjectOfType<RoundTransition>();
     roundRewardUI = gameObject.GetComponent<RoundRewardUI>();
     roundTalleyUI = gameObject.GetComponent<RoundTalley>();
+    conditionLogic = FindObjectOfType<ConditionLogic>();
 }
 
 public void SetupNewRound()
@@ -77,6 +80,7 @@ public void SetupNewRound()
 
     //timeManager.ResetGameSpeed();
     comboBarLogic.ResetComboBar();
+    conditionLogic.ResetConditionMeter(true);
 
     levelManager.ResetRandomLevel();
     programInputManager.EnableInput();

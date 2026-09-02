@@ -34,9 +34,11 @@ public class Program : MonoBehaviour
 
     public int gameSpeedRewardType;
     public float amountToChangeGameSpeed;
+
+    private bool conditionMet = false;
     
     //Reward Requirement types : 1 = HasAnyHitboxHit, 2 = HasEveryHitboxHit
-    //Types: Adding to combo = 1, Removing from combo = 2, multiply combo = 3, divide combo = 4
+    //Types: No combo reward = 0, Adding to combo = 1, Removing from combo = 2, multiply combo = 3, divide combo = 4
     //Types : No gamespeed reward = 0, add to gameSpeed = 1, remove from gamespeed = 2
 
     [Header("Description Box Data")]
@@ -49,10 +51,21 @@ public class Program : MonoBehaviour
     [HideInInspector] public PlayerTargeting playerTargeting;
     [HideInInspector] public ProgramUI programUI;
     [HideInInspector] public ProgramInputManager inputManager;
+    [HideInInspector] public ConditionLogic conditionLogic;
     
     public virtual void FireProgram(QueueParameter queueParameter)
     {
         
+    }
+
+    //designed to only one once per life of a program
+    public virtual void ConditionMet()
+    {
+        if (conditionMet == false)
+        {
+            conditionLogic.IncrementConditionMeter();
+            conditionMet = true;
+        }
     }
 
     void Awake()
@@ -63,8 +76,6 @@ public class Program : MonoBehaviour
     //In script for any program inheriting this class, run FindDependencies() in Start()
     protected virtual void FindDependencies()
     {
-        HitboxTracker.Instance.RegisterHitboxGroup(gameObject, hitboxTimings, hitboxTimings.Length);
-
         //Be aware that changing the AttackUIManager name in the editor will break GameObject.Find()
         if (programType == ProgramType.Attack)
         {
@@ -79,6 +90,7 @@ public class Program : MonoBehaviour
         playerMovement = FindObjectOfType<PlayerMovement>();
         playerTargeting = FindObjectOfType<PlayerTargeting>();
         inputManager = FindObjectOfType<ProgramInputManager>();
+        conditionLogic = FindObjectOfType<ConditionLogic>();
 
         if (player != null)
         {
@@ -92,6 +104,8 @@ public class Program : MonoBehaviour
         {
             hitboxTiming.hitbox.damage = amount;
         }
+
+        HitboxTracker.Instance.RegisterHitboxGroup(gameObject, hitboxTimings, hitboxTimings.Length);
     }
 
     //When given a direction of -1 or 1 in in direction, this method will change the transform of the hitboxes 
@@ -113,5 +127,10 @@ public class Program : MonoBehaviour
     protected virtual void OnDestroy()
     {
         HitboxTracker.Instance.UnregisterHitboxGroup(gameObject);
+
+        if(conditionMet == false)
+        {
+            conditionLogic.ResetConditionMeter(false);
+        }
     }
 }

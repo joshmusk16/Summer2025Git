@@ -6,9 +6,8 @@ public class HitboxTracker : MonoBehaviour
 
 public Dictionary<GameObject, List<HitBox>> hitboxGroups = new();
 public static HitboxTracker Instance { get; private set; }
-private ComboBarLogic comboBar;
-private PlayerTimerLogic playerTimerBar;
-private TimeManager gameSpeedManager;
+
+private ProgramRewardManager programRewardManager;
 
 private void Awake()
 {
@@ -18,9 +17,7 @@ private void Awake()
 private void FindDependencies()
 {
     Instance = this;
-    comboBar = FindObjectOfType<ComboBarLogic>();
-    playerTimerBar = FindObjectOfType<PlayerTimerLogic>();
-    gameSpeedManager = FindObjectOfType<TimeManager>();
+    if(programRewardManager == null) programRewardManager = FindObjectOfType<ProgramRewardManager>();
 }
 
 public void RegisterHitboxGroup(GameObject program, HitboxTiming[] hitboxTimings, int hitboxAmount)
@@ -43,17 +40,13 @@ public void UnregisterHitboxGroup(GameObject program)
 }
 
 public void CheckForReward
-(GameObject program, 
-    int rewardRequirementType, 
-    int comboRewardType, int comboAmount, 
-    int timerRewardType, int timerAmount,
-    int gameSpeedRewardType, float gameSpeedAmount)
+(GameObject program, Program programData)
 {
     if(!hitboxGroups.ContainsKey(program)) return;
     
     bool shouldGiveReward = false;
 
-    switch (rewardRequirementType)
+    switch (programData.rewardRequirementType)
     {
         case 1: 
             shouldGiveReward = HasAnyHitboxHit(program);
@@ -65,9 +58,7 @@ public void CheckForReward
 
     if (shouldGiveReward)
     {
-        comboBar.ChangeComboBar(comboRewardType, comboAmount);
-        playerTimerBar.ChangeTimerBar(timerRewardType, timerAmount);
-        gameSpeedManager.ChangeGameSpeed(gameSpeedRewardType, gameSpeedAmount);
+        programRewardManager.GiveRewards(programData);
         UnregisterHitboxGroup(program);
     }
 }
