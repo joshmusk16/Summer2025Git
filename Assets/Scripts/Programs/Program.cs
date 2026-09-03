@@ -126,9 +126,12 @@ public class Program : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        HitboxTracker.Instance.UnregisterHitboxGroup(gameObject);
+        if (HitboxTracker.Instance != null)
+        {
+            HitboxTracker.Instance.UnregisterHitboxGroup(gameObject);
+        }
 
-        if(conditionMet == false)
+        if(conditionMet == false && conditionLogic != null)
         {
             conditionLogic.ResetConditionMeter(false);
         }

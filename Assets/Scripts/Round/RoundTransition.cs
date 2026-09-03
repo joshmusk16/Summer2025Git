@@ -47,13 +47,12 @@ private void Update()
 
 private void FindDependencies()
 {
-    cameraManager = FindObjectOfType<DualCameraManager>();
+    if(cameraManager == null) cameraManager = FindObjectOfType<DualCameraManager>();
 }
 
 public void AnimateRoundTransitionIn()
 {
     EnableAllImages();
-    GetUIPositions();
 
     if(transitionGameObjects.Count == 0) InitializeTransitionObjects();
     

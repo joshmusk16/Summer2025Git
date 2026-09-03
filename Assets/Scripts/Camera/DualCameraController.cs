@@ -26,6 +26,8 @@ public class DualCameraManager : MonoBehaviour
         public Vector3 bottomRight;
         public Vector3 topLeft;
         public Vector3 topRight;
+        public Vector3 middleLeft;
+        public Vector3 middleRight;
     }
 
     void Start()
@@ -104,13 +106,14 @@ public class DualCameraManager : MonoBehaviour
         
         ScreenCorners corners = new ScreenCorners
         {
-            bottomLeft  = cam.ScreenToWorldPoint(new Vector3(0f, 0f, depth)),
-            bottomRight = cam.ScreenToWorldPoint(new Vector3(Screen.width, 0f, depth)),
-            topLeft     = cam.ScreenToWorldPoint(new Vector3(0f, Screen.height, depth)),
-            topRight    = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth))
+            bottomLeft   = cam.ScreenToWorldPoint(new Vector3(0f, 0f, depth)),
+            bottomRight  = cam.ScreenToWorldPoint(new Vector3(Screen.width, 0f, depth)),
+            topLeft      = cam.ScreenToWorldPoint(new Vector3(0f, Screen.height, depth)),
+            topRight     = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, depth)),
+            middleLeft   = cam.ScreenToWorldPoint(new Vector3(0f, Screen.height * 0.5f, depth)),
+            middleRight  = cam.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height * 0.5f, depth))
         };
 
         return corners;
     }
-
 }
